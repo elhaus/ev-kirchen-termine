@@ -1,0 +1,338 @@
+:root {
+    --featured-event-bg: #0ea0d7
+}
+
+#evkite-events-content .evkite-events-tooltip h4, #evkite_events_filters_wrapper .evkite_events_slider_val, .single-evkite_events a.evkite-events-gcal, .single-evkite_events a.evkite-events-ical {
+    color: #21759b
+}
+
+#evkite-events .evkite-events-button, #evkite-events .evkite-events-button:hover, #evkite_events_filters_wrapper input[type=submit], .evkite-events-button, .evkite-events-button.evkite-active:hover, .evkite-events-button.evkite-inactive, .evkite-events-button:hover, .evkite-events-calendar td.evkite-events-present div[id*=evkite-events-daynum-], .evkite-events-calendar td.evkite-events-present div[id*=evkite-events-daynum-]>a {
+    background-color: #21759b
+}
+
+
+.evkite-events-adv-list-widget .evkite-events-widget-link a, .evkite-events-back a, .evkite-events-list-widget .evkite-events-widget-link a, ul.evkite-events-sub-nav a {
+    font-size: 15px;
+    font-weight: 700
+}
+
+.evkite-events-event-meta address.evkite-events-address, .evkite-events-list .evkite-events-venue-details {
+    font-weight: 400;
+    font-style: italic
+}
+
+.evkite-events-event-meta address.evkite-events-address {
+    padding-right: 3px
+}
+
+.evkite-events-schedule {
+    margin: 1em 0 1.5em
+}
+
+.single-evkite_events .evkite-events-cal-links {
+    margin-bottom: 1.75em;
+    display: block
+}
+
+.single-evkite_events a.evkite-events-gcal, .single-evkite_events a.evkite-events-gcal:hover, .single-evkite_events a.evkite-events-ical, .single-evkite_events a.evkite-events-ical:hover {
+    background-color: transparent;
+    text-transform: none;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0;
+    padding: 0;
+    float: none;
+    color: #21759b
+}
+
+.evkite-events-meta-group .evkite-events-single-section-title {
+    font-size: 17px
+}
+
+.single-evkite_events .evkite-events-event-meta {
+    font-size: 14px
+}
+
+/* ############################################################### */
+:root {
+    --featured-event-bg: #0ea0d7;
+    --twentynineteen-font--body: "NonBreakingSpaceOverride", "Hoefler Text", "Baskerville Old Face", Garamond, "Times New Roman", serif;
+    --twentynineteen-font--heading: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    --twentynineteen-font--code: Menlo, monaco, Consolas, Lucida Console, monospace;
+    --twentynineteen-font--pre: "Courier 10 Pitch", Courier, monospace
+}
+
+#evkite-events .evkite-events-content p, .evkite-events-after-html p, .evkite-events-before-html p {
+    line-height: 1.7;
+    margin: 0 0 10px
+}
+
+.evkite-events-back {
+    margin: 0 0 20px
+}
+
+
+#evkite-events-content a, .evkite-events-adv-list-widget .evkite-events-widget-link a, .evkite-events-adv-list-widget .evkite-events-widget-link a:hover, .evkite-events-back a, .evkite-events-back a:hover, .evkite-events-event-meta a, .evkite-events-list-widget .evkite-events-widget-link a, .evkite-events-list-widget .evkite-events-widget-link a:hover, ul.evkite-events-sub-nav a, ul.evkite-events-sub-nav a:hover {
+    text-decoration: none
+}
+
+#evkite-events .evkite-events-button, .evkite-events-button {
+    *display: inline;
+    background-color: #666;
+    background-image: none;
+    border-radius: 3px;
+    border: 0;
+    box-shadow: none;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    line-height: normal;
+    padding: 6px 9px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    vertical-align: middle;
+    zoom: 1
+}
+
+a.evkite-events-gcal, a.evkite-events-ical {
+    clear: both;
+    color: #fff;
+    float: right;
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 18px;
+    margin-top: 21px;
+    padding: 0 6px;
+    text-decoration: none
+}
+
+.single-evkite_events a.evkite-events-gcal, .single-evkite_events a.evkite-events-ical {
+    float: none
+}
+
+.evkite-events-event-meta-desc .evkite-events-gmap, .evkite-events-event-meta .evkite-events-gmap {
+    white-space: nowrap
+}
+
+.event .entry-title {
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    padding: inherit
+}
+
+.evkite-events-schedule h2 {
+    display: inline-block;
+    margin-bottom: 0;
+    font-size: 1.2em;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal
+}
+
+
+.clearfix, .evkite-clearfix {
+    zoom: 1
+}
+
+.clearfix:after, .clearfix:before, .evkite-clearfix:after, .evkite-clearfix:before {
+    content: "";
+    display: table
+}
+
+.clearfix:after, .evkite-clear, .evkite-clearfix:after {
+    clear: both
+}
+
+
+#evkite-events-content .evkite-events-abbr {
+    border-bottom: 0;
+    cursor: default
+}
+
+#evkite-events-content {
+    margin-bottom: 48px;
+    padding: 2px 0;
+    position: relative
+}
+
+
+.evkite-events-event-meta address.evkite-events-address {
+    display: inline;
+    font-family: inherit;
+    font-size: inherit;
+    font-style: normal;
+    line-height: inherit;
+    margin-right: 10px
+}
+
+.single-evkite_venue .evkite-events-loop .evkite-events-content p {
+    margin: 0
+}
+
+.events-archive h3 .published, .single-evkite_venue h3 .published {
+    font-size: 18px;
+    font-style: italic;
+    margin-top: 0;
+    text-transform: none
+}
+
+.evkite-events-event-day, .evkite-events-event-meta-desc {
+    color: #333
+}
+
+.venue-address {
+    margin-top: 1em
+}
+
+.venue-address>* {
+    display: block;
+    margin-top: .5em
+}
+
+.single-evkite_events .evkite-events-single-event-title {
+    font-size: 1.7em;
+    line-height: 1;
+    margin: 0;
+    padding: 0
+}
+
+.evkite-events-meta-group .evkite-events-single-section-title {
+    font-size: 1.4em;
+    font-weight: 700;
+    margin: 20px 0 10px
+}
+
+.evkite-events-event-meta .evkite-events-meta-group address.evkite-events-address {
+    display: block;
+    margin: 0
+}
+
+.evkite-events-schedule {
+    margin: 20px 0 0;
+    vertical-align: middle
+}
+
+.single-evkite_events .evkite-events-cal-links {
+    clear: both
+}
+
+.single-evkite_events .evkite-events-event-meta {
+    background: #fafafa;
+    border: 1px solid #eee;
+    margin: 30px 0
+}
+
+.single-evkite_events .evkite-events-venue-map {
+    background: #eee;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    display: inline-block;
+    float: right;
+    margin: 20px 4% 2% 0;
+    padding: 5px;
+    vertical-align: top;
+    width: 90%;
+    zoom: 1
+}
+
+
+.single-evkite_events .secondary .evkite-events-venue-map {
+    width: 58%
+}
+
+.single-evkite_events .evkite-events-event-meta {
+    font-size: 13px
+}
+
+.single-evkite_events .evkite-events-event-meta dl {
+    margin: 0
+}
+
+.single-evkite_events #evkite-events-content .evkite-events-event-meta dt {
+    clear: left;
+    font-weight: 700;
+    line-height: 1;
+    list-style: none
+}
+
+.single-evkite_events #evkite-events-content .evkite-events-event-meta dd {
+    float: none;
+    line-height: 1.5;
+    list-style: none;
+    margin: 0 0 10px;
+    padding: 0
+}
+
+.evkite-events-event-meta .column, .evkite-events-event-meta .evkite-events-meta-group {
+    box-sizing: border-box;
+    display: inline-block;
+    float: left;
+    margin: 0 0 20px;
+    padding: 0 4%;
+    text-align: left;
+    vertical-align: top;
+    width: 33.3333%;
+    zoom: 1
+}
+
+.single-evkite_events .evkite-events-content {
+    max-width: 100%;
+    padding: 0;
+    width: 100%
+}
+
+.screen-reader-text {
+    clip: rect(1px, 1px, 1px, 1px);
+    height: 1px;
+    overflow: hidden;
+    position: absolute !important;
+    width: 1px;
+    word-wrap: normal !important
+}
+
+@media screen and (max-width:767px) {
+    .single-evkite_events .secondary .evkite-events-venue-map {
+        width: 90%
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .evkite-events-event-meta .column, .evkite-events-event-meta .evkite-events-meta-group {
+        float: none;
+        width: 100%;
+    }
+}
+
+
+/*Event plugin Änderungen*/
+
+h4.evkite-event-title {
+	font-size: 20px;
+	line-height: 1;
+	margin-bottom: 8px!important;
+}
+
+ol.evkite-list-widget {
+	padding-left: 3px;
+	margin-bottom: 10px;
+}
+
+.single-evkite_events .evkite-events-event-meta {
+    padding-top: 20px;
+}
+.single-evkite_events .evkite-events-event-image {
+    display: none;
+}
+.evkite-events-single-event-description {
+	font-size: 18px;
+}
+.evkite-clearfix h3.entry-title {
+	line-height: 1.2;
+	margin-top: 5px;
+}

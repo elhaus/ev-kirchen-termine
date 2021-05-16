@@ -1,0 +1,170 @@
+:root {
+    --featured-event-bg: #0ea0d7
+}
+
+.evkite-mini-calendar-event {
+    border-bottom: 1px dotted #2f2f2f;
+    margin-bottom: 5px;
+    overflow: hidden;
+    padding-bottom: 5px;
+    width: 100%
+}
+
+.evkite-mini-calendar-event .list-date {
+    background: #666;
+    box-sizing: border-box;
+    display: inline;
+    float: left;
+    font-weight: 700;
+    margin: 10px 5% 10px 0;
+    overflow: hidden;
+    padding: 3px;
+    text-align: center;
+    width: 15%
+}
+
+.evkite-mini-calendar-event .list-info {
+    display: inline;
+    float: left;
+    margin: 10px 0;
+    width: 80%
+}
+
+.evkite-mini-calendar-event .list-date .list-dayname {
+    background: #fff;
+    color: #666;
+    display: block;
+    font-size: 11px;
+    letter-spacing: .5px;
+    padding: 3px;
+    text-align: center;
+    text-transform: uppercase
+}
+
+.evkite-mini-calendar-event .list-date .list-daynumber {
+    color: #fff;
+    display: block;
+    font-size: 15px;
+    line-height: 1.6;
+    text-align: center;
+    width: 100%
+}
+
+.evkite-mini-calendar-event .list-info {
+    font-size: 13px;
+    line-height: 1.6
+}
+
+.evkite-mini-calendar-event .list-info h2 {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 18px;
+    margin-bottom: 10px;
+    margin-top: 0
+}
+
+@media screen and (min-width:59.6875em) {
+    .evkite-theme-twentyfifteen .evkite-events-countdown-widget div.evkite-countdown-number {
+        font-size: 2.1em
+    }
+}
+
+@media only screen and (max-width:767px) {
+    .evkite-this-week-widget-wrapper {
+        max-width: 400px;
+        margin: 0 auto
+    }
+
+    .evkite-this-week-widget-horizontal .evkite-this-week-widget-day, .evkite-this-week-widget-horizontal .evkite-this-week-widget-hide-weekends .evkite-this-week-widget-day {
+        width: 100%
+    }
+}
+
+.hestia-about-content .small_event_list {
+	max-width: 500px;
+	margin: auto;
+}
+.hestia-about-content .small_event_list a {
+	color: white;
+}
+
+
+
+/*Event Witget*/
+.evkite-mini-calendar-event .evkite-events-title {
+	font-size: 20px !important;
+	margin-bottom: 10px !important;
+}
+.evkite-mini-calendar-event .evkite-events-duration {
+	font-size: 16px !important;
+}
+.evkite-mini-calendar-event .list-date{
+	max-width: 50px;
+}
+.evkite-mini-calendar-event .evkite-event-image{
+	display: none;
+}
+.evkite-event-featured .evkite-mini-calendar-event .list-date {
+	background-color: #c81d26;
+}
+/*Event witget sidebar*/
+.blog-sidebar-wrapper h2 a {
+	font-size: 15px;
+	line-height: 0;
+}
+.blog-sidebar-wrapper .evkite-events-title {
+	margin-bottom: 2px !important;
+}
+.blog-sidebar-wrapper .evkite-events-duration {
+	font-size: 13px !important;
+}
+
+/*Event Featured nicht blau in Witget*/
+.evkite-mini-calendar-list-wrapper .evkite-event-featured .evkite-mini-calendar-event .evkite-events-title a {
+	color: #23527c !important;
+}
+.evkite-mini-calendar-list-wrapper .evkite-event-featured .evkite-mini-calendar-event{
+	background: transparent !important;
+	padding-bottom: 0px !important;
+}
+.evkite-mini-calendar-list-wrapper .evkite-event-featured {
+	background-color: transparent !important;
+}
+.evkite-mini-calendar-list-wrapper .evkite-event-featured .list-date{
+	display: inline !important;
+}
+.evkite-mini-calendar-list-wrapper .evkite-event-featured .list-info {
+	padding: 0px !important;
+	width: 80% !important;
+}
+.evkite-mini-calendar-list-wrapper .evkite-event-featured .evkite-events-duration {
+	color: #3C4858 !important;
+}
+
+
+/*Event Shortcode Custom Class for small*/
+.events-on-page-small {
+	max-width: 400px;
+}
+h5 {
+	font-weight: bold;
+}
+.hide_event_list .events-on-page-small {
+	display: none;
+}
+
+/*Startseite Events*/
+.hestia-subscribe .card {
+	background-color: transparent !important;
+	box-shadow: none;
+	-webkit-box-shadow: none;
+}
+.hestia-subscribe li {
+	border-bottom: solid 2px gray;
+}
+.hestia-subscribe a {
+	color: white !important;
+}
+.hestia-subscribe .evkite-events-duration {
+	color: white !important;
+}
