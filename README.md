@@ -5,13 +5,17 @@ The events will be handled as a custom post type.
 
 ## Shortcodes
 
-    [events_list ]
+#### Small list of events
+
+    [events_list channel="" limit="5" highlight="" event_ids=""]
  - channel (optional)
  - limit (optional) - default: 5
  - highlight (optional)
  - event_ids (optional)
 
-    [events_calendar channel="<channel-name>"]
+#### calendar view of events
+
+    [events_calendar channel=""]
  - channel (optional)
 
 ## YouTube-Live notification
