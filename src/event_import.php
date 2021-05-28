@@ -78,8 +78,11 @@ function ev_kirchen_termine_import_events() {
 
     foreach ($events as $event) {
 
+        if(empty($event["Veranstaltung"]["_event_LONG_DESCRIPTION"]))
+             $event["Veranstaltung"]["_event_LONG_DESCRIPTION"] = $event["Veranstaltung"]["_event_TEXTBOX_1"];
+
         $title          = $event["Veranstaltung"]["_event_TITLE"];
-        $text           = nl2br($event["Veranstaltung"]["_event_TEXTBOX_1"]);
+        $text           = nl2br($event["Veranstaltung"]["_event_LONG_DESCRIPTION"]);
 
         $text           = preg_replace(
                             '`([^"=\'>])(((http|https|ftp)://|www.)[^\s<]+[^\s<\.)])`i',
@@ -160,9 +163,9 @@ function ev_kirchen_termine_import_events() {
         $org_url        = $event["Veranstaltung"]["_user_URL"];
         $org_email      = $event["Veranstaltung"]["_user_EMAIL"];
 
-		$event_tags		= explode(",", $event["Veranstaltung"]["CHANNELS"]);
-		if($event["Veranstaltung"]["_event_HIGHLIGHT"] !== "low")
-			array_push($event_tags, "Event-Highlight");
+    		$event_tags		= explode(",", $event["Veranstaltung"]["CHANNELS"]);
+    		if($event["Veranstaltung"]["_event_HIGHLIGHT"] !== "low")
+    			array_push($event_tags, "Event-Highlight");
 
         $organizer      = "";
         if(!empty($event["Veranstaltung"]["_event_PERSON_ID"]))
@@ -220,7 +223,7 @@ function ev_kirchen_termine_import_events() {
             "name"=> $event["Veranstaltung"]["_event_TITLE"],
             "startDate"=> $event["Veranstaltung"]["START_RFC"],
             "endDate"=> $event["Veranstaltung"]["END_RFC"],
-            "description"=> $event["Veranstaltung"]["_event_TEXTBOX_1"],
+            "description"=> addslashes($event["Veranstaltung"]["_event_LONG_DESCRIPTION"]),
             "location"=> array(),
             "image"=> array(),
             "sameAs"=> $ev_kirchen_termine_webpage. "/veranstaltung_detail". $event["Veranstaltung"]["ID"]. ".html",
