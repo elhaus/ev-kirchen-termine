@@ -19,6 +19,7 @@ add_action( 'wp_enqueue_scripts', 'ev_kirchen_termin_load_plugin_css' );
 
 include_once plugin_dir_path( __FILE__ ) . 'src/event_posttype.php';
 include_once plugin_dir_path( __FILE__ ) . 'src/event_import.php';
+include_once plugin_dir_path( __FILE__ ) . 'src/event_dashboard_widget.php';
 
 
 

@@ -28,7 +28,7 @@ add_action('ev_kirchen_termine_import_events_task', 'ev_kirchen_termine_import_e
  *
 **/
 
-function ev_kirchen_termine_import_events() {
+function ev_kirchen_termine_import_events($force = false) {
 
     global $wpdb;
     $old_posts_meta = $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE meta_key LIKE '_ev_kirchen_termine_meta_key_id'");
@@ -137,6 +137,19 @@ function ev_kirchen_termine_import_events() {
                             </noscript>';
 
         $ical_link      = get_option("ev_kirchen_termine_webpage")."/ical-". $event["Veranstaltung"]["ID"];
+
+        $google_cal_link_parameter = array();
+        $google_cal_link_parameter["action"] = "TEMPLATE";
+        $google_cal_link_parameter["text"] = $event["Veranstaltung"]["_event_TITLE"];
+        $google_cal_link_parameter["dates"] = date("Ymd\THis", strtotime($start_datetime))."/".date("Ymd\THis", strtotime($end_datetime));
+        $google_cal_link_parameter["details"] = $event["Veranstaltung"]["_event_LONG_DESCRIPTION"];
+        $google_cal_link_parameter["location"] = $event["Veranstaltung"]["_place_STREET_NR"].", ".$event["Veranstaltung"]["_place_ZIP"]." ".$event["Veranstaltung"]["_place_CITY"];
+        $google_cal_link_parameter["trp"] = true;
+        $google_cal_link_parameter["ctz"] = "Europe/Berlin";
+
+        $google_cal_link = 'https://www.google.com/calendar/event?'.http_build_query($google_cal_link_parameter);
+
+
         $type           = implode(", ", explode(",", $event["Veranstaltung"]["_event_EVENTTYPE"]));
         $tags           = explode(",", $event["Veranstaltung"]["CHANNELS"]);
         foreach ($tags as $tag_key => $tag_value) {
@@ -352,7 +365,7 @@ function ev_kirchen_termine_import_events() {
                                 <p>'.$media.$text.$feedback.'</p>
                             </div>
                             <div class="evkite-events-cal-links">
-                                <a class="evkite-events-ical evkite-events-button" href="'.$ical_link.'" title=".ics Datei herunterladen">+ Exportiere iCal</a>
+                                <a class="evkite-events-ical evkite-events-button" href="'.$ical_link.'" title=".ics Datei herunterladen">+ Exportiere iCal</a> <a target="_blank" class="evkite-events-gcal evkite-events-button" href="'.$google_cal_link.'" title="zu Google Kalender hinzufügen">zu Google Kalender hinzufügen</a>
                             </div>
                             <div class="evkite-events-single-section evkite-events-event-meta primary evkite-clearfix">
                                 <div class="evkite-events-meta-group evkite-events-meta-group-details">
@@ -422,6 +435,7 @@ function ev_kirchen_termine_import_events() {
         ) {
             $args["ID"] = $current_id;
             wp_update_post( $args );
+            wp_set_post_tags($current_id, $args["tags_input"]);
         }
 
     }
