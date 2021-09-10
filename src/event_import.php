@@ -190,7 +190,7 @@ function ev_kirchen_termine_import_events($force = false) {
                                         <a >'.$event["Veranstaltung"]["_person_NAME"].'</a>
                                     </dd>
                                     <dt class="evkite-organizer-email-label">E-Mail:</dt>
-                                    <dd class="evkite-organizer-email">'.$event["Veranstaltung"]["_person_EMAIL"].'</dd>
+                                    <dd class="evkite-organizer-email"><a href="mailto:'.$event["Veranstaltung"]["_person_EMAIL"].'">'.$event["Veranstaltung"]["_person_EMAIL"].'</a></dd>
                                     <dt class="evkite-organizer-contact-label">Kontakt:</dt>
                                     <dd class="evkite-organizer-contact">'.$event["Veranstaltung"]["_person_CONTACT"].'</dd>
                                 </dl>
@@ -220,7 +220,8 @@ function ev_kirchen_termine_import_events($force = false) {
                                                     <span class="evkite-street-address">'.$place_street.'</span>
                                                     <span class="evkite-postal-code">'.$place_zip.'</span><span class="evkite-delimiter">, </span><span class="evkite-locality">'.$place_city.'</span>
                                                 </span>
-                                                <a class="evkite-events-gmap" rel="noopener" href="https://maps.google.com/maps?f=q&#038;source=s_q&#038;hl=en&#038;geocode=&#038;q='.$place_street.', '.$place_zip.' '.$place_city.'" title="Klicken, um Google Karte anzuzeigen" target="_blank">+ Google Karte</a>
+                                                <a class="evkite-events-gmap" rel="noopener" href="https://maps.google.com/maps?f=q&#038;source=s_q&#038;hl=en&#038;geocode=&#038;q='.urlencode($place_street.', '.$place_zip.' '.$place_city).'" title="Klicken, um Google Karte anzuzeigen" target="_blank">+ Google Maps</a>
+                                                <a class="evkite-events-gmap hide-on-non-ios" rel="noopener" href="http://maps.apple.com/?q='.urlencode($place_street.', '.$place_zip.' '.$place_city).'" title="Klicken, um Apple Karten anzuzeigen" target="_blank">+ Apple Karten</a>
                                             </address>
                                         </dd>
                                     </dl>
@@ -396,7 +397,7 @@ function ev_kirchen_termine_import_events($force = false) {
                                         <dt class="evkite-organizer-tel-label">Kontakt:</dt>
                                         <dd class="evkite-organizer-tel">'.$org_contact.'</dd>
                                         <dt class="evkite-organizer-email-label">E-Mail:</dt>
-                                        <dd class="evkite-organizer-email">'.$org_email.'</dd>
+                                        <dd class="evkite-organizer-email"><a href="mailto:'.$org_email.'">'.$org_email.'</a></dd>
                                         <dt class="evkite-organizer-url-label">Website:</dt>
                                         <dd class="evkite-organizer-url">
                                             <a href="'.$org_url.'" target="_self">'.$org_url.'</a>

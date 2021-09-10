@@ -336,3 +336,18 @@ ol.evkite-list-widget {
 	line-height: 1.2;
 	margin-top: 5px;
 }
+
+
+@supports not (-webkit-touch-callout: none) {
+  /* CSS for other than iOS devices */
+  .hide-on-non-ios {
+      display: none;
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  /* CSS specific to iOS devices */
+  .hide-on-ios {
+      display: none;
+  }
+}
