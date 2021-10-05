@@ -120,6 +120,10 @@ function ev_kirchen_termine_create_calendar($atts) {
         'channel' => "",
     ), $atts );
 
+    if(empty($a["channel"]) && !empty($_GET["channel"])) {
+        $a["channel"] = $_GET["channel"];
+    }
+
     $args = array(
         'post_type'  => 'event',
         'tag'        => $a["channel"],

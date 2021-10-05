@@ -153,7 +153,7 @@ function ev_kirchen_termine_import_events($force = false) {
         $type           = implode(", ", explode(",", $event["Veranstaltung"]["_event_EVENTTYPE"]));
         $tags           = explode(",", $event["Veranstaltung"]["CHANNELS"]);
         foreach ($tags as $tag_key => $tag_value) {
-            $tags[$tag_key] = '<a href="'.get_site_url().'/tag/'.sanitize_title($tag_value).'">'.$tag_value.'</a>';
+            $tags[$tag_key] = '<a href="'.get_site_url().'/events/?channel='.sanitize_title($tag_value).'">'.$tag_value.'</a>';
         }
         $tags           = implode(", ", $tags);
 
@@ -192,7 +192,7 @@ function ev_kirchen_termine_import_events($force = false) {
                                     <dt class="evkite-organizer-email-label">E-Mail:</dt>
                                     <dd class="evkite-organizer-email"><a href="mailto:'.$event["Veranstaltung"]["_person_EMAIL"].'">'.$event["Veranstaltung"]["_person_EMAIL"].'</a></dd>
                                     <dt class="evkite-organizer-contact-label">Kontakt:</dt>
-                                    <dd class="evkite-organizer-contact">'.$event["Veranstaltung"]["_person_CONTACT"].'</dd>
+                                    <dd class="evkite-organizer-contact">'.nl2br($event["Veranstaltung"]["_person_CONTACT"]).'</dd>
                                 </dl>
                             </div>';
 
@@ -217,9 +217,10 @@ function ev_kirchen_termine_import_events($force = false) {
                                         <dd class="evkite-venue-location">
                                             <address class="evkite-events-address">
                                                 <span class="evkite-address">
-                                                    <span class="evkite-street-address">'.$place_street.'</span>
+                                                    <span class="evkite-street-address">'.$place_street.'</span></br>
                                                     <span class="evkite-postal-code">'.$place_zip.'</span><span class="evkite-delimiter">, </span><span class="evkite-locality">'.$place_city.'</span>
                                                 </span>
+                                                </br></br>
                                                 <a class="evkite-events-gmap" rel="noopener" href="https://maps.google.com/maps?f=q&#038;source=s_q&#038;hl=en&#038;geocode=&#038;q='.urlencode($place_street.', '.$place_zip.' '.$place_city).'" title="Klicken, um Google Karte anzuzeigen" target="_blank">+ Google Maps</a>
                                                 <a class="evkite-events-gmap hide-on-non-ios" rel="noopener" href="http://maps.apple.com/?q='.urlencode($place_street.', '.$place_zip.' '.$place_city).'" title="Klicken, um Apple Karten anzuzeigen" target="_blank">+ Apple Karten</a>
                                             </address>
@@ -361,12 +362,14 @@ function ev_kirchen_termine_import_events($force = false) {
                         <div class="evkite-events-schedule evkite-clearfix">
                             <h2>'.$timespan.'</h2>
                         </div>
+                        </br></br>
                         <div class="evkite_events type-evkite_events status-publish hentry">
                             <div class="evkite-events-single-event-description evkite-events-content">
                                 <p>'.$media.$text.$feedback.'</p>
                             </div>
                             <div class="evkite-events-cal-links">
-                                <a class="evkite-events-ical evkite-events-button" href="'.$ical_link.'" title=".ics Datei herunterladen">+ Exportiere iCal</a> <a target="_blank" class="evkite-events-gcal evkite-events-button" href="'.$google_cal_link.'" title="zu Google Kalender hinzufügen">zu Google Kalender hinzufügen</a>
+                                <a class="evkite-events-ical evkite-events-button" href="'.$ical_link.'" title=".ics Datei herunterladen">+ Exportiere iCal</a>
+                                <a target="_blank" class="evkite-events-gcal evkite-events-button" href="'.$google_cal_link.'" title="zu Google Kalender hinzufügen">zu Google Kalender hinzufügen</a>
                             </div>
                             <div class="evkite-events-single-section evkite-events-event-meta primary evkite-clearfix">
                                 <div class="evkite-events-meta-group evkite-events-meta-group-details">
@@ -395,7 +398,7 @@ function ev_kirchen_termine_import_events($force = false) {
                                             <a >'.$org_name.'</a>
                                         </dd>
                                         <dt class="evkite-organizer-tel-label">Kontakt:</dt>
-                                        <dd class="evkite-organizer-tel">'.$org_contact.'</dd>
+                                        <dd class="evkite-organizer-tel">'.nl2br($org_contact).'</dd>
                                         <dt class="evkite-organizer-email-label">E-Mail:</dt>
                                         <dd class="evkite-organizer-email"><a href="mailto:'.$org_email.'">'.$org_email.'</a></dd>
                                         <dt class="evkite-organizer-url-label">Website:</dt>

@@ -18,6 +18,7 @@ add_action( 'wp_enqueue_scripts', 'ev_kirchen_termin_load_plugin_css' );
 
 
 include_once plugin_dir_path( __FILE__ ) . 'src/event_posttype.php';
+include_once plugin_dir_path( __FILE__ ) . 'src/event_share_button.php';
 include_once plugin_dir_path( __FILE__ ) . 'src/event_import.php';
 include_once plugin_dir_path( __FILE__ ) . 'src/event_dashboard_widget.php';
 
@@ -53,6 +54,7 @@ add_filter('single_template', function($original) {
 
 
 include_once plugin_dir_path( __FILE__ ) . 'src/event_shortcode.php';
+include_once plugin_dir_path( __FILE__ ) . 'src/event_archive.php';
 
 
 add_action( 'pre_get_posts', function ( $q )
@@ -71,5 +73,4 @@ add_action( 'pre_get_posts', function ( $q )
 });
 
 
-include_once plugin_dir_path( __FILE__ ) . 'src/yt_live_check.php';
 include_once plugin_dir_path( __FILE__ ) . 'src/show_page_text.php';

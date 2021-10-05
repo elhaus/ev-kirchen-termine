@@ -21,10 +21,8 @@ function ev_kirchen_termine_manage_settings() {
         update_option("ev_kirchen_termine_vid", $ev_kirchen_termine_vid);
         $ev_kirchen_termine_event_template = esc_attr($_POST["ev_kirchen_termine_event_template"]);
         update_option("ev_kirchen_termine_event_template", $ev_kirchen_termine_event_template);
-        $ev_kirchen_termine_yt_api_key = esc_attr($_POST["ev_kirchen_termine_yt_api_key"]);
-        update_option("ev_kirchen_termine_yt_api_key", $ev_kirchen_termine_yt_api_key);
-        $ev_kirchen_termine_yt_channel = esc_attr($_POST["ev_kirchen_termine_yt_channel"]);
-        update_option("ev_kirchen_termine_yt_channel", $ev_kirchen_termine_yt_channel);
+        $ev_kirchen_termine_show_share_icons = isset($_POST["ev_kirchen_termine_show_share_icons"]) ? 1 : 0;
+        update_option("ev_kirchen_termine_show_share_icons", $ev_kirchen_termine_show_share_icons);
     }
     ?>
             <form method="POST" action="">
@@ -69,28 +67,21 @@ function ev_kirchen_termine_manage_settings() {
                     </tr>
                     <tr valign="top">
                         <th scope="row">
-                            <label for="ev_kirchen_termine_yt_api_key">
-                                YouTube API-Key:
-                            </label>
                         </th>
                         <td>
-                            <input type="text" name="ev_kirchen_termine_yt_api_key" size="25" value="<?php echo get_option("ev_kirchen_termine_yt_api_key"); ?>" />
-                        </td>
-                    </tr>
-                    <tr valign="top">
-                        <th scope="row">
-                            <label for="ev_kirchen_termine_yt_channel">
-                                YouTube channel-ID:
+                            <label for="ev_kirchen_termine_show_share_icons">
+                                <input name="ev_kirchen_termine_show_share_icons" type="checkbox" id="ev_kirchen_termine_show_share_icons" <?php
+                                    if(get_option("ev_kirchen_termine_show_share_icons")) {
+                                        echo "checked";
+                                    } ?>>
+                                Aktiviere "Teilen"-Links auf Veranstaltungsseite
                             </label>
-                        </th>
-                        <td>
-                            <input type="text" name="ev_kirchen_termine_yt_channel" size="25" value="<?php echo get_option("ev_kirchen_termine_yt_channel"); ?>" />
                         </td>
                     </tr>
                 </table>
                 <input type="hidden" name="update_settings" value="Y" />
                 <p>
-                    <input type="submit" value="Save settings" class="button-primary"/>
+                    <input type="submit" value="Einstellungen speichern" class="button-primary"/>
                 </p>
             </form>
         </div>
@@ -145,7 +136,7 @@ function ev_kirchen_termine_custom_post_type() {
         'show_in_admin_bar' => false,
         'menu_position' => 5,
         'can_export' => true,
-        'has_archive' => true,
+        'has_archive' => false,
         'exclude_from_search' => false,
         'publicly_queryable' => true,
         'rewrite' => $rewrite,
