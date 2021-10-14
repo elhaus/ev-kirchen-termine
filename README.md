@@ -17,7 +17,3 @@ The events will be handled as a custom post type.
 
     [events_calendar channel=""]
  - channel (optional)
-
-## YouTube-Live notification
-
-If a YouTube api-key and a the YouTube channelID were configured, a notification will popup if the channel is live.
