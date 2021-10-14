@@ -102,6 +102,8 @@ function create_small_event_list( $atts) {
 
    }
 
+   $return .= '<a href="'.get_site_url().'/events/?channel='.$a["channel"].'">mehr Veranstaltungen...</a>';
+
    $return .= "</div>";
 
    return $return;

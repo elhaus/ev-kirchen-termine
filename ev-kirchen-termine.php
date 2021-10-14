@@ -54,6 +54,7 @@ add_filter('single_template', function($original) {
 
 
 include_once plugin_dir_path( __FILE__ ) . 'src/event_shortcode.php';
+include_once plugin_dir_path( __FILE__ ) . 'src/event_widget.php';
 include_once plugin_dir_path( __FILE__ ) . 'src/event_archive.php';
 
 
