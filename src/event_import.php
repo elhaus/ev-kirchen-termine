@@ -82,6 +82,12 @@ function ev_kirchen_termine_import_events($force = false) {
              $event["Veranstaltung"]["_event_LONG_DESCRIPTION"] = $event["Veranstaltung"]["_event_TEXTBOX_1"];
 
         $title          = $event["Veranstaltung"]["_event_TITLE"];
+
+        $subtitle_html  = "";
+        if(!empty($event["Veranstaltung"]["SUBTITLE"]))
+            $subtitle_html  = '<h2 class="evkite-events-single-event-subtitle">'.$event["Veranstaltung"]["SUBTITLE"].'</h2>';
+
+
         $text           = nl2br($event["Veranstaltung"]["_event_LONG_DESCRIPTION"]);
 
         $text           = preg_replace(
@@ -359,6 +365,7 @@ function ev_kirchen_termine_import_events($force = false) {
                             <a href="'.get_site_url().'/events/">&laquo;Alle Veranstaltungen</a>
                         </p>
                         <h1 class="evkite-events-single-event-title">'.$title.'</h1>
+                        '.$subtitle_html.'
                         <div class="evkite-events-schedule evkite-clearfix">
                             <h2>'.$timespan.'</h2>
                         </div>
