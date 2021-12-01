@@ -1,20 +1,28 @@
 <?php
 /**
  * Plugin Name:       Ev. Kirchen Termine
- * Plugin URI:        https://github.com/elhaus
+ * Plugin URI:        https://github.com/elhaus/ev-kirchen-termine
  * Description:       Zeige Veranstaltungen aus dem Veranstaltungskalendar der Ev. Kirchen
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Jan Elhaus
  * Author URI:        https://github.com/elhaus
 **/
 
-function ev_kirchen_termin_load_plugin_css() {
+function ev_kirchen_termin_load_plugin_css_js() {
     $plugin_url = plugin_dir_url( __FILE__ );
 
-    wp_enqueue_style( 'events', $plugin_url . 'events.css' );
+    wp_enqueue_style( 'ev_kirchen_events_css', $plugin_url . 'events.css' );
+
+    wp_enqueue_script('jquery');
+    wp_register_script( 'ev_kirchen_events_js', $plugin_url . 'events.js', array('jquery') , "1.0.1" );
+    wp_localize_script( 'ev_kirchen_events_js', 'ev_kirchen_events_js_data', array(
+        'ajaxurl' => $plugin_url,
+    ));
+    wp_enqueue_script( 'ev_kirchen_events_js' );
+
 }
 
-add_action( 'wp_enqueue_scripts', 'ev_kirchen_termin_load_plugin_css' );
+add_action( 'wp_enqueue_scripts', 'ev_kirchen_termin_load_plugin_css_js' );
 
 
 include_once plugin_dir_path( __FILE__ ) . 'src/event_posttype.php';

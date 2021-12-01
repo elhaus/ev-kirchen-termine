@@ -17,3 +17,8 @@ The events will be handled as a custom post type.
 
     [events_calendar channel=""]
  - channel (optional)
+
+## Installation
+
+ 1. extract the plugin data to the wordpress dirotory "/wp-content/plugins/ev-kirchen-termine/" or upload the plugin via the wordpress plugin menu (zip file)
+ 2. go to Settings -> Ev. Kirchen Termine Einstellungen, configure event source website and vid

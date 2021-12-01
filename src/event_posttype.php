@@ -15,14 +15,22 @@ function ev_kirchen_termine_manage_settings() {
             <h2>Ev. Kirchen Termine Einstellungen</h2>
     <?php
     if (isset($_POST["update_settings"])) {
+
         $ev_kirchen_termine_webpage = esc_attr($_POST["ev_kirchen_termine_webpage"]);
         update_option("ev_kirchen_termine_webpage", $ev_kirchen_termine_webpage);
+
         $ev_kirchen_termine_vid = esc_attr($_POST["ev_kirchen_termine_vid"]);
         update_option("ev_kirchen_termine_vid", $ev_kirchen_termine_vid);
+
         $ev_kirchen_termine_event_template = esc_attr($_POST["ev_kirchen_termine_event_template"]);
         update_option("ev_kirchen_termine_event_template", $ev_kirchen_termine_event_template);
+
         $ev_kirchen_termine_show_share_icons = isset($_POST["ev_kirchen_termine_show_share_icons"]) ? 1 : 0;
         update_option("ev_kirchen_termine_show_share_icons", $ev_kirchen_termine_show_share_icons);
+
+        $ev_kirchen_termine_show_share_icons = isset($_POST["ev_kirchen_termine_show_feedback_count"]) ? 1 : 0;
+        update_option("ev_kirchen_termine_show_feedback_count", $ev_kirchen_termine_show_share_icons);
+
     }
     ?>
             <form method="POST" action="">
@@ -49,7 +57,7 @@ function ev_kirchen_termine_manage_settings() {
                     </tr>
                     <tr valign="top">
                         <th scope="row">
-                            <label for="ev_kirchen_termine_event_template">Veranstaltungsseiten Template</label>
+                            <label for="ev_kirchen_termine_event_template">Veranstaltungsseiten Template:</label>
                         </th>
                         <td>
                             <select name="ev_kirchen_termine_event_template" id="ev_kirchen_termine_event_template">
@@ -67,6 +75,7 @@ function ev_kirchen_termine_manage_settings() {
                     </tr>
                     <tr valign="top">
                         <th scope="row">
+                            Weitere Einstellungen:
                         </th>
                         <td>
                             <label for="ev_kirchen_termine_show_share_icons">
@@ -75,6 +84,13 @@ function ev_kirchen_termine_manage_settings() {
                                         echo "checked";
                                     } ?>>
                                 Aktiviere "Teilen"-Links auf Veranstaltungsseite
+                            </label></br>
+                            <label for="ev_kirchen_termine_show_feedback_count">
+                                <input name="ev_kirchen_termine_show_feedback_count" type="checkbox" id="ev_kirchen_termine_show_feedback_count" <?php
+                                    if(get_option("ev_kirchen_termine_show_feedback_count")) {
+                                        echo "checked";
+                                    } ?>>
+                                Anmelde/Rückmeldeformular mit Anzahl der Restplätze
                             </label>
                         </td>
                     </tr>

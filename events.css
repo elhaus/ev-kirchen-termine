@@ -358,3 +358,9 @@ ol.evkite-list-widget {
       display: none;
   }
 }
+
+
+.event_feedback_counter {
+    text-transform: none;
+    display: none;
+}

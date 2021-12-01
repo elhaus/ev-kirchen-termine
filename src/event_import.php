@@ -134,7 +134,7 @@ function ev_kirchen_termine_import_events($force = false) {
             $feedback   = ' <br/>
                             <a target="_blank" title="Anmelden" class="btn btn-primary"
                                 onclick=\'window.open("'.$feedback_link.'", "Rückmeldeformular","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=850,height=650,top=10,left=200");\'>
-                                zur Anmeldung
+                                zur Anmeldung <span class="event_feedback_counter" event_id="'.$event["Veranstaltung"]["ID"].'">(noch %count% verfügbare Plätze)</span>
                             </a>
                             <noscript>
                                 <a target="_blank" href="'.$feedback_link.'" title="Anmelden" class="btn btn-primary">
