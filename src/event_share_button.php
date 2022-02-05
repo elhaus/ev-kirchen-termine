@@ -60,8 +60,8 @@ function social_icons() {
         'whatsapp://send'
     );
 
-    return '<div class="col-md-12">
-                <div class="entry-social">
+    $return = '<div class="col-md-12">
+                <div class="entry-social evkite-entry-social">
 
                     <a target="_blank"
                         class="btn btn-just-icon btn-round" style="background-color: #25D366"
@@ -88,5 +88,9 @@ function social_icons() {
 
                 </div>
             </div>';
+
+    $return = str_replace(array("\n","\r","\t"), "", $return);
+
+    return $return;
 
 }

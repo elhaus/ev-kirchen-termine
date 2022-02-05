@@ -33,8 +33,10 @@ function ev_kirchen_termine_import_events($force = false) {
     global $wpdb;
     $old_posts_meta = $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE meta_key LIKE '_ev_kirchen_termine_meta_key_id'");
 
+    $events = array();
+
     $parameter["itemsPerPage"] = 5000;
-    $parameter["vid"] = get_option("ev_kirchen_termine_vid");
+    $parameter["highlight"] = "all";
     $parameter["start"] = date("Y-m-d", strtotime("-90 days"));
     $parameter["end"] = date("Y-m-d", strtotime("+240 days"));
 
@@ -43,17 +45,54 @@ function ev_kirchen_termine_import_events($force = false) {
     if(empty($ev_kirchen_termine_webpage))
         return false;
 
-    $url = $ev_kirchen_termine_webpage.'/json?'.http_build_query($parameter);
+    # Get events from vid
+    if(!empty(get_option("ev_kirchen_termine_vid"))) {
 
-    //read json file from url in php
-    $readJSONFile = file_get_contents($url);
+        $parameter["vid"] = get_option("ev_kirchen_termine_vid");
 
-    //convert json to array in php
-    $events = json_decode($readJSONFile, TRUE);
+        if(!empty(get_option("ev_kirchen_termine_vid_eventtype_filter")))
+            $parameter["eventtype"] = get_option("ev_kirchen_termine_vid_eventtype_filter");
+
+        $url = $ev_kirchen_termine_webpage.'/json?'.http_build_query($parameter);
+
+        //read json file from url in php
+        $readJSONFile = file_get_contents($url);
+
+        //convert json to array in php
+        $events = array_merge($events, json_decode($readJSONFile, TRUE));
+
+    }
+
+    # Get events from region
+    if(!empty(get_option("ev_kirchen_termine_region"))) {
+
+        $parameter["region"] = get_option("ev_kirchen_termine_region");
+        $parameter["vid"] = "all";
+        $parameter["eventtype"] = "all";
+
+        if(!empty(get_option("ev_kirchen_termine_region_eventtype_filter")))
+            $parameter["eventtype"] = get_option("ev_kirchen_termine_region_eventtype_filter");
+
+        $url = $ev_kirchen_termine_webpage.'/json?'.http_build_query($parameter);
+
+        //read json file from url in php
+        $readJSONFile = file_get_contents($url);
+
+        //convert json to array in php
+        $events = array_merge($events, json_decode($readJSONFile, TRUE));
+
+    }
+
+    $events = array_map("unserialize", array_unique(array_map("serialize", $events)));
 
     $date_format = get_option( 'date_format' );
     $time_format = get_option( 'time_format' );
 
+
+
+    if(empty($events)) {
+        return false;
+    }
 
     // For Iframe
     remove_filter('content_save_pre', 'wp_filter_post_kses');
@@ -202,6 +241,7 @@ function ev_kirchen_termine_import_events($force = false) {
                                 </dl>
                             </div>';
 
+        $map = "";
         if(!empty($geo_long) && !empty($geo_lat))
             $map        = '<div class="evkite-events-venue-map">
                                 <div id="evkite-events-gmap-0" style="height: 350px; width: 100%">
@@ -369,7 +409,7 @@ function ev_kirchen_termine_import_events($force = false) {
                         <div class="evkite-events-schedule evkite-clearfix">
                             <h2>'.$timespan.'</h2>
                         </div>
-                        </br></br>
+                        </br>
                         <div class="evkite_events type-evkite_events status-publish hentry">
                             <div class="evkite-events-single-event-description evkite-events-content">
                                 <p>'.$media.$text.$feedback.'</p>
@@ -402,7 +442,7 @@ function ev_kirchen_termine_import_events($force = false) {
                                     <dl>
                                         <dt style="display:none;"></dt>
                                         <dd class="evkite-organizer">
-                                            <a >'.$org_name.'</a>
+                                            <a href="'.get_site_url().'/events/?vid='.$event["Veranstaltung"]["_event_USER_ID"].'">'.$org_name.'</a>
                                         </dd>
                                         <dt class="evkite-organizer-tel-label">Kontakt:</dt>
                                         <dd class="evkite-organizer-tel">'.nl2br($org_contact).'</dd>
@@ -425,9 +465,12 @@ function ev_kirchen_termine_import_events($force = false) {
                 '_ev_kirchen_termine_meta_key_start' => $start_datetime,
                 '_ev_kirchen_termine_meta_key_end' => $end_datetime,
                 '_ev_kirchen_termine_meta_key_id' => (int) $event["Veranstaltung"]["ID"],
+                '_ev_kirchen_termine_meta_key_vid' => (int) $event["Veranstaltung"]["_event_USER_ID"],
                 '_ev_kirchen_termine_meta_key_highlight' => ($event["Veranstaltung"]["_event_HIGHLIGHT"] !== "low"),
             )
         );
+
+        $args["post_content"] = str_replace(array("\n","\r","\t"), "", $args["post_content"]);
 
         $current_id = NULL;
 

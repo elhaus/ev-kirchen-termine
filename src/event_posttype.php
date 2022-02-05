@@ -22,6 +22,15 @@ function ev_kirchen_termine_manage_settings() {
         $ev_kirchen_termine_vid = esc_attr($_POST["ev_kirchen_termine_vid"]);
         update_option("ev_kirchen_termine_vid", $ev_kirchen_termine_vid);
 
+        $ev_kirchen_termine_vid_eventtype_filter = esc_attr($_POST["ev_kirchen_termine_vid_eventtype_filter"]);
+        update_option("ev_kirchen_termine_vid_eventtype_filter", $ev_kirchen_termine_vid_eventtype_filter);
+
+        $ev_kirchen_termine_region = esc_attr($_POST["ev_kirchen_termine_region"]);
+        update_option("ev_kirchen_termine_region", $ev_kirchen_termine_region);
+
+        $ev_kirchen_termine_region_eventtype_filter = esc_attr($_POST["ev_kirchen_termine_region_eventtype_filter"]);
+        update_option("ev_kirchen_termine_region_eventtype_filter", $ev_kirchen_termine_region_eventtype_filter);
+
         $ev_kirchen_termine_event_template = esc_attr($_POST["ev_kirchen_termine_event_template"]);
         update_option("ev_kirchen_termine_event_template", $ev_kirchen_termine_event_template);
 
@@ -34,6 +43,8 @@ function ev_kirchen_termine_manage_settings() {
     }
     ?>
             <form method="POST" action="">
+                <p>Für Webseiten von Kirchengemeinden tragen Sie bitte die vid ein und lassen Sie das Feld region leer. Für Webseiten von Kirchenkreisen tragen Sie in vid "all" ein und füllen Sie region entsprechend des Kirchenkreises aus.</p>
+                <p>Der Katergorie Filter bezeiht sich auf den "eventtype". Lassen Sie das Feld leer wir nicht weiter gefiltert, tragen Sie z.B. 1 ein werden nur Gottesdienste importiert. Genauere Angaben unter <a href="http://handbuch.evangelische-termine.de/anzeige-im-internet/ausgabe-parameter">http://handbuch.evangelische-termine.de/anzeige-im-internet/ausgabe-parameter</a></p>
                 <table class="form-table">
                     <tr valign="top">
                         <th scope="row">
@@ -53,6 +64,36 @@ function ev_kirchen_termine_manage_settings() {
                         </th>
                         <td>
                             <input type="text" name="ev_kirchen_termine_vid" size="25" value="<?php echo get_option("ev_kirchen_termine_vid"); ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">
+                            <label for="ev_kirchen_termine_vid_eventtype_filter">
+                                Katergorie Filter (vid) [eventtype]:
+                            </label>
+                        </th>
+                        <td>
+                            <input type="text" name="ev_kirchen_termine_vid_eventtype_filter" size="25" value="<?php echo get_option("ev_kirchen_termine_vid_eventtype_filter"); ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">
+                            <label for="ev_kirchen_termine_region">
+                                Kirchenkreis/Dekanats-Nummer [region]:
+                            </label>
+                        </th>
+                        <td>
+                            <input type="text" name="ev_kirchen_termine_region" size="25" value="<?php echo get_option("ev_kirchen_termine_region"); ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">
+                            <label for="ev_kirchen_termine_region_eventtype_filter">
+                                Katergorie Filter (region) [eventtype]:
+                            </label>
+                        </th>
+                        <td>
+                            <input type="text" name="ev_kirchen_termine_region_eventtype_filter" size="25" value="<?php echo get_option("ev_kirchen_termine_region_eventtype_filter"); ?>" />
                         </td>
                     </tr>
                     <tr valign="top">
@@ -208,6 +249,13 @@ abstract class ev_kirchen_termine_Meta_Box {
                 $_POST['event_id']
             );
         }
+        if ( array_key_exists( 'event_vid', $_POST ) ) {
+            update_post_meta(
+                $post_id,
+                '_ev_kirchen_termine_meta_key_vid',
+                $_POST['event_vid']
+            );
+        }
     }
 
 
@@ -220,6 +268,7 @@ abstract class ev_kirchen_termine_Meta_Box {
         $event_start = date("Y-m-d\TH:i", strtotime(get_post_meta( $post->ID, '_ev_kirchen_termine_meta_key_start', true )));
         $event_end = date("Y-m-d\TH:i", strtotime(get_post_meta( $post->ID, '_ev_kirchen_termine_meta_key_end', true )));
         $event_id = get_post_meta( $post->ID, '_ev_kirchen_termine_meta_key_id', true );
+        $event_vid = get_post_meta( $post->ID, '_ev_kirchen_termine_meta_key_vid', true );
         ?>
         <table class="form-table">
             <tr valign="top">
@@ -244,6 +293,14 @@ abstract class ev_kirchen_termine_Meta_Box {
                 </th>
                 <td>
                     <input name="event_id" id="event_id" type="number" class="postbox" value="<?php echo $event_id; ?>"></input>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row">
+                    <label for="event_id">Veranstalter-ID</label>
+                </th>
+                <td>
+                    <input name="event_id" id="event_vid" type="number" class="postbox" value="<?php echo $event_vid; ?>"></input>
                 </td>
             </tr>
         </table>

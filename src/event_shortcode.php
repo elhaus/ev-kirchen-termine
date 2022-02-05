@@ -12,6 +12,7 @@ function create_small_event_list( $atts) {
        'limit' => 5,
 	   'highlight' => "none",
 	   'event_ids' => "",
+       'vid' => "",
     ), $atts );
 
     $args = array(
@@ -45,6 +46,13 @@ function create_small_event_list( $atts) {
                 'type'    => 'DATETIME',
             );
 	}
+
+    if(!empty($a["vid"]))
+		$args['meta_query']["vid"] = array(
+			'key'	 	=> '_ev_kirchen_termine_meta_key_vid',
+			'value'	  	=> explode(',', $a["vid"]),
+			'compare' 	=> 'IN',
+		);
 
 	if($a["highlight"] == "filter") {
 		$args['meta_query']["highlight"] = array(
@@ -102,7 +110,7 @@ function create_small_event_list( $atts) {
 
    }
 
-   $return .= '<a href="'.get_site_url().'/events/?channel='.$a["channel"].'">mehr Veranstaltungen...</a>';
+   $return .= '<a href="'.get_site_url().'/events/?channel='.$a["channel"].'&vid='.$a["vid"].'">mehr Veranstaltungen...</a>';
 
    $return .= "</div>";
 
@@ -120,10 +128,14 @@ function ev_kirchen_termine_create_calendar($atts) {
 
     $a = shortcode_atts( array (
         'channel' => "",
+        'vid' => "",
     ), $atts );
 
     if(empty($a["channel"]) && !empty($_GET["channel"])) {
         $a["channel"] = $_GET["channel"];
+    }
+    if(empty($a["vid"]) && !empty($_GET["vid"])) {
+        $a["vid"] = $_GET["vid"];
     }
 
     $args = array(
@@ -131,6 +143,13 @@ function ev_kirchen_termine_create_calendar($atts) {
         'tag'        => $a["channel"],
         'posts_per_page' => 600,
     );
+
+    if(!empty($a["vid"]))
+		$args['meta_query']["vid"] = array(
+			'key'	 	=> '_ev_kirchen_termine_meta_key_vid',
+			'value'	  	=> explode(',', $a["vid"]),
+			'compare' 	=> 'IN',
+		);
 
     $query = new WP_Query( $args );
     $events = $query->posts;

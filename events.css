@@ -156,7 +156,7 @@ a.evkite-events-gcal, a.evkite-events-ical {
 }
 
 #evkite-events-content {
-    margin-bottom: 48px;
+    margin-bottom: 0px;
     padding: 2px 0;
     position: relative
 }
@@ -363,4 +363,40 @@ ol.evkite-list-widget {
 .event_feedback_counter {
     text-transform: none;
     display: none;
+}
+
+.evkite-events-single-event-description .btn {
+    border-radius: 3px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 33px;
+    padding-right: 33px;
+    color: #fff;
+    background-color: #999999;
+    display: inline-block;
+    margin: 10px 1px;
+}
+
+
+@media (min-width: 992px) {
+    .evkite-entry-social {
+        text-align: right;
+    }
+}
+
+
+.evkite-entry-social .btn.btn-just-icon {
+    padding: 12px;
+    color: #fff;
+    background-color: #999999;
+    margin: 10px 1px;
+    display: inline-block;
+}
+
+.evkite-entry-social .btn.btn-round {
+    border-radius: 30px;
+}
+.evkite-entry-social .btn.btn-just-icon {
+    font-size: 20px;
+    line-height: 20px;
 }
