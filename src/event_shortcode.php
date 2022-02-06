@@ -71,7 +71,7 @@ function create_small_event_list( $atts) {
 
     $return = '<div class="small_event_list">';
     if(empty($events))
-        $return .= "Es stehen aktuell keine Veranstaltungen an.";
+        $return .= "Es stehen aktuell keine Veranstaltungen an.<br/>";
 
     foreach ($events as $event) {
 
