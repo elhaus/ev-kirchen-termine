@@ -1,18 +1,19 @@
+var __ = wp.i18n.__;
 
 
 var el = wp.element.createElement,
     registerBlockType = wp.blocks.registerBlockType,
-    ServerSideRender = wp.components.ServerSideRender,
+    ServerSideRender = wp.serverSideRender,
     TextControl = wp.components.TextControl,
 	PanelBody = wp.components.PanelBody,
 	PanelRow = wp.components.PanelRow,
 	RangeControl = wp.components.RangeControl,
     TextareaControl = wp.components.TextareaControl,
-    InspectorControls = wp.editor.InspectorControls;
+    InspectorControls = wp.blockEditor.InspectorControls;
 
 
 registerBlockType( 'evkirchentermin/small-event-list', {
-  title: 'small event list',
+  title: __('small event list', 'ev-kirchen-termine'),
   icon: "calendar",
   category: 'widgets',
 
@@ -66,12 +67,12 @@ registerBlockType( 'evkirchentermin/small-event-list', {
       el( InspectorControls,
           {}, [
 
-			el( PanelBody, { title: 'Settings', initialOpen: true },
+			el( PanelBody, { title: __('Settings', 'ev-kirchen-termine'), initialOpen: true },
 
 				el( PanelRow, {},
 
 					el( TextControl, {
-					  label: 'Channel Filter',
+					  label: __('Channel Filter', 'ev-kirchen-termine'),
 					  value: props.attributes.channel,
 					  onChange: ( value ) => {
 						props.setAttributes( { channel: value } );
@@ -83,7 +84,7 @@ registerBlockType( 'evkirchentermin/small-event-list', {
 				el( PanelRow, {},
 
 					el( RangeControl, {
-					  label: 'Count',
+					  label: __('Count', 'ev-kirchen-termine'),
 					  min: 1,
 					  max: 20,
 					  value: props.attributes.limit,
@@ -97,7 +98,7 @@ registerBlockType( 'evkirchentermin/small-event-list', {
 				el( PanelRow, {},
 
 					el( TextControl, {
-					  label: 'Include Event-IDs',
+					  label: __('Include Event-IDs', 'ev-kirchen-termine'),
 					  value: props.attributes.event_ids,
 					  onChange: ( value ) => {
 						props.setAttributes( { event_ids: value } );
@@ -109,7 +110,7 @@ registerBlockType( 'evkirchentermin/small-event-list', {
 				el( PanelRow, {},
 
 					el( TextControl, {
-					  label: 'VID Filter',
+					  label: __('VID Filter', 'ev-kirchen-termine'),
 					  value: props.attributes.vid,
 					  onChange: ( value ) => {
 						props.setAttributes( { vid: value } );

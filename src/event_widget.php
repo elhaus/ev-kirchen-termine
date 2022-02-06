@@ -10,10 +10,10 @@ class ev_event_widget extends WP_Widget {
             'ev_event_widget',
 
             // Widget name will appear in UI
-            __('Ev. Kirchen Termine - Kalendar', 'ev_event_widget_domain'),
+            __('Ev. Kirchen Termine - calendar', 'ev-kirchen-termine'),
 
             // Widget description
-            array( 'description' => __( 'Kalendar-Widget das alle Termine oder Termine mit bestimmten Tags anzeigt.', 'ev_event_widget_domain' ), )
+            array( 'description' => __( 'Calendar widget that displays all appointments or appointments with specific tags.', 'ev-kirchen-termine' ), )
         );
     }
 
@@ -34,7 +34,7 @@ class ev_event_widget extends WP_Widget {
         echo $args['before_widget'];
 
         // This is where you run the code and display the output
-        echo __( $events, 'ev_event_widget_domain' );
+        echo __( $events, 'ev-kirchen-termine' );
         echo $args['after_widget'];
     }
 
@@ -54,14 +54,14 @@ class ev_event_widget extends WP_Widget {
             $tag_filter = $instance[ 'tag_filter' ];
         }
         else {
-            $tag_filter = __( '', 'ev_event_widget_domain' );
+            $tag_filter = '';
         }
 
         if ( isset( $instance[ 'number_of_events' ] ) ) {
             $number_of_events = $instance[ 'number_of_events' ];
         }
         else {
-            $number_of_events = __( '5', 'ev_event_widget_domain' );
+            $number_of_events = '5';
         }
 
         // Widget admin form
@@ -79,7 +79,7 @@ class ev_event_widget extends WP_Widget {
                 ?>
             </select>
 
-            <label for="<?php echo $this->get_field_id( 'number_of_events' ); ?>"><?php _e( 'Anzahl der Termine:' ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'number_of_events' ); ?>"><?php _e( 'Number of events:' ); ?></label>
             <input type="number" name="<?php echo $this->get_field_name( 'number_of_events' ); ?>" id="<?php echo $this->get_field_id( 'number_of_events' ); ?>" value="<?php echo $number_of_events; ?>" min="1" max="50" step="1">
         </p>
         <?php

@@ -8,6 +8,16 @@
  * Author URI:        https://github.com/elhaus
 **/
 
+
+if (!defined('ABSPATH')) die('No direct access allowed');/**
+* Load plugin textdomain.
+*/
+function ev_kirchen_termine_load_textdomain() {
+    load_plugin_textdomain( 'ev-kirchen-termine', false, basename( dirname( __FILE__ ) ) . '/languages/' );
+}
+add_action( 'init', 'ev_kirchen_termine_load_textdomain' );
+
+
 function ev_kirchen_termin_load_plugin_css_js() {
     $plugin_url = plugin_dir_url( __FILE__ );
 

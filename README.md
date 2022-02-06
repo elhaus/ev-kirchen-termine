@@ -7,16 +7,18 @@ The events will be handled as a custom post type.
 
 #### Small list of events
 
-    [events_list channel="" limit="5" highlight="" event_ids=""]
+    [events_list channel="" limit="5" highlight="" event_ids="" vid=""]
  - channel (optional)
  - limit (optional) - default: 5
  - highlight (optional)
  - event_ids (optional)
+ - vid (optional)
 
 #### calendar view of events
 
-    [events_calendar channel=""]
+    [events_calendar channel="" vid=""]
  - channel (optional)
+ - vid (optional)
 
 ## Installation
 

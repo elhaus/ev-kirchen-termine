@@ -1,0 +1,107 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2022-02-06 23:39+0100\n"
+"PO-Revision-Date: 2022-02-06 23:40+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: src/event_dashboard_widget.php:9 src/event_dashboard_widget.php:28
+msgid "Refresh events"
+msgstr "Veranstaltungen aktualisieren"
+
+#: src/event_dashboard_widget.php:23
+msgid "events refreshed"
+msgstr "Veranstaltungen aktualisiert"
+
+#: src/event_gutenberg_block.js:16
+msgid "small event list"
+msgstr "Kleine Veranstaltungsliste"
+
+#: src/event_gutenberg_block.js:70
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: src/event_gutenberg_block.js:75
+msgid "Channel Filter"
+msgstr "Kanal Filter"
+
+#: src/event_gutenberg_block.js:87
+msgid "Count"
+msgstr "Anzahl"
+
+#: src/event_gutenberg_block.js:101
+msgid "Include Event-IDs"
+msgstr "Veranstaltungs-IDs einbeziehen"
+
+#: src/event_gutenberg_block.js:113
+msgid "VID Filter"
+msgstr "VID Filter"
+
+#: src/event_posttype.php:15
+msgid "Ev. Kirchen Termine - settings"
+msgstr "Ev. Kirchen Termine - Einstellungen"
+
+#: src/event_posttype.php:52
+msgid "Ev. Termine website:"
+msgstr "Ev. Termine Webseite:"
+
+#: src/event_posttype.php:62
+msgid "Organizer ID [vid]:"
+msgstr "Veranstalter ID [vid]:"
+
+#: src/event_posttype.php:72 src/event_posttype.php:92
+msgid "Category Filter"
+msgstr "Katergorie Filter"
+
+#: src/event_posttype.php:82
+msgid "Church district/deanery number"
+msgstr "Kirchenkreis/Dekanats-Nummer"
+
+#: src/event_posttype.php:101
+msgid "Event Pages Template:"
+msgstr "Veranstaltungsseiten Template:"
+
+#: src/event_posttype.php:119
+msgid "Other settings:"
+msgstr "Weitere Einstellungen:"
+
+#: src/event_posttype.php:127
+msgid "Enable Share links on event page"
+msgstr "Aktiviere Teilen-Links auf Veranstaltungsseite"
+
+#: src/event_posttype.php:134
+msgid "registration form with number of remaining places"
+msgstr "Anmelde/Rückmeldeformular mit Anzahl der Restplätze"
+
+#: src/event_posttype.php:141
+msgid "save settings"
+msgstr "Einstellungen speichern"
+
+#: src/event_widget.php:13
+msgid "Ev. Kirchen Termine - calendar"
+msgstr "Ev. Kirchen Termine - Kalendar"
+
+#: src/event_widget.php:16
+msgid ""
+"Calendar widget that displays all appointments or appointments with specific "
+"tags."
+msgstr ""
+"Kalender-Widget, das alle Termine oder Termine mit bestimmten Tags anzeigt."
+
+#: src/event_widget.php:70
+msgid "Filter:"
+msgstr "Filter:"
+
+#: src/event_widget.php:82
+msgid "Number of events:"
+msgstr "Anzahl der Veranstaltungen:"
