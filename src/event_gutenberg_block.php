@@ -18,6 +18,11 @@ function evkirchentermin_smalleventlist_block_init()
       array( 'wp-i18n', 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' )
   );
 
+  add_theme_support( 'editor-styles' );
+  // Enqueue block editor stylesheet.
+  $plugin_url = plugin_dir_url( dirname(__FILE__) );
+  add_editor_style( $plugin_url . 'event-widget.css' );
+
   /**
    * Register our block, and explicitly define the attributes we accept
    */
@@ -30,10 +35,13 @@ function evkirchentermin_smalleventlist_block_init()
               'type' => 'string'
           ),
           'limit' => array(
-              'type' => 'string'
+              'type' => 'integer'
           ),
           'event_ids' => array(
               'type' => 'string'
+          ),
+          'show_location' => array(
+              'type' => 'boolean'
           ),
 		  'vid' => array(
               'type' => 'string'
@@ -65,40 +73,12 @@ function evkirchentermin_smalleventlist_block_render( $attributes )
   /** @var  $is_in_edit_mode  Check if we are in the editor */
   $is_in_edit_mode = strrpos($_SERVER['REQUEST_URI'], "context=edit");
 
-
-  if(!isset($attributes['channel']))
-	$attributes['channel'] = "";
-  if(!isset($attributes['limit']))
-	$attributes['limit'] = "";
-  if(!isset($attributes['event_ids']))
-	$attributes['event_ids'] = "";
-  if(!isset($attributes['vid']))
-	$attributes['vid'] = "";
-
   if(is_array($attributes['vid']))
 	$attributes['vid'] = implode(",", $attributes['vid']);
 
 
   /** If we are in the editor */
-  if ($is_in_edit_mode) {
+  $content = create_small_event_list($attributes);
 
-    /** If the specific attribute exist (it's not new) */
-    $content = '<small>Editing: [events_list';
-    $content .= ' channel="'.$attributes['channel'].'"';
-    $content .= ' limit='.$attributes['limit'].'';
-    $content .= ' event_ids="'.$attributes['event_ids'].'"';
-	$content .= ' vid="'.$attributes['vid'].'"';
-    $content .= ' ]';
-	$content .= '</small><br/>'.create_small_event_list($attributes);
-
-    /** If we are in the front end */
-  } else {
-    $content = '[events_list';
-    $content .= ' channel="'.$attributes['channel'].'"';
-    $content .= ' limit='.$attributes['limit'].'';
-    $content .= ' event_ids="'.$attributes['event_ids'].'"';
-	$content .= ' vid="'.$attributes['vid'].'"';
-    $content .= ' ]';
-  }
   return $content;
 }

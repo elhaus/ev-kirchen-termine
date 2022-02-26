@@ -13,6 +13,7 @@ function create_small_event_list( $atts) {
 	   'highlight' => "none",
 	   'event_ids' => "",
        'vid' => "",
+       'show_location' => true,
     ), $atts );
 
     $args = array(
@@ -27,7 +28,7 @@ function create_small_event_list( $atts) {
         'orderby'    => array(
             "start" => 'ASC'
         ),
-        'posts_per_page' => $a["limit"],
+        'posts_per_page' => (int) $a["limit"],
     );
 
 
@@ -93,6 +94,12 @@ function create_small_event_list( $atts) {
        if($post_meta["_ev_kirchen_termine_meta_key_highlight"][0])
             $highlight = " evkite-event-featured";
 
+       $location = "";
+       if($a["show_location"]) {
+            $location = maybe_unserialize($post_meta["_ev_kirchen_termine_meta_key_location_json"][0])["name"];
+            if(!empty($location))
+                $location = '<div class="evkite-events-location"> Ort: '.$location.'</div>';
+       }
 
        $return .=
            '<div class="type-evkite_events evkite-clearfix'.$highlight.'">
@@ -102,6 +109,7 @@ function create_small_event_list( $atts) {
                    <div class="list-info">
                        <h2 class="evkite-events-title"> <a href="'.$link.'" rel="bookmark">'.$title.'</a>
                        </h2>
+                       '.$location.'
                        <div class="evkite-events-duration"> '.$timespan.'
                        </div>
                    </div>

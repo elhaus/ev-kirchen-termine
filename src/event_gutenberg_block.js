@@ -9,6 +9,7 @@ var el = wp.element.createElement,
 	PanelRow = wp.components.PanelRow,
 	RangeControl = wp.components.RangeControl,
     TextareaControl = wp.components.TextareaControl,
+    ToggleControl = wp.components.ToggleControl,
     InspectorControls = wp.blockEditor.InspectorControls;
 
 
@@ -31,6 +32,11 @@ registerBlockType( 'evkirchentermin/small-event-list', {
     'event_ids': {
       type: 'string',
       default: ""
+    },
+
+    'show_location': {
+      type: 'boolean',
+      default: true
     },
 
 	'vid': {
@@ -102,6 +108,18 @@ registerBlockType( 'evkirchentermin/small-event-list', {
 					  value: props.attributes.event_ids,
 					  onChange: ( value ) => {
 						props.setAttributes( { event_ids: value } );
+					  }
+					} ),
+
+				),
+
+                el( PanelRow, {},
+
+					el( ToggleControl, {
+					  label: __('Show location', 'ev-kirchen-termine'),
+					  checked: props.attributes.show_location,
+					  onChange: ( value ) => {
+						props.setAttributes( { show_location: value } );
 					  }
 					} ),
 

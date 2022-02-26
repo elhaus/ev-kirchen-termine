@@ -391,6 +391,17 @@ function ev_kirchen_termine_import_events($force = false) {
                 "logo"=> $event["Veranstaltung"]["_user_IMAGE"],
             );
 
+        $location_json = array(
+            "id"=> $event["Veranstaltung"]["_place_ID"],
+            "name"=> $event["Veranstaltung"]["_place_NAME"],
+            "streetAddress"=> $event["Veranstaltung"]["_place_STREET_NR"],
+            "city"=> $event["Veranstaltung"]["_place_CITY"],
+            "postalCode"=> $event["Veranstaltung"]["_place_ZIP"],
+            "Country"=> "DE",
+            "latitude"=> $event["Veranstaltung"]["_place_GLAT"],
+            "longitude"=> $event["Veranstaltung"]["_place_GLONG"],
+        );
+
 
         $args = array(
             'post_type'    => 'event',
@@ -464,6 +475,7 @@ function ev_kirchen_termine_import_events($force = false) {
             'meta_input'   => array(
                 '_ev_kirchen_termine_meta_key_start' => $start_datetime,
                 '_ev_kirchen_termine_meta_key_end' => $end_datetime,
+                '_ev_kirchen_termine_meta_key_location_json' => $location_json,
                 '_ev_kirchen_termine_meta_key_id' => (int) $event["Veranstaltung"]["ID"],
                 '_ev_kirchen_termine_meta_key_vid' => (int) $event["Veranstaltung"]["_event_USER_ID"],
                 '_ev_kirchen_termine_meta_key_highlight' => ($event["Veranstaltung"]["_event_HIGHLIGHT"] !== "low"),
@@ -482,6 +494,8 @@ function ev_kirchen_termine_import_events($force = false) {
 
         if(empty($current_id)) {
             $args['post_name'] = date("Y-m-d", strtotime($start_datetime)) ." - " .$event["Veranstaltung"]["_event_TITLE"];
+            if($event["Veranstaltung"]["_user_ID"] !== $parameter["vid"])
+                $args['post_name'] .= ' - '.$event["Veranstaltung"]["_user_REALNAME"];
             $id = wp_insert_post($args);
         } elseif(
             get_date_from_gmt( date("Y-m-d H:i:s", filemtime(__FILE__)), 'Y-m-d H:i:s' ) > get_the_modified_date("Y-m-d H:i:s", $current_id) ||

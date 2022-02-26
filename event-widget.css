@@ -96,8 +96,12 @@
 	margin-bottom: 10px !important;
 }
 .evkite-mini-calendar-event .evkite-events-duration {
-	font-size: 16px !important;
+	font-size: 16px;
 }
+.evkite-mini-calendar-event .evkite-events-location {
+	font-size: 15px;
+}
+
 .evkite-mini-calendar-event .list-date{
 	max-width: 50px;
 }
