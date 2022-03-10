@@ -1,6 +1,6 @@
 <?php
 
-add_filter( 'the_content', 'add_share_icons_to_content', 1 );
+add_filter( 'the_content', 'add_share_icons_to_content', 20 );
 
 function add_share_icons_to_content( $content ) {
 

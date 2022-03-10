@@ -203,19 +203,6 @@ function ev_kirchen_termine_import_events($force = false) {
         $tags           = implode(", ", $tags);
 
 
-        $place_name     = $event["Veranstaltung"]["_place_NAME"];
-        $place_street   = $event["Veranstaltung"]["_place_STREET_NR"];
-        $place_city     = $event["Veranstaltung"]["_place_CITY"];
-        $place_zip      = $event["Veranstaltung"]["_place_ZIP"];
-
-        $geo_long       = (float) str_replace(",", ".", $event["Veranstaltung"]["_place_GLONG"]);
-        $geo_lat        = (float) str_replace(",", ".", $event["Veranstaltung"]["_place_GLAT"]);
-        $zoom           = 0.002;
-        $para["bbox"]   = ($geo_long+$zoom).",".($geo_lat+$zoom).",".($geo_long-$zoom).",".($geo_lat-$zoom);
-        $para["layer"]  = "mapnik";
-        $para["marker"] = $geo_lat.",".$geo_long ;
-        $map_url        = 'https://www.openstreetmap.org/export/embed.html?'.http_build_query($para);
-
         $org_name       = $event["Veranstaltung"]["_user_REALNAME"];
         $org_contact    = $event["Veranstaltung"]["_user_CONTACT"];
         $org_url        = $event["Veranstaltung"]["_user_URL"];
@@ -240,42 +227,6 @@ function ev_kirchen_termine_import_events($force = false) {
                                     <dd class="evkite-organizer-contact">'.nl2br($event["Veranstaltung"]["_person_CONTACT"]).'</dd>
                                 </dl>
                             </div>';
-
-        $map = "";
-        if(!empty($geo_long) && !empty($geo_lat))
-            $map        = '<div class="evkite-events-venue-map">
-                                <div id="evkite-events-gmap-0" style="height: 350px; width: 100%">
-                                    <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="'.$map_url.'" style="border: 1px solid black"></iframe>
-                                    <br/>
-                                    <small>
-                                        <a href="https://www.openstreetmap.org/?mlat='.$geo_lat.'&amp;mlon='.$geo_long.'#map=17/'.$geo_lat.'/'.$geo_long.'">Größere Karte anzeigen</a>
-                                    </small>
-                                </div>
-                            </div>';
-
-        $place_text = "";
-        if(!empty($event["Veranstaltung"]["_place_ID"]) && $event["Veranstaltung"]["_place_ID"] !== "1")
-            $place_text =  '<div class="evkite-events-single-section evkite-events-event-meta secondary evkite-clearfix">
-                                <div class="evkite-events-meta-group evkite-events-meta-group-venue">
-                                    <h2 class="evkite-events-single-section-title">Veranstaltungsort</h2>
-                                    <dl>
-                                        <dd class="evkite-venue">'.$place_name.'</dd>
-                                        <dd class="evkite-venue-location">
-                                            <address class="evkite-events-address">
-                                                <span class="evkite-address">
-                                                    <span class="evkite-street-address">'.$place_street.'</span></br>
-                                                    <span class="evkite-postal-code">'.$place_zip.'</span><span class="evkite-delimiter">, </span><span class="evkite-locality">'.$place_city.'</span>
-                                                </span>
-                                                </br></br>
-                                                <a class="evkite-events-gmap" rel="noopener" href="https://maps.google.com/maps?f=q&#038;source=s_q&#038;hl=en&#038;geocode=&#038;q='.urlencode($place_street.', '.$place_zip.' '.$place_city).'" title="Klicken, um Google Karte anzuzeigen" target="_blank">+ Google Maps</a>
-                                                <a class="evkite-events-gmap hide-on-non-ios" rel="noopener" href="http://maps.apple.com/?q='.urlencode($place_street.', '.$place_zip.' '.$place_city).'" title="Klicken, um Apple Karten anzuzeigen" target="_blank">+ Apple Karten</a>
-                                            </address>
-                                        </dd>
-                                    </dl>
-                                </div>
-                                '.$map.'
-                            </div>';
-
 
 
         $parameter_event_shema = array(
@@ -406,11 +357,10 @@ function ev_kirchen_termine_import_events($force = false) {
         $args = array(
             'post_type'    => 'event',
             'post_status'  => 'publish',
-            'post_excerpt' => $timespan.' / </br>'.$place_name.' / </br>mit '.$event["Veranstaltung"]["_person_NAME"],
+            'post_excerpt' => $timespan.' / </br>'.$event["Veranstaltung"]["_place_NAME"].' / </br>mit '.$event["Veranstaltung"]["_person_NAME"],
             'post_content' =>
                 '<script type="application/ld+json">'.json_encode($parameter_event_shema, JSON_UNESCAPED_UNICODE).'</script>
-                <div id="evkite-events" class="evkite-no-js" data-live_ajax="1" data-datepicker_format="11" data-category="" data-featured="">
-                    <div class="evkite-events-before-html"></div>
+                <div id="evkite-events">
                     <div id="evkite-events-content" class="evkite-events-single">
                         <p class="evkite-events-back">
                             <a href="'.get_site_url().'/events/">&laquo;Alle Veranstaltungen</a>
@@ -466,7 +416,6 @@ function ev_kirchen_termine_import_events($force = false) {
                                     </dl>
                                 </div>
                             </div>
-                            '.$place_text.'
                         </div>
                     </div>
                 </div>',

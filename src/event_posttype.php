@@ -34,6 +34,15 @@ function ev_kirchen_termine_manage_settings() {
         $ev_kirchen_termine_event_template = esc_attr($_POST["ev_kirchen_termine_event_template"]);
         update_option("ev_kirchen_termine_event_template", $ev_kirchen_termine_event_template);
 
+        $ev_kirchen_termine_map_type = esc_attr($_POST["ev_kirchen_termine_map_type"]);
+        update_option("ev_kirchen_termine_map_type", $ev_kirchen_termine_map_type);
+
+        $ev_kirchen_termine_google_maps_api_key = esc_attr($_POST["ev_kirchen_termine_google_maps_api_key"]);
+        update_option("ev_kirchen_termine_google_maps_api_key", $ev_kirchen_termine_google_maps_api_key);
+
+        $ev_kirchen_termine_show_events_in_search = isset($_POST["ev_kirchen_termine_show_events_in_search"]) ? 1 : 0;
+        update_option("ev_kirchen_termine_show_events_in_search", $ev_kirchen_termine_show_events_in_search);
+
         $ev_kirchen_termine_show_share_icons = isset($_POST["ev_kirchen_termine_show_share_icons"]) ? 1 : 0;
         update_option("ev_kirchen_termine_show_share_icons", $ev_kirchen_termine_show_share_icons);
 
@@ -116,6 +125,38 @@ function ev_kirchen_termine_manage_settings() {
                     </tr>
                     <tr valign="top">
                         <th scope="row">
+                            <label for="ev_kirchen_termine_map_type"><?php _e("Map type:", 'ev-kirchen-termine'); ?></label>
+                        </th>
+                        <td>
+                            <select name="ev_kirchen_termine_map_type" id="ev_kirchen_termine_map_type">
+                                <?php
+                                $templates = array(
+                                    "google_iframe" => __("Google Maps iframe", 'ev-kirchen-termine'),
+                                    "google_image" => __("Google Maps image", 'ev-kirchen-termine'),
+                                    "osm_iframe" => __("OpenStreetMap iframe", 'ev-kirchen-termine'),
+                                    //"osm_image" => __("OpenStreetMap image", 'ev-kirchen-termine')
+                                );
+                                foreach ($templates as $template_key => $template_name) {
+                                    $selected = "";
+                                    if($template_key == get_option("ev_kirchen_termine_map_type")) $selected = " selected";
+                                    echo "<option value='$template_key'$selected>$template_name</option>";
+                                }
+                                ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">
+                            <label for="ev_kirchen_termine_google_maps_api_key">
+                                <?php _e("Google Maps API key", 'ev-kirchen-termine'); ?>:
+                            </label>
+                        </th>
+                        <td>
+                            <input type="text" name="ev_kirchen_termine_google_maps_api_key" size="64" value="<?php echo get_option("ev_kirchen_termine_google_maps_api_key"); ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">
                             <?php _e("Other settings:", 'ev-kirchen-termine'); ?>
                         </th>
                         <td>
@@ -132,6 +173,13 @@ function ev_kirchen_termine_manage_settings() {
                                         echo "checked";
                                     } ?>>
                                 <?php _e("registration form with number of remaining places", 'ev-kirchen-termine'); ?>
+                            </label></br>
+                            <label for="ev_kirchen_termine_show_events_in_search">
+                                <input name="ev_kirchen_termine_show_events_in_search" type="checkbox" id="ev_kirchen_termine_show_events_in_search" <?php
+                                    if(get_option("ev_kirchen_termine_show_events_in_search")) {
+                                        echo "checked";
+                                    } ?>>
+                                <?php _e("Show Events in Search", 'ev-kirchen-termine'); ?>
                             </label>
                         </td>
                     </tr>
@@ -194,7 +242,7 @@ function ev_kirchen_termine_custom_post_type() {
         'menu_position' => 5,
         'can_export' => true,
         'has_archive' => false,
-        'exclude_from_search' => false,
+        'exclude_from_search' => !get_option("ev_kirchen_termine_show_events_in_search"),
         'publicly_queryable' => true,
         'rewrite' => $rewrite,
     );

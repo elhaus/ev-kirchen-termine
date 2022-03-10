@@ -73,9 +73,6 @@ function evkirchentermin_smalleventlist_block_render( $attributes )
   /** @var  $is_in_edit_mode  Check if we are in the editor */
   $is_in_edit_mode = strrpos($_SERVER['REQUEST_URI'], "context=edit");
 
-  if(is_array($attributes['vid']))
-	$attributes['vid'] = implode(",", $attributes['vid']);
-
 
   /** If we are in the editor */
   $content = create_small_event_list($attributes);
