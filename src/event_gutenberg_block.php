@@ -43,6 +43,9 @@ function evkirchentermin_smalleventlist_block_init()
           'show_location' => array(
               'type' => 'boolean'
           ),
+          'show_organizer' => array(
+              'type' => 'boolean'
+          ),
 		  'vid' => array(
               'type' => 'string'
           )

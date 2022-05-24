@@ -14,6 +14,7 @@ function create_small_event_list( $atts) {
 	   'event_ids' => "",
        'vid' => "",
        'show_location' => true,
+       'show_organizer' => false,
     ), $atts );
 
     $args = array(
@@ -82,7 +83,7 @@ function create_small_event_list( $atts) {
        $post_meta = get_post_meta($event->ID);
 
        if(date("Y-m-d", strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0])) == date("Y-m-d", strtotime($post_meta["_ev_kirchen_termine_meta_key_end"][0]))) {
-            $timespan = date_i18n($date_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0]))." um ".date_i18n($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0]))." - ".date_i18n($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_end"][0]));
+            $timespan = date_i18n($date_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0]))." um ".date_i18n($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0]))." - ".date_i18n($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_end"][0]))." Uhr";
        } else {
            $timespan = date_i18n($date_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0]))." um ".date_i18n($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0]))." - ".date_i18n($date_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_end"][0]))." um ".date_i18n($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_end"][0]));
        }
@@ -98,7 +99,15 @@ function create_small_event_list( $atts) {
        if($a["show_location"]) {
             $location = maybe_unserialize($post_meta["_ev_kirchen_termine_meta_key_location_json"][0])["name"];
             if(!empty($location))
-                $location = '<div class="evkite-events-location"> Ort: '.$location.'</div>';
+                $location = '<div class="evkite-events-location">Ort: '.$location.'</div>';
+       }
+
+
+       $organizer = "";
+       if($a["show_organizer"]) {
+            $organizer = maybe_unserialize($post_meta["_ev_kirchen_termine_meta_key_user_data"][0])["name"];
+            if(!empty($organizer))
+                $organizer = '<div class="evkite-events-location">'.$organizer.'</div>';
        }
 
        $return .=
@@ -109,7 +118,7 @@ function create_small_event_list( $atts) {
                    <div class="list-info">
                        <h2 class="evkite-events-title"> <a href="'.$link.'" rel="bookmark">'.$title.'</a>
                        </h2>
-                       '.$location.'
+                       '.$location.$organizer.'
                        <div class="evkite-events-duration"> '.$timespan.'
                        </div>
                    </div>

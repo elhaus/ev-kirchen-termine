@@ -31,6 +31,9 @@ function ev_kirchen_termine_manage_settings() {
         $ev_kirchen_termine_region_eventtype_filter = esc_attr($_POST["ev_kirchen_termine_region_eventtype_filter"]);
         update_option("ev_kirchen_termine_region_eventtype_filter", $ev_kirchen_termine_region_eventtype_filter);
 
+        $ev_kirchen_termine_custom_filter = esc_attr($_POST["ev_kirchen_termine_custom_filter"]);
+        update_option("ev_kirchen_termine_custom_filter", $ev_kirchen_termine_custom_filter);
+
         $ev_kirchen_termine_event_template = esc_attr($_POST["ev_kirchen_termine_event_template"]);
         update_option("ev_kirchen_termine_event_template", $ev_kirchen_termine_event_template);
 
@@ -103,6 +106,16 @@ function ev_kirchen_termine_manage_settings() {
                         </th>
                         <td>
                             <input type="text" name="ev_kirchen_termine_region_eventtype_filter" size="25" value="<?php echo get_option("ev_kirchen_termine_region_eventtype_filter"); ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">
+                            <label for="ev_kirchen_termine_custom_filter">
+                                <?php _e("Custom Filter", 'ev-kirchen-termine'); ?>:
+                            </label>
+                        </th>
+                        <td>
+                            <input type="text" name="ev_kirchen_termine_custom_filter" size="40" value="<?php echo get_option("ev_kirchen_termine_custom_filter"); ?>" />
                         </td>
                     </tr>
                     <tr valign="top">

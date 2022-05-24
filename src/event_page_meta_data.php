@@ -82,6 +82,31 @@ function add_postmeta_to_event($post_id) {
 
     }
 
+    $barrier_free = "";
+    $equipped = explode(",", $location["equipped"]);
+    if(in_array("1", $equipped)) {
+        $barrier_free .= '<img class="equipicon" title="Rollstuhlgerecht" alt="Rollstuhlgerecht" src="'.get_site_url().'/wp-content/plugins/ev-kirchen-termine/img/1_rollstuhlgerecht.png">';
+    }
+    if(in_array("2", $equipped)) {
+        $barrier_free .= '<img class="equipicon" title="Induktionsanlage für Hörgeräte" alt="Induktionsanlage für Hörgeräte" src="'.get_site_url().'/wp-content/plugins/ev-kirchen-termine/img/2_induktion.png">';
+    }
+    if(in_array("3", $equipped)) {
+        $barrier_free .= '<img class="equipicon" title="Behinderten-WC" alt="Behinderten-WC" src="'.get_site_url().'/wp-content/plugins/ev-kirchen-termine/img/3_behinderten-wc.png">';
+    }
+    if(in_array("4", $equipped)) {
+        $barrier_free .= '<img class="equipicon" title="Behindertenparkplatz" alt="Behindertenparkplatz" src="'.get_site_url().'/wp-content/plugins/ev-kirchen-termine/img/4_behindertenparkplatz.png">';
+    }
+    if(!empty($location["equipped_text"])) {
+        $barrier_free .= '<p class="equipicon">'.$location["equipped_text"].'</p>';
+    }
+
+    if(!empty($barrier_free)) {
+        $barrier_free = '<h3 class="evkite-events-single-section-title">Angaben zur Barrierefreiheit</h3><div>' .$barrier_free.'</div>';
+    } else {
+        $barrier_free = '<h3 class="evkite-events-single-section-title">Keine Angaben zur Barrierefreiheit</h3>';
+    }
+
+
     return '<div class="evkite-events-single-section evkite-events-event-meta secondary evkite-clearfix">
                         <div class="evkite-events-meta-group evkite-events-meta-group-venue">
                             <h2 class="evkite-events-single-section-title">Veranstaltungsort</h2>
@@ -99,6 +124,7 @@ function add_postmeta_to_event($post_id) {
                                     </address>
                                 </dd>
                             </dl>
+                            '.$barrier_free.'
                         </div>
                         <div class="evkite-events-venue-map">
                             <div id="evkite-events-gmap-0" style="height: 350px; width: 100%">

@@ -2,7 +2,7 @@
     --featured-event-bg: #0ea0d7
 }
 
-#evkite-events-content .evkite-events-tooltip h4, #evkite_events_filters_wrapper .evkite_events_slider_val, .single-evkite_events a.evkite-events-gcal, .single-evkite_events a.evkite-events-ical {
+#evkite-events-content .evkite-events-tooltip h4, #evkite_events_filters_wrapper .evkite_events_slider_val, .single-evkite_events a.evkite-events-gcal, .single-evkite_events a.evkite-events-o365, .single-evkite_events a.evkite-events-ical {
     color: #21759b
 }
 
@@ -34,7 +34,7 @@
     display: block
 }
 
-.single-evkite_events a.evkite-events-gcal, .single-evkite_events a.evkite-events-gcal:hover, .single-evkite_events a.evkite-events-ical, .single-evkite_events a.evkite-events-ical:hover {
+.single-evkite_events a.evkite-events-o365, .single-evkite_events a.evkite-events-o365:hover, .single-evkite_events a.evkite-events-gcal, .single-evkite_events a.evkite-events-gcal:hover, .single-evkite_events a.evkite-events-ical, .single-evkite_events a.evkite-events-ical:hover {
     background-color: transparent;
     text-transform: none;
     font-size: 14px;
@@ -98,7 +98,7 @@
     zoom: 1
 }
 
-a.evkite-events-gcal, a.evkite-events-ical {
+a.evkite-events-gcal, a.evkite-events-ical, a.evkite-events-o365 {
     clear: both;
     color: #fff;
     float: right;
@@ -110,7 +110,7 @@ a.evkite-events-gcal, a.evkite-events-ical {
     text-decoration: none
 }
 
-.single-evkite_events a.evkite-events-gcal, .single-evkite_events a.evkite-events-ical {
+.single-evkite_events a.evkite-events-o365, .single-evkite_events a.evkite-events-gcal, .single-evkite_events a.evkite-events-ical {
     float: none
 }
 
@@ -399,4 +399,13 @@ ol.evkite-list-widget {
 .evkite-entry-social .btn.btn-just-icon {
     font-size: 20px;
     line-height: 20px;
+}
+
+img.equipicon {
+    margin: 5px;
+}
+
+h3.evkite-events-single-section-subtitle {
+    font-size: 16px;
+    margin-top: 30px;
 }
