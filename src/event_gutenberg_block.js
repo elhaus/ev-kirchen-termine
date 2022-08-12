@@ -44,6 +44,11 @@ registerBlockType( 'evkirchentermin/small-event-list', {
       default: false
     },
 
+    'show_more_link': {
+      type: 'boolean',
+      default: true
+    },
+
 	'vid': {
       type: 'string',
       default: ""
@@ -137,6 +142,18 @@ registerBlockType( 'evkirchentermin/small-event-list', {
 					  checked: props.attributes.show_organizer,
 					  onChange: ( value ) => {
 						props.setAttributes( { show_organizer: value } );
+					  }
+					} ),
+
+				),
+
+                el( PanelRow, {},
+
+					el( ToggleControl, {
+					  label: __('Show more events link', 'ev-kirchen-termine'),
+					  checked: props.attributes.show_more_link,
+					  onChange: ( value ) => {
+						props.setAttributes( { show_more_link: value } );
 					  }
 					} ),
 

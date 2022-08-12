@@ -15,6 +15,7 @@ function create_small_event_list( $atts) {
        'vid' => "",
        'show_location' => true,
        'show_organizer' => false,
+       'show_more_link' => true,
     ), $atts );
 
     $args = array(
@@ -127,7 +128,9 @@ function create_small_event_list( $atts) {
 
    }
 
-   $return .= '<a href="'.get_site_url().'/events/?channel='.$a["channel"].'&vid='.$a["vid"].'">mehr Veranstaltungen...</a>';
+   if($a["show_more_link"]) {
+        $return .= '<a href="'.get_site_url().'/events/?channel='.$a["channel"].'&vid='.$a["vid"].'">mehr Veranstaltungen...</a>';
+   }
 
    $return .= "</div>";
 
