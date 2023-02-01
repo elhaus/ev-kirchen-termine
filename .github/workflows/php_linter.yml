@@ -15,10 +15,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Check PHP syntax errors
       uses: overtrue/phplint@3.0.3
       with:
         path: .
-        options: --exclude=*.log
+        options: --json=./annotations.json
+  	
+    - name: Add annotations
+      uses: Attest/annotations-action@v0.1.0
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        input: './annotations.json'
+        title: 'PHP Lint Annotate File'
