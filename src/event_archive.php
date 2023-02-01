@@ -1,6 +1,6 @@
 <?php
 
-sad
+sadf
 $check_page_exist = get_page_by_path('events', 'OBJECT', 'page');
 // Check if the page already exists
 if(empty($check_page_exist)) {
