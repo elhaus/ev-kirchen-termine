@@ -22,7 +22,6 @@ jobs:
       with:
         path: .
         options: --json=./annotations.json
-  	
     - name: Add annotations
       uses: Attest/annotations-action@v0.1.0
       with:
