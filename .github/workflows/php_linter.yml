@@ -22,9 +22,9 @@ jobs:
       with:
         path: .
         options: --json=./annotations.json
-    - name: Add annotations
-      uses: Attest/annotations-action@v1.0.7
+    - name: Annotate
+      uses: yuzutech/annotations-action@v0.4.0
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        title: 'lint'
         input: './annotations.json'
-        title: 'PHP Lint Annotate File'
