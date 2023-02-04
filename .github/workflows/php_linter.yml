@@ -1,30 +1,26 @@
-name: PHP Linter
+name: Psalm show github
 
 on:
+  pull_request:
   push:
     branches:
       - main
-      - '*'
-  
-  pull_request:
-    types: [opened, reopened]
+      - *
 
 jobs:
-  build:
-
+  psalm:
+    name: Psalm
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-
-    - name: Check PHP syntax errors
-      uses: overtrue/phplint@3.0.3
-      with:
-        path: .
-        options: --json=./annotations.json
-    - name: Annotate
-      uses: yuzutech/annotations-action@v0.4.0
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
-        title: 'lint'
-        input: './annotations.json'
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Psalm
+        uses: docker://vimeo/psalm-github-actions:4.9.3
+        continue-on-error: false
+        with:
+          composer_ignore_platform_reqs: false
+          report_file: results.sarif
+      - name: Upload Analysis results to GitHub
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: results.sarif
