@@ -12,7 +12,7 @@ function ev_kirchen_termine_manage_settings() {
     }
     ?>
         <div class="wrap">
-            <h2><?php _e("Ev. Kirchen Termine - settings", 'ev-kirchen-termine'); ?></h2>
+            <h2><?php esc_html_e("Ev. Kirchen Termine - settings", 'ev-kirchen-termine'); ?></h2>
     <?php
     if (isset($_POST["update_settings"])) {
 
@@ -61,7 +61,7 @@ function ev_kirchen_termine_manage_settings() {
                     <tr valign="top">
                         <th scope="row">
                             <label for="ev_kirchen_termine_webpage">
-                                <?php _e("Ev. Termine website:", 'ev-kirchen-termine'); ?>
+                                <?php esc_html_e("Ev. Termine website:", 'ev-kirchen-termine'); ?>
                             </label>
                         </th>
                         <td>
@@ -71,7 +71,7 @@ function ev_kirchen_termine_manage_settings() {
                     <tr valign="top">
                         <th scope="row">
                             <label for="ev_kirchen_termine_vid">
-                                <?php _e("Organizer ID [vid]:", 'ev-kirchen-termine'); ?>
+                                <?php esc_html_e("Organizer ID [vid]:", 'ev-kirchen-termine'); ?>
                             </label>
                         </th>
                         <td>
@@ -81,7 +81,7 @@ function ev_kirchen_termine_manage_settings() {
                     <tr valign="top">
                         <th scope="row">
                             <label for="ev_kirchen_termine_vid_eventtype_filter">
-                                <?php _e("Category Filter", 'ev-kirchen-termine'); ?> (vid) [eventtype]:
+                                <?php esc_html_e("Category Filter", 'ev-kirchen-termine'); ?> (vid) [eventtype]:
                             </label>
                         </th>
                         <td>
@@ -91,7 +91,7 @@ function ev_kirchen_termine_manage_settings() {
                     <tr valign="top">
                         <th scope="row">
                             <label for="ev_kirchen_termine_region">
-                                <?php _e("Church district/deanery number", 'ev-kirchen-termine'); ?> [region]:
+                                <?php esc_html_e("Church district/deanery number", 'ev-kirchen-termine'); ?> [region]:
                             </label>
                         </th>
                         <td>
@@ -101,7 +101,7 @@ function ev_kirchen_termine_manage_settings() {
                     <tr valign="top">
                         <th scope="row">
                             <label for="ev_kirchen_termine_region_eventtype_filter">
-                                <?php _e("Category Filter", 'ev-kirchen-termine'); ?> (region) [eventtype]:
+                                <?php esc_html_e("Category Filter", 'ev-kirchen-termine'); ?> (region) [eventtype]:
                             </label>
                         </th>
                         <td>
@@ -111,7 +111,7 @@ function ev_kirchen_termine_manage_settings() {
                     <tr valign="top">
                         <th scope="row">
                             <label for="ev_kirchen_termine_custom_filter">
-                                <?php _e("Custom Filter", 'ev-kirchen-termine'); ?>:
+                                <?php esc_html_e("Custom Filter", 'ev-kirchen-termine'); ?>:
                             </label>
                         </th>
                         <td>
@@ -120,7 +120,7 @@ function ev_kirchen_termine_manage_settings() {
                     </tr>
                     <tr valign="top">
                         <th scope="row">
-                            <label for="ev_kirchen_termine_event_template"><?php _e("Event Pages Template:", 'ev-kirchen-termine'); ?></label>
+                            <label for="ev_kirchen_termine_event_template"><?php esc_html_e("Event Pages Template:", 'ev-kirchen-termine'); ?></label>
                         </th>
                         <td>
                             <select name="ev_kirchen_termine_event_template" id="ev_kirchen_termine_event_template">
@@ -192,14 +192,14 @@ function ev_kirchen_termine_manage_settings() {
                                     if(get_option("ev_kirchen_termine_show_events_in_search")) {
                                         echo "checked";
                                     } ?>>
-                                <?php _e("Show Events in Search", 'ev-kirchen-termine'); ?>
+                                <?php esc_html_e("Show Events in Search", 'ev-kirchen-termine'); ?>
                             </label>
                         </td>
                     </tr>
                 </table>
                 <input type="hidden" name="update_settings" value="Y" />
                 <p>
-                    <input type="submit" value="<?php _e("save settings", 'ev-kirchen-termine'); ?>" class="button-primary"/>
+                    <input type="submit" value="<?php esc_html_e("save settings", 'ev-kirchen-termine'); ?>" class="button-primary"/>
                 </p>
             </form>
         </div>

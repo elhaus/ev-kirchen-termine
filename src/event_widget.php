@@ -67,7 +67,7 @@ class ev_event_widget extends WP_Widget {
         // Widget admin form
         ?>
         <p>
-            <label for="<?php echo $this->get_field_id( 'tag_filter' ); ?>"><?php _e( 'Filter:' ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'tag_filter' ); ?>"><?php _e( 'Filter:', 'ev-kirchen-termine' ); ?></label>
             <select name="<?php echo $this->get_field_name( 'tag_filter' ); ?>[]" id="<?php echo $this->get_field_id( 'tag_filter' ); ?>" multiple>
                 <option value="">Alle Events</option>"
                 <?php
@@ -79,7 +79,7 @@ class ev_event_widget extends WP_Widget {
                 ?>
             </select>
 
-            <label for="<?php echo $this->get_field_id( 'number_of_events' ); ?>"><?php _e( 'Number of events:' ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'number_of_events' ); ?>"><?php _e( 'Number of events:', 'ev-kirchen-termine' ); ?></label>
             <input type="number" name="<?php echo $this->get_field_name( 'number_of_events' ); ?>" id="<?php echo $this->get_field_id( 'number_of_events' ); ?>" value="<?php echo $number_of_events; ?>" min="1" max="50" step="1">
         </p>
         <?php
