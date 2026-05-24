@@ -94,5 +94,4 @@ add_action( 'pre_get_posts', function ( $q )
 });
 
 
-include_once plugin_dir_path( __FILE__ ) . 'src/show_page_text.php';
 include_once plugin_dir_path( __FILE__ ) . 'src/event_gutenberg_block.php';
