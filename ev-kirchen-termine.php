@@ -6,6 +6,7 @@
  * Version:           0.1.2
  * Author:            Jan Elhaus
  * Author URI:        https://github.com/elhaus
+ * License:           GPLv2
 **/
 
 
