@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 function setup_ev_kirchen_termine_admin_menus() {
     add_submenu_page('options-general.php',

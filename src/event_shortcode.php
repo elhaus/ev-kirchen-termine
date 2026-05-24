@@ -1,6 +1,5 @@
 <?php
-
-
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 function create_small_event_list( $atts) {
 

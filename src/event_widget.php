@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 // Creating the widget
 class ev_event_widget extends WP_Widget {

@@ -1,5 +1,5 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 $check_page_exist = get_page_by_path('events', 'OBJECT', 'page');
 // Check if the page already exists

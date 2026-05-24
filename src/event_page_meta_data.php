@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 add_filter( 'the_content', 'add_event_postmeta_to_content', 5 );
 

@@ -1,5 +1,5 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 add_action( 'wp_dashboard_setup', 'ev_kirchen_termine_add_dashboard_widget' );
 
