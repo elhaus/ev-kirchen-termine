@@ -15,7 +15,9 @@ function evkirchentermin_smalleventlist_block_init()
   wp_register_script(
       'small-event-list',
       plugins_url( 'event_gutenberg_block.js', __FILE__ ),
-      array( 'wp-i18n', 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' )
+      array('wp-i18n', 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor'),
+      "0.1.2",
+      array('in_footer'  => true)
   );
 
   add_theme_support( 'editor-styles' );

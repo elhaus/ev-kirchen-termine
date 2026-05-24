@@ -20,12 +20,13 @@ function ev_kirchen_termine_dashboard_widget() {
 	if( 'POST' == $_SERVER['REQUEST_METHOD']
 	 && isset( $_POST['refresh_ev_events'] ) ) {
 		ev_kirchen_termine_import_events(true);
-        echo __('events refreshed', 'ev-kirchen-termine')."!</br>";
+        esc_html_e('events refreshed', 'ev-kirchen-termine');
+		echo "!</br>";
 	}
 
     echo
         '<form method="post">
-            <input type="submit" name="refresh_ev_events" id="save-post" class="button button-primary" value="'.__('Refresh events', 'ev-kirchen-termine').'">
+            <input type="submit" name="refresh_ev_events" id="save-post" class="button button-primary" value="'.esc_html__('Refresh events', 'ev-kirchen-termine').'">
         </form></br></br>';
 
 }

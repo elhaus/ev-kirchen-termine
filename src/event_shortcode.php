@@ -4,7 +4,12 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 function create_small_event_list( $atts) {
 
     $plugin_url = plugin_dir_url( dirname(__FILE__) );
-    wp_enqueue_style( 'ev_kirchen_termine_event_widget_css', $plugin_url . 'event-widget.css' );
+    wp_enqueue_style(
+        'ev_kirchen_termine_event_widget_css',
+        $plugin_url . 'event-widget.css',
+        array(),
+        "0.1.2"
+    );
 
     $a = shortcode_atts( array (
        'channel' => "",
@@ -197,9 +202,26 @@ function ev_kirchen_termine_create_calendar($atts) {
 
     $plugin_url = plugin_dir_url( dirname(__FILE__) );
 
-    wp_enqueue_style( 'ev_kirchen_termine_fullcalendar_css', $plugin_url . 'fullcalendar/main.css' );
-    wp_enqueue_script( 'ev_kirchen_termine_fullcalendar_js', $plugin_url . 'fullcalendar/main.js' );
-    wp_enqueue_script( 'ev_kirchen_termine_fullcalendar_local_js', $plugin_url . 'fullcalendar/locales/de.js' );
+    wp_enqueue_style(
+        'ev_kirchen_termine_fullcalendar_css',
+        $plugin_url . 'fullcalendar/main.css',
+        array(),
+        "0.1.2"
+    );
+    wp_enqueue_script(
+        'ev_kirchen_termine_fullcalendar_js',
+        $plugin_url . 'fullcalendar/main.js',
+        array(),
+        "0.1.2",
+        array('in_footer'  => true)
+    );
+    wp_enqueue_script(
+        'ev_kirchen_termine_fullcalendar_local_js',
+        $plugin_url . 'fullcalendar/locales/de.js',
+        array(),
+        "0.1.2",
+        array('in_footer'  => true)
+    );
 
 
     return '

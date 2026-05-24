@@ -35,7 +35,7 @@ class ev_event_widget extends WP_Widget {
         echo $args['before_widget'];
 
         // This is where you run the code and display the output
-        echo __( $events, 'ev-kirchen-termine' );
+        echo $events;
         echo $args['after_widget'];
     }
 
@@ -68,7 +68,7 @@ class ev_event_widget extends WP_Widget {
         // Widget admin form
         ?>
         <p>
-            <label for="<?php echo $this->get_field_id( 'tag_filter' ); ?>"><?php _e( 'Filter:', 'ev-kirchen-termine' ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'tag_filter' ); ?>"><?php esc_html_e( 'Filter:', 'ev-kirchen-termine' ); ?></label>
             <select name="<?php echo $this->get_field_name( 'tag_filter' ); ?>[]" id="<?php echo $this->get_field_id( 'tag_filter' ); ?>" multiple>
                 <option value="">Alle Events</option>"
                 <?php
@@ -80,7 +80,7 @@ class ev_event_widget extends WP_Widget {
                 ?>
             </select>
 
-            <label for="<?php echo $this->get_field_id( 'number_of_events' ); ?>"><?php _e( 'Number of events:', 'ev-kirchen-termine' ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'number_of_events' ); ?>"><?php esc_html_e( 'Number of events:', 'ev-kirchen-termine' ); ?></label>
             <input type="number" name="<?php echo $this->get_field_name( 'number_of_events' ); ?>" id="<?php echo $this->get_field_id( 'number_of_events' ); ?>" value="<?php echo $number_of_events; ?>" min="1" max="50" step="1">
         </p>
         <?php
@@ -90,8 +90,8 @@ class ev_event_widget extends WP_Widget {
     public function update( $new_instance, $old_instance ) {
         if(is_array($new_instance['tag_filter'])) $new_instance['tag_filter'] = implode(",", $new_instance['tag_filter']);
         $instance = array();
-        $instance['tag_filter'] = ( ! empty( $new_instance['tag_filter'] ) ) ? strip_tags( $new_instance['tag_filter'] ) : '';
-        $instance['number_of_events'] = ( ! empty( $new_instance['number_of_events'] ) ) ? strip_tags( $new_instance['number_of_events'] ) : '5';
+        $instance['tag_filter'] = ( ! empty( $new_instance['tag_filter'] ) ) ? wp_strip_all_tags( $new_instance['tag_filter'] ) : '';
+        $instance['number_of_events'] = ( ! empty( $new_instance['number_of_events'] ) ) ? wp_strip_all_tags( $new_instance['number_of_events'] ) : '5';
         return $instance;
     }
 

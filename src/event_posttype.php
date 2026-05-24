@@ -66,7 +66,7 @@ function ev_kirchen_termine_manage_settings() {
                             </label>
                         </th>
                         <td>
-                            <input type="text" name="ev_kirchen_termine_webpage" size="25" value="<?php echo get_option("ev_kirchen_termine_webpage"); ?>" />
+                            <input type="text" name="ev_kirchen_termine_webpage" size="25" value="<?php echo esc_attr(get_option("ev_kirchen_termine_webpage")); ?>" />
                         </td>
                     </tr>
                     <tr valign="top">
@@ -76,7 +76,7 @@ function ev_kirchen_termine_manage_settings() {
                             </label>
                         </th>
                         <td>
-                            <input type="text" name="ev_kirchen_termine_vid" size="25" value="<?php echo get_option("ev_kirchen_termine_vid"); ?>" />
+                            <input type="text" name="ev_kirchen_termine_vid" size="25" value="<?php echo esc_attr(get_option("ev_kirchen_termine_vid")); ?>" />
                         </td>
                     </tr>
                     <tr valign="top">
@@ -86,7 +86,7 @@ function ev_kirchen_termine_manage_settings() {
                             </label>
                         </th>
                         <td>
-                            <input type="text" name="ev_kirchen_termine_vid_eventtype_filter" size="25" value="<?php echo get_option("ev_kirchen_termine_vid_eventtype_filter"); ?>" />
+                            <input type="text" name="ev_kirchen_termine_vid_eventtype_filter" size="25" value="<?php echo esc_attr(get_option("ev_kirchen_termine_vid_eventtype_filter")); ?>" />
                         </td>
                     </tr>
                     <tr valign="top">
@@ -96,7 +96,7 @@ function ev_kirchen_termine_manage_settings() {
                             </label>
                         </th>
                         <td>
-                            <input type="text" name="ev_kirchen_termine_region" size="25" value="<?php echo get_option("ev_kirchen_termine_region"); ?>" />
+                            <input type="text" name="ev_kirchen_termine_region" size="25" value="<?php echo esc_attr(get_option("ev_kirchen_termine_region")); ?>" />
                         </td>
                     </tr>
                     <tr valign="top">
@@ -106,7 +106,7 @@ function ev_kirchen_termine_manage_settings() {
                             </label>
                         </th>
                         <td>
-                            <input type="text" name="ev_kirchen_termine_region_eventtype_filter" size="25" value="<?php echo get_option("ev_kirchen_termine_region_eventtype_filter"); ?>" />
+                            <input type="text" name="ev_kirchen_termine_region_eventtype_filter" size="25" value="<?php echo esc_attr(get_option("ev_kirchen_termine_region_eventtype_filter")); ?>" />
                         </td>
                     </tr>
                     <tr valign="top">
@@ -116,7 +116,7 @@ function ev_kirchen_termine_manage_settings() {
                             </label>
                         </th>
                         <td>
-                            <input type="text" name="ev_kirchen_termine_custom_filter" size="40" value="<?php echo get_option("ev_kirchen_termine_custom_filter"); ?>" />
+                            <input type="text" name="ev_kirchen_termine_custom_filter" size="40" value="<?php echo esc_attr(get_option("ev_kirchen_termine_custom_filter")); ?>" />
                         </td>
                     </tr>
                     <tr valign="top">
@@ -128,10 +128,15 @@ function ev_kirchen_termine_manage_settings() {
                                 <option value="">Default</option>"
                                 <?php
                                 $templates = get_page_templates();
-                                foreach ($templates as $template) {
-                                    $selected = "";
-                                    if($template == get_option("ev_kirchen_termine_event_template")) $selected = " selected";
-                                    echo "<option value='$template'$selected>$template</option>";
+                                $current_setting = get_option( 'ev_kirchen_termine_event_template' );
+                                foreach ( $templates as $template_name => $template_file ) {
+                                    // Escape safely during output
+                                    echo sprintf(
+                                        '<option value="%s"%s>%s</option>',
+                                        esc_attr( $template_file ),
+                                        selected( $current_setting, $template_file, false ), // selected() returns securely formatted ' selected="selected"' or empty
+                                        esc_html( $template_name )
+                                    );
                                 }
                                 ?>
                             </select>
@@ -139,21 +144,26 @@ function ev_kirchen_termine_manage_settings() {
                     </tr>
                     <tr valign="top">
                         <th scope="row">
-                            <label for="ev_kirchen_termine_map_type"><?php _e("Map type:", 'ev-kirchen-termine'); ?></label>
+                            <label for="ev_kirchen_termine_map_type"><?php esc_html_e("Map type:", 'ev-kirchen-termine'); ?></label>
                         </th>
                         <td>
                             <select name="ev_kirchen_termine_map_type" id="ev_kirchen_termine_map_type">
                                 <?php
-                                $templates = array(
+                                $options = array(
                                     "google_iframe" => __("Google Maps iframe", 'ev-kirchen-termine'),
                                     "google_image" => __("Google Maps image", 'ev-kirchen-termine'),
                                     "osm_iframe" => __("OpenStreetMap iframe", 'ev-kirchen-termine'),
                                     //"osm_image" => __("OpenStreetMap image", 'ev-kirchen-termine')
                                 );
-                                foreach ($templates as $template_key => $template_name) {
-                                    $selected = "";
-                                    if($template_key == get_option("ev_kirchen_termine_map_type")) $selected = " selected";
-                                    echo "<option value='$template_key'$selected>$template_name</option>";
+                                $current_setting = get_option("ev_kirchen_termine_map_type");
+                                foreach ($options as $option_key => $option_name) {
+                                    // Escape safely during output
+                                    echo sprintf(
+                                        '<option value="%s"%s>%s</option>',
+                                        esc_attr( $option_key ),
+                                        selected( $current_setting, $option_key, false ),  // selected() returns securely formatted ' selected="selected"' or empty
+                                        esc_html( $option_name )
+                                    );
                                 }
                                 ?>
                             </select>
@@ -162,16 +172,16 @@ function ev_kirchen_termine_manage_settings() {
                     <tr valign="top">
                         <th scope="row">
                             <label for="ev_kirchen_termine_google_maps_api_key">
-                                <?php _e("Google Maps API key", 'ev-kirchen-termine'); ?>:
+                                <?php esc_html_e("Google Maps API key", 'ev-kirchen-termine'); ?>:
                             </label>
                         </th>
                         <td>
-                            <input type="text" name="ev_kirchen_termine_google_maps_api_key" size="64" value="<?php echo get_option("ev_kirchen_termine_google_maps_api_key"); ?>" />
+                            <input type="text" name="ev_kirchen_termine_google_maps_api_key" size="64" value="<?php echo esc_attr(get_option("ev_kirchen_termine_google_maps_api_key")); ?>" />
                         </td>
                     </tr>
                     <tr valign="top">
                         <th scope="row">
-                            <?php _e("Other settings:", 'ev-kirchen-termine'); ?>
+                            <?php esc_html_e("Other settings:", 'ev-kirchen-termine'); ?>
                         </th>
                         <td>
                             <label for="ev_kirchen_termine_show_share_icons">
@@ -179,14 +189,14 @@ function ev_kirchen_termine_manage_settings() {
                                     if(get_option("ev_kirchen_termine_show_share_icons")) {
                                         echo "checked";
                                     } ?>>
-                                <?php _e("Enable Share links on event page", 'ev-kirchen-termine'); ?>
+                                <?php esc_html_e("Enable Share links on event page", 'ev-kirchen-termine'); ?>
                             </label></br>
                             <label for="ev_kirchen_termine_show_feedback_count">
                                 <input name="ev_kirchen_termine_show_feedback_count" type="checkbox" id="ev_kirchen_termine_show_feedback_count" <?php
                                     if(get_option("ev_kirchen_termine_show_feedback_count")) {
                                         echo "checked";
                                     } ?>>
-                                <?php _e("registration form with number of remaining places", 'ev-kirchen-termine'); ?>
+                                <?php esc_html_e("registration form with number of remaining places", 'ev-kirchen-termine'); ?>
                             </label></br>
                             <label for="ev_kirchen_termine_show_events_in_search">
                                 <input name="ev_kirchen_termine_show_events_in_search" type="checkbox" id="ev_kirchen_termine_show_events_in_search" <?php
@@ -338,7 +348,7 @@ abstract class ev_kirchen_termine_Meta_Box {
                     <label for="event_start">Veranstaltungsbeginn</label>
                 </th>
                 <td>
-                    <input name="event_start" id="event_start" type="datetime-local" class="postbox" value="<?php echo $event_start; ?>"></input>
+                    <input name="event_start" id="event_start" type="datetime-local" class="postbox" value="<?php echo esc_attr($event_start); ?>"></input>
                 </td>
             </tr>
             <tr valign="top">
@@ -346,7 +356,7 @@ abstract class ev_kirchen_termine_Meta_Box {
                     <label for="event_end">Veranstaltungsende</label>
                 </th>
                 <td>
-                    <input name="event_end" id="event_end" type="datetime-local" class="postbox" value="<?php echo $event_end; ?>"></input>
+                    <input name="event_end" id="event_end" type="datetime-local" class="postbox" value="<?php echo esc_attr($event_end); ?>"></input>
                 </td>
             </tr>
             <tr valign="top">
@@ -354,7 +364,7 @@ abstract class ev_kirchen_termine_Meta_Box {
                     <label for="event_id">Veranstaltungs-ID</label>
                 </th>
                 <td>
-                    <input name="event_id" id="event_id" type="number" class="postbox" value="<?php echo $event_id; ?>"></input>
+                    <input name="event_id" id="event_id" type="number" class="postbox" value="<?php echo esc_attr($event_id); ?>"></input>
                 </td>
             </tr>
             <tr valign="top">
@@ -362,7 +372,7 @@ abstract class ev_kirchen_termine_Meta_Box {
                     <label for="event_id">Veranstalter-ID</label>
                 </th>
                 <td>
-                    <input name="event_id" id="event_vid" type="number" class="postbox" value="<?php echo $event_vid; ?>"></input>
+                    <input name="event_id" id="event_vid" type="number" class="postbox" value="<?php echo esc_attr($event_vid); ?>"></input>
                 </td>
             </tr>
         </table>
