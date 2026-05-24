@@ -32,6 +32,9 @@ function add_postmeta_to_event($post_id) {
     if(empty($location["name"]))
         return "";
 
+    if($location["name"] == "Ohne Ort")
+        return "";
+
     $geo_long       = (float) str_replace(",", ".", $location["longitude"]);
     $geo_lat        = (float) str_replace(",", ".", $location["latitude"]);
     $zoom           = 0.002;

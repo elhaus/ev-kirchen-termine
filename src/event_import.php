@@ -61,7 +61,7 @@ function ev_kirchen_termine_import_events($force = false) {
         $data = new SimpleXMLElement(file_get_contents($url));
 
         //convert xml to array in php
-        $events_data = array_merge($events_data, json_decode(json_encode($data->Export), true)["Veranstaltung"]);
+        $events_data = array_merge($events_data, array(json_decode(json_encode($data->Export), true)["Veranstaltung"]));
 
     }
 
@@ -155,7 +155,7 @@ function ev_kirchen_termine_import_events($force = false) {
         $event = array();
 
         foreach($data_keys as $data_key) {
-            if(is_string($event_data[$data_key])) {
+            if(isset($event_data[$data_key]) && is_string($event_data[$data_key])) {
                 $event[$data_key] = $event_data[$data_key];
             } else {
                 $event[$data_key] = "";
@@ -167,8 +167,12 @@ function ev_kirchen_termine_import_events($force = false) {
         } else {
             $event["_place_EQUIP"] = "";
         }
+        
 
-        $events[$event_data["ID"]] = $event;
+        if(isset($event_data["ID"])) 
+            $events[$event_data["ID"]] = $event;
+        //else
+            //echo json_encode($event_data);
     }
 
 
