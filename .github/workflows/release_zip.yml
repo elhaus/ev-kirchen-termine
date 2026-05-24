@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Build project
         run: |
           mkdir build
@@ -17,7 +17,7 @@ jobs:
         with:
           args: zip -X -r build/${{ github.event.repository.name }}.zip . -x *.git* node_modules/\* .* "*/\.*" *.md *.dist composer.* dev-helpers** build**
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7
         with:
             name: graphql-api
             path: "build/${{ github.event.repository.name }}.zip"

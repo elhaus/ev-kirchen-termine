@@ -12,14 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Psalm
-        uses: docker://vimeo/psalm-github-actions:4.9.3
+        uses: docker://vimeo/psalm-github-actions:6.16.1
         continue-on-error: true
         with:
           composer_ignore_platform_reqs: false
           report_file: results.sarif
       - name: Upload Analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: results.sarif
