@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
       - name: Psalm
-        uses: docker://vimeo/psalm-github-actions:6.16.1
+        uses: docker://vimeo/psalm-github-actions:latest
         continue-on-error: true
         with:
           composer_ignore_platform_reqs: false
