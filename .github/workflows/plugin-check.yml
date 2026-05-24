@@ -1,0 +1,17 @@
+name: WordPress Plugin Check (PCP)
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  plugin-check:
+    name: Run PCP Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Run Official WordPress Plugin Check
+        uses: wordpress/plugin-check-action@v1
