@@ -7,14 +7,12 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  *
 **/
 
-register_activation_hook(__FILE__, 'ev_kirchen_termine_import_events_task_plugin_activate');
 function ev_kirchen_termine_import_events_task_plugin_activate() {
     if (!wp_next_scheduled('ev_kirchen_termine_import_events_task')) {
-        wp_schedule_event(time(), 'hourly', 'ev_kirchen_termine_import_events_task');;
+        wp_schedule_event(time(), 'hourly', 'ev_kirchen_termine_import_events_task');
     }
 }
 
-register_deactivation_hook(__FILE__, 'ev_kirchen_termine_import_events_task_plugin_deactivation');
 function ev_kirchen_termine_import_events_task_plugin_deactivation() {
     wp_clear_scheduled_hook('ev_kirchen_termine_import_events_task');
 }

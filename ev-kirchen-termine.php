@@ -10,22 +10,22 @@
 **/
 
 
-if (!defined('ABSPATH')) die('No direct access allowed');/**
-* Load plugin textdomain.
-*/
-function ev_kirchen_termine_load_textdomain() {
-    load_plugin_textdomain( 'ev-kirchen-termine', false, basename( dirname( __FILE__ ) ) . '/languages/' );
-}
-add_action( 'init', 'ev_kirchen_termine_load_textdomain' );
+if (!defined('ABSPATH')) die('No direct access allowed');
 
 
 function ev_kirchen_termin_load_plugin_css_js() {
     $plugin_url = plugin_dir_url( __FILE__ );
 
-    wp_enqueue_style( 'ev_kirchen_events_css', $plugin_url . 'events.css' );
+    wp_enqueue_style( 'ev_kirchen_events_css', $plugin_url . 'events.css', array(), "0.1.2" );
 
     wp_enqueue_script('jquery');
-    wp_register_script( 'ev_kirchen_events_js', $plugin_url . 'events.js', array('jquery') , "1.0.1" );
+    wp_register_script( 
+        'ev_kirchen_events_js',
+        $plugin_url . 'events.js',
+        array('jquery'),
+        "0.1.2",
+        array('in_footer'  => true)
+    );
     wp_localize_script( 'ev_kirchen_events_js', 'ev_kirchen_events_js_data', array(
         'ajaxurl' => $plugin_url,
     ));
@@ -42,6 +42,9 @@ include_once plugin_dir_path( __FILE__ ) . 'src/event_page_meta_data.php';
 include_once plugin_dir_path( __FILE__ ) . 'src/event_import.php';
 include_once plugin_dir_path( __FILE__ ) . 'src/event_dashboard_widget.php';
 
+# activation hook to register cron job
+register_activation_hook(__FILE__, 'ev_kirchen_termine_import_events_task_plugin_activate');
+register_deactivation_hook(__FILE__, 'ev_kirchen_termine_import_events_task_plugin_deactivation');
 
 
 
@@ -69,7 +72,6 @@ add_filter('single_template', function($original) {
     return $original;
 
 });
-
 
 
 
