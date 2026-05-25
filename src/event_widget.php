@@ -75,13 +75,18 @@ class ev_event_widget extends WP_Widget {
                 foreach ($event_tags as $event_tag) {
                     $selected = "";
                     if(in_array($event_tag->slug, explode(",", $tag_filter))) $selected = " selected";
-                    echo "<option value='".$event_tag->slug."'$selected>".$event_tag->name."</option>";
+                    echo sprintf(
+                        '<option value="%s"%s>%s</option>',
+                        esc_attr( $event_tag->slug ),
+                        selected( in_array($event_tag->slug, explode(",", $tag_filter)), true, false ),
+                        esc_html( $event_tag->name )
+                    );
                 }
                 ?>
             </select>
 
-            <label for="<?php echo $this->get_field_id( 'number_of_events' ); ?>"><?php esc_html_e( 'Number of events:', 'ev-kirchen-termine' ); ?></label>
-            <input type="number" name="<?php echo $this->get_field_name( 'number_of_events' ); ?>" id="<?php echo $this->get_field_id( 'number_of_events' ); ?>" value="<?php echo $number_of_events; ?>" min="1" max="50" step="1">
+            <label for="<?php echo esc_attr($this->get_field_id( 'number_of_events' )); ?>"><?php esc_html_e( 'Number of events:', 'ev-kirchen-termine' ); ?></label>
+            <input type="number" name="<?php echo esc_attr($this->get_field_name( 'number_of_events' )); ?>" id="<?php echo esc_attr($this->get_field_id( 'number_of_events' )); ?>" value="<?php echo esc_attr($number_of_events); ?>" min="1" max="50" step="1">
         </p>
         <?php
     }
