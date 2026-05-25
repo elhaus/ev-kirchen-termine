@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
  *
- * Corn
+ * Cron
  *
 **/
 
@@ -12,6 +12,7 @@ function ev_kirchen_termine_import_events_task_plugin_activate() {
         wp_schedule_event(time(), 'hourly', 'ev_kirchen_termine_import_events_task');
     }
 
+    // Create a archive page if not exsting
     $check_page_exist = get_page_by_path('events', 'OBJECT', 'page');
     // Check if the page already exists
     if(empty($check_page_exist)) {
@@ -54,6 +55,7 @@ function ev_kirchen_termine_import_events($force = false) {
     $parameter["region"] = "all";
     $parameter["itemsPerPage"] = 3000;
     $parameter["highlight"] = "all";
+    $parameter["past"] = 2; // load also past events
     $parameter["start"] = date("Y-m-d", strtotime("-30 days"));
     $parameter["end"] = date("Y-m-d", strtotime("+120 days"));
 
@@ -76,7 +78,7 @@ function ev_kirchen_termine_import_events($force = false) {
         $data = new SimpleXMLElement(file_get_contents($url));
 
         //convert xml to array in php
-        $events_data = array_merge($events_data, array(json_decode(json_encode($data->Export), true)["Veranstaltung"]));
+        $events_data = array_merge($events_data, json_decode(json_encode($data->Export), true)["Veranstaltung"]);
 
     }
 
@@ -186,18 +188,12 @@ function ev_kirchen_termine_import_events($force = false) {
 
         if(isset($event_data["ID"])) 
             $events[$event_data["ID"]] = $event;
-        //else
-            //echo json_encode($event_data);
     }
-
 
     // End Transform
 
-
-
     $date_format = get_option( 'date_format' );
     $time_format = get_option( 'time_format' );
-
 
 
     if(empty($events)) {
