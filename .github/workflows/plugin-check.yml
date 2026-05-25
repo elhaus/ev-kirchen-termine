@@ -15,3 +15,5 @@ jobs:
         uses: actions/checkout@v6
       - name: Run Official WordPress Plugin Check
         uses: wordpress/plugin-check-action@v1
+        with:
+          exclude-directories: '.github'
