@@ -42,9 +42,6 @@ if(! file_exists($path)) {
                     $result = -10;
                 }
 
-
-
-
             } else {
                 $result = "event not found";
             }
