@@ -1,5 +1,11 @@
 # ev-kirchen-termine
 
+Contributors: jan2000
+Tags: events, kirche
+Tested up to: 7.0
+Stable tag: 0.1.3
+License: GPL v2 or later
+
 ev-kirchen-termine is a WordPress plugin to import events form a event database like https://www.veranstaltungen-ekvw.de/.
 The events will be handled as a custom post type.
 
@@ -19,8 +25,3 @@ The events will be handled as a custom post type.
     [events_calendar channel="" vid=""]
  - channel (optional)
  - vid (optional)
-
-## Installation
-
- 1. extract the plugin data to the wordpress dirotory "/wp-content/plugins/ev-kirchen-termine/" or upload the plugin via the wordpress plugin menu (zip file)
- 2. go to Settings -> Ev. Kirchen Termine Einstellungen, configure event source website and vid
