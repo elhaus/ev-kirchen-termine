@@ -17,41 +17,41 @@ function ev_kirchen_termine_manage_settings() {
     <?php
     if (isset($_POST["update_settings"])) {
 
-        $ev_kirchen_termine_webpage = esc_attr($_POST["ev_kirchen_termine_webpage"]);
-        update_option("ev_kirchen_termine_webpage", $ev_kirchen_termine_webpage);
+        check_admin_referer( 'update_ev-kirchen-termine_settings' );
 
-        $ev_kirchen_termine_vid = esc_attr($_POST["ev_kirchen_termine_vid"]);
-        update_option("ev_kirchen_termine_vid", $ev_kirchen_termine_vid);
+        // Define your fields by type
+        $text_fields = [
+            'ev_kirchen_termine_webpage',
+            'ev_kirchen_termine_vid',
+            'ev_kirchen_termine_vid_eventtype_filter',
+            'ev_kirchen_termine_region',
+            'ev_kirchen_termine_region_eventtype_filter',
+            'ev_kirchen_termine_custom_filter',
+            'ev_kirchen_termine_event_template',
+            'ev_kirchen_termine_map_type',
+            'ev_kirchen_termine_google_maps_api_key'
+        ];
 
-        $ev_kirchen_termine_vid_eventtype_filter = esc_attr($_POST["ev_kirchen_termine_vid_eventtype_filter"]);
-        update_option("ev_kirchen_termine_vid_eventtype_filter", $ev_kirchen_termine_vid_eventtype_filter);
+        // Process standard text inputs
+        foreach ( $text_fields as $field ) {
+            $value = isset( $_POST[ $field ] ) 
+                ? sanitize_text_field( wp_unslash( $_POST[ $field ] ) ) 
+                : '';
+            update_option( $field, $value );
+        }
 
-        $ev_kirchen_termine_region = esc_attr($_POST["ev_kirchen_termine_region"]);
-        update_option("ev_kirchen_termine_region", $ev_kirchen_termine_region);
+        $checkbox_fields = [
+            'ev_kirchen_termine_show_events_in_search',
+            'ev_kirchen_termine_show_share_icons',
+            'ev_kirchen_termine_show_feedback_count'
+        ];
 
-        $ev_kirchen_termine_region_eventtype_filter = esc_attr($_POST["ev_kirchen_termine_region_eventtype_filter"]);
-        update_option("ev_kirchen_termine_region_eventtype_filter", $ev_kirchen_termine_region_eventtype_filter);
-
-        $ev_kirchen_termine_custom_filter = esc_attr($_POST["ev_kirchen_termine_custom_filter"]);
-        update_option("ev_kirchen_termine_custom_filter", $ev_kirchen_termine_custom_filter);
-
-        $ev_kirchen_termine_event_template = esc_attr($_POST["ev_kirchen_termine_event_template"]);
-        update_option("ev_kirchen_termine_event_template", $ev_kirchen_termine_event_template);
-
-        $ev_kirchen_termine_map_type = esc_attr($_POST["ev_kirchen_termine_map_type"]);
-        update_option("ev_kirchen_termine_map_type", $ev_kirchen_termine_map_type);
-
-        $ev_kirchen_termine_google_maps_api_key = esc_attr($_POST["ev_kirchen_termine_google_maps_api_key"]);
-        update_option("ev_kirchen_termine_google_maps_api_key", $ev_kirchen_termine_google_maps_api_key);
-
-        $ev_kirchen_termine_show_events_in_search = isset($_POST["ev_kirchen_termine_show_events_in_search"]) ? 1 : 0;
-        update_option("ev_kirchen_termine_show_events_in_search", $ev_kirchen_termine_show_events_in_search);
-
-        $ev_kirchen_termine_show_share_icons = isset($_POST["ev_kirchen_termine_show_share_icons"]) ? 1 : 0;
-        update_option("ev_kirchen_termine_show_share_icons", $ev_kirchen_termine_show_share_icons);
-
-        $ev_kirchen_termine_show_share_icons = isset($_POST["ev_kirchen_termine_show_feedback_count"]) ? 1 : 0;
-        update_option("ev_kirchen_termine_show_feedback_count", $ev_kirchen_termine_show_share_icons);
+        // Process checkbox inputs (strictly 1 or 0)
+        foreach ( $checkbox_fields as $field ) {
+            // If the checkbox is checked, it exists in $_POST, so save 1. Otherwise, save 0.
+            $value = isset( $_POST[ $field ] ) ? 1 : 0;
+            update_option( $field, $value );
+        }
 
     }
     ?>
@@ -209,6 +209,7 @@ function ev_kirchen_termine_manage_settings() {
                     </tr>
                 </table>
                 <input type="hidden" name="update_settings" value="Y" />
+                <?php wp_nonce_field( 'update_ev-kirchen-termine_settings' ); ?>
                 <p>
                     <input type="submit" value="<?php esc_html_e("save settings", 'ev-kirchen-termine'); ?>" class="button-primary"/>
                 </p>
