@@ -6,7 +6,7 @@ function create_small_event_list( $atts) {
     $plugin_url = plugin_dir_url( dirname(__FILE__) );
     wp_enqueue_style(
         'ev_kirchen_termine_event_widget_css',
-        $plugin_url . 'event-widget.css',
+        $plugin_url . 'public/event-widget.css',
         array(),
         "0.1.2"
     );
@@ -202,65 +202,33 @@ function ev_kirchen_termine_create_calendar($atts) {
 
     $plugin_url = plugin_dir_url( dirname(__FILE__) );
 
-    wp_enqueue_style(
-        'ev_kirchen_termine_fullcalendar_css',
-        $plugin_url . 'fullcalendar/main.css',
-        array(),
-        "0.1.2"
-    );
     wp_enqueue_script(
         'ev_kirchen_termine_fullcalendar_js',
-        $plugin_url . 'fullcalendar/main.js',
+        $plugin_url . 'public/fullcalendar/index.global.js',
         array(),
         "0.1.2",
         array('in_footer'  => true)
     );
     wp_enqueue_script(
         'ev_kirchen_termine_fullcalendar_local_js',
-        $plugin_url . 'fullcalendar/locales/de.js',
+        $plugin_url . 'public/fullcalendar/de.global.js',
         array(),
         "0.1.2",
         array('in_footer'  => true)
     );
 
+    $data_json = wp_json_encode( array( 'events' => array_values($show_events) ) );
+    $inline_script = "var evkiteCalendarData = {$data_json};";
+
+    wp_add_inline_script('ev_kirchen_events_js', $inline_script, 'before');
+
 
     return '
-        <br/>
-
-        <script>
-
-            function mobilecheck() {
-              return (window.innerWidth < 765);
-            };
-
-          document.addEventListener("DOMContentLoaded", function() {
-
-            var calendarEl = document.getElementById("calendar");
-
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-              headerToolbar: {
-                left: "prev,next today",
-                center: "title",
-                right: mobilecheck() ? "" : "dayGridMonth,timeGridWeek,timeGridDay,listMonth",
-              },
-              locale: "de",
-              weekNumbers: true,
-              height: "auto",
-              initialView: mobilecheck() ? "listMonth" : "dayGridMonth",
-              navLinks: true, // can click day/week names to navigate views
-              dayMaxEvents: true, // allow "more" link when too many events
-              eventColor: "#213c6b",
-              events: '.json_encode(array_values($show_events)).'
-            });
-
-            calendar.render();
-
-          });
-
-        </script>
+        <br>
         <div id="events" class="">
-              <div id="calendar"></div>
-              <br/><br/>
+              <div id="evkitecalendar"></div>
+              <br>
+              <br>
         </div>';
 
 }

@@ -19,12 +19,12 @@ if (!defined('ABSPATH')) die('No direct access allowed');
 function ev_kirchen_termin_load_plugin_css_js() {
     $plugin_url = plugin_dir_url( __FILE__ );
 
-    wp_enqueue_style( 'ev_kirchen_events_css', $plugin_url . 'events.css', array(), "0.1.2" );
+    wp_enqueue_style( 'ev_kirchen_events_css', $plugin_url . 'public/events.css', array(), "0.1.2" );
 
     wp_enqueue_script('jquery');
     wp_register_script( 
         'ev_kirchen_events_js',
-        $plugin_url . 'events.js',
+        $plugin_url . 'public/events.js',
         array('jquery'),
         "0.1.2",
         array('in_footer'  => true)

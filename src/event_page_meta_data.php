@@ -89,16 +89,16 @@ function add_postmeta_to_event($post_id) {
     $barrier_free = "";
     $equipped = explode(",", $location["equipped"]);
     if(in_array("1", $equipped)) {
-        $barrier_free .= '<img class="equipicon" title="Rollstuhlgerecht" alt="Rollstuhlgerecht" src="'.get_site_url().'/wp-content/plugins/ev-kirchen-termine/img/1_rollstuhlgerecht.png">';
+        $barrier_free .= '<img class="equipicon" title="Rollstuhlgerecht" alt="Rollstuhlgerecht" src="'.get_site_url().'/wp-content/plugins/ev-kirchen-termine/public/img/1_rollstuhlgerecht.png">';
     }
     if(in_array("2", $equipped)) {
-        $barrier_free .= '<img class="equipicon" title="Induktionsanlage für Hörgeräte" alt="Induktionsanlage für Hörgeräte" src="'.get_site_url().'/wp-content/plugins/ev-kirchen-termine/img/2_induktion.png">';
+        $barrier_free .= '<img class="equipicon" title="Induktionsanlage für Hörgeräte" alt="Induktionsanlage für Hörgeräte" src="'.get_site_url().'/wp-content/plugins/ev-kirchen-termine/public/img/2_induktion.png">';
     }
     if(in_array("3", $equipped)) {
-        $barrier_free .= '<img class="equipicon" title="Behinderten-WC" alt="Behinderten-WC" src="'.get_site_url().'/wp-content/plugins/ev-kirchen-termine/img/3_behinderten-wc.png">';
+        $barrier_free .= '<img class="equipicon" title="Behinderten-WC" alt="Behinderten-WC" src="'.get_site_url().'/wp-content/plugins/ev-kirchen-termine/public/img/3_behinderten-wc.png">';
     }
     if(in_array("4", $equipped)) {
-        $barrier_free .= '<img class="equipicon" title="Behindertenparkplatz" alt="Behindertenparkplatz" src="'.get_site_url().'/wp-content/plugins/ev-kirchen-termine/img/4_behindertenparkplatz.png">';
+        $barrier_free .= '<img class="equipicon" title="Behindertenparkplatz" alt="Behindertenparkplatz" src="'.get_site_url().'/wp-content/plugins/ev-kirchen-termine/public/img/4_behindertenparkplatz.png">';
     }
     if(!empty($location["equipped_text"])) {
         $barrier_free .= '<p class="equipicon">'.$location["equipped_text"].'</p>';
