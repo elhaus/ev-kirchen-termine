@@ -5,10 +5,11 @@ var el = wp.element.createElement,
     registerBlockType = wp.blocks.registerBlockType,
     ServerSideRender = wp.serverSideRender,
     TextControl = wp.components.TextControl,
-	PanelBody = wp.components.PanelBody,
-	PanelRow = wp.components.PanelRow,
-	RangeControl = wp.components.RangeControl,
+	  PanelBody = wp.components.PanelBody,
+	  PanelRow = wp.components.PanelRow,
+	  RangeControl = wp.components.RangeControl,
     TextareaControl = wp.components.TextareaControl,
+    FormTokenField = wp.components.FormTokenField,
     ToggleControl = wp.components.ToggleControl,
     InspectorControls = wp.blockEditor.InspectorControls;
 
@@ -21,8 +22,8 @@ registerBlockType( 'evkirchentermin/small-event-list', {
   attributes: {
 
     'channel': {
-      type: 'string',
-      default: ""
+      type: 'array',
+      default: []
     },
     'limit': {
       type: 'integer',
@@ -49,7 +50,7 @@ registerBlockType( 'evkirchentermin/small-event-list', {
       default: true
     },
 
-	'vid': {
+	  'vid': {
       type: 'string',
       default: ""
     },
@@ -62,6 +63,18 @@ registerBlockType( 'evkirchentermin/small-event-list', {
     if(props.isSelected){
       //console.debug(props.attributes);
     };
+
+    if ( typeof props.attributes.channel === 'string' ) {
+      var oldString = props.attributes.channel;
+      var newArray = oldString ? oldString.split(',').map( function(item) { return item.trim(); } ) : [];
+      
+      // Zustand sofort updaten
+      props.setAttributes( { channel: newArray } );
+    }
+
+    var channelSuggestions = ( typeof evkiteChannelSuggestions !== 'undefined' && evkiteChannelSuggestions.channels ) 
+      ? evkiteChannelSuggestions.channels 
+      : [];
 
     return [
       /**
@@ -87,13 +100,15 @@ registerBlockType( 'evkirchentermin/small-event-list', {
 
 				el( PanelRow, {},
 
-					el( TextControl, {
-					  label: __('Channel Filter', 'ev-kirchen-termine'),
-					  value: props.attributes.channel,
-					  onChange: ( value ) => {
-						props.setAttributes( { channel: value } );
-					  }
-					} ),
+					el( FormTokenField, {
+            label: __('Channel Filter', 'ev-kirchen-termine'),
+            value: Array.isArray(props.attributes.channel) ? props.attributes.channel : [],
+            suggestions: channelSuggestions,
+            maxLength: 10,
+            onChange: ( value ) => {
+              props.setAttributes( { channel: value } );
+            }
+          } )
 
 				),
 
@@ -123,7 +138,7 @@ registerBlockType( 'evkirchentermin/small-event-list', {
 
 				),
 
-                el( PanelRow, {},
+        el( PanelRow, {},
 
 					el( ToggleControl, {
 					  label: __('Show location', 'ev-kirchen-termine'),
@@ -135,7 +150,7 @@ registerBlockType( 'evkirchentermin/small-event-list', {
 
 				),
 
-                el( PanelRow, {},
+        el( PanelRow, {},
 
 					el( ToggleControl, {
 					  label: __('Show organizer', 'ev-kirchen-termine'),
@@ -147,7 +162,7 @@ registerBlockType( 'evkirchentermin/small-event-list', {
 
 				),
 
-                el( PanelRow, {},
+        el( PanelRow, {},
 
 					el( ToggleControl, {
 					  label: __('Show more events link', 'ev-kirchen-termine'),

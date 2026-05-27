@@ -20,10 +20,36 @@ function evkirchentermin_smalleventlist_block_init()
       array('in_footer'  => true)
   );
 
+  // Get all IDs of the 'event' post type
+  $event_ids = get_posts( array(
+      'post_type'      => 'event',
+      'posts_per_page' => -1,
+      'fields'         => 'ids', // optimized query returning only IDs
+  ) );
+
+  $event_channels = array();
+
+  // Fetch the terms (tags) attached to those specific event IDs
+  if ( ! empty( $event_ids ) ) {
+      $event_channels = wp_get_object_terms( $event_ids, 'post_tag', array(
+          'fields'  => 'slugs',
+          'orderby' => 'name',
+          'order'   => 'ASC',
+      ) );
+      
+      // De-duplicate the results
+      $event_channels = array_unique( $event_channels, SORT_REGULAR );
+  }
+
+  $inline_js = 'var evkiteChannelSuggestions = ' . wp_json_encode( array( 'channels' => $event_channels ) ) . ';';
+  
+  // Das Inline-Skript direkt an dein Editor-Skript anheften
+  wp_add_inline_script( 'small-event-list', $inline_js, 'before' );
+
   add_theme_support( 'editor-styles' );
   // Enqueue block editor stylesheet.
   $plugin_url = plugin_dir_url( dirname(__FILE__) );
-  add_editor_style( $plugin_url . 'event-widget.css' );
+  add_editor_style( $plugin_url . 'public/event-widget.css' );
 
   /**
    * Register our block, and explicitly define the attributes we accept
@@ -34,7 +60,11 @@ function evkirchentermin_smalleventlist_block_init()
 
       'attributes'  => array(
           'channel' => array(
-              'type' => 'string'
+              'type'    => 'array',
+              'default' => array(), // Leeres Array als Standard
+              'items'   => array(
+                  'type' => 'string'
+              )
           ),
           'limit' => array(
               'type' => 'integer'
@@ -51,7 +81,7 @@ function evkirchentermin_smalleventlist_block_init()
           'show_more_link' => array(
               'type' => 'boolean'
           ),
-		  'vid' => array(
+		      'vid' => array(
               'type' => 'string'
           )
       ),
@@ -78,6 +108,10 @@ add_action( 'init', 'evkirchentermin_smalleventlist_block_init' );
  */
 function evkirchentermin_smalleventlist_block_render( $attributes )
 {
+  
+if(is_array($attributes["channel"]))
+    $attributes["channel"] = implode(",", $attributes["channel"]);
+
   $content = create_small_event_list($attributes);
 
   return $content;

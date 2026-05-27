@@ -44,12 +44,25 @@ class ev_event_widget extends WP_Widget {
 
         global $wpdb;
 
-        $event_tags = $wpdb->get_results(
-            "SELECT $wpdb->terms.slug as 'slug',$wpdb->terms.name as 'name' FROM $wpdb->term_relationships
-                INNER JOIN $wpdb->posts on $wpdb->posts.ID = $wpdb->term_relationships.object_id
-                INNER JOIN $wpdb->terms on $wpdb->term_relationships.term_taxonomy_id = $wpdb->terms.term_id
-                WHERE $wpdb->posts.post_type = 'event'
-                GROUP BY slug");
+        // Get all IDs of the 'event' post type
+        $event_ids = get_posts( array(
+            'post_type'      => 'event',
+            'posts_per_page' => -1,
+            'fields'         => 'ids', // optimized query returning only IDs
+        ) );
+
+        $event_tags = array();
+
+        // Fetch the terms (tags) attached to those specific event IDs
+        if ( ! empty( $event_ids ) ) {
+            $event_tags = wp_get_object_terms( $event_ids, 'post_tag', array(
+                'orderby' => 'name',
+                'order'   => 'ASC',
+            ) );
+            
+            // De-duplicate the results
+            $event_tags = array_unique( $event_tags, SORT_REGULAR );
+        }
 
         if ( isset( $instance[ 'tag_filter' ] ) ) {
             $tag_filter = $instance[ 'tag_filter' ];

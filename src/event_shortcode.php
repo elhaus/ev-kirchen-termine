@@ -65,7 +65,7 @@ function create_small_event_list( $atts) {
 		$args['meta_query']["highlight"] = array(
 			'key'	 	=> '_ev_kirchen_termine_meta_key_highlight',
 			'value'	  	=> '1',
-			'compare' 	=> 'LIKE',
+			'compare' 	=> '=',
 		);
 	}
 
