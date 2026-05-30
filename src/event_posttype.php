@@ -42,8 +42,7 @@ function ev_kirchen_termine_manage_settings() {
 
         $checkbox_fields = [
             'ev_kirchen_termine_show_events_in_search',
-            'ev_kirchen_termine_show_share_icons',
-            'ev_kirchen_termine_show_feedback_count'
+            'ev_kirchen_termine_show_share_icons'
         ];
 
         // Process checkbox inputs (strictly 1 or 0)
@@ -190,13 +189,6 @@ function ev_kirchen_termine_manage_settings() {
                                         echo "checked";
                                     } ?>>
                                 <?php esc_html_e("Enable Share links on event page", 'ev-kirchen-termine'); ?>
-                            </label></br>
-                            <label for="ev_kirchen_termine_show_feedback_count">
-                                <input name="ev_kirchen_termine_show_feedback_count" type="checkbox" id="ev_kirchen_termine_show_feedback_count" <?php
-                                    if(get_option("ev_kirchen_termine_show_feedback_count")) {
-                                        echo "checked";
-                                    } ?>>
-                                <?php esc_html_e("registration form with number of remaining places", 'ev-kirchen-termine'); ?>
                             </label></br>
                             <label for="ev_kirchen_termine_show_events_in_search">
                                 <input name="ev_kirchen_termine_show_events_in_search" type="checkbox" id="ev_kirchen_termine_show_events_in_search" <?php
