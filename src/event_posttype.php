@@ -233,25 +233,21 @@ add_action("admin_menu", "setup_ev_kirchen_termine_admin_menus");
 */
 function ev_kirchen_termine_custom_post_type() {
     $labels = array(
-        'name' => 'Evagelische Termine',
-        'singular_name' => 'Veranstaltung',
-        'menu_name' => 'Evagelische Termine',
-        'parent_item_colon' => '',
-        'all_items' => 'Alle Veranstaltungen',
-        'view_item' => 'Veranstaltung ansehen',
-        'add_new_item' => 'Neue Veranstaltung',
-        'add_new' => 'Veranstaltung hinzufügen',
-        'edit_item' => 'Veranstaltung bearbeiten',
-        'update_item' => 'Veranstaltung aktualisieren',
-        'search_items' => '',
-        'not_found' => '',
-        'not_found_in_trash' => '',
+        'name'               => 'Evangelische Termine', // Tippfehler korrigiert ;)
+        'singular_name'      => 'Veranstaltung',
+        'menu_name'          => 'Evangelische Termine',
+        'all_items'          => 'Alle Veranstaltungen',
+        'view_item'          => 'Veranstaltung ansehen',
+        'add_new_item'       => 'Neue Veranstaltung',
+        'add_new'            => 'Veranstaltung hinzufügen',
+        'edit_item'          => 'Veranstaltung bearbeiten',
+        'update_item'        => 'Veranstaltung aktualisieren',
     );
     $rewrite = array(
-        'slug' => 'event',
+        'slug'       => 'event',
         'with_front' => true,
-        'pages' => true,
-        'feeds' => true,
+        'pages'      => true,
+        'feeds'      => true,
     );
     $args = array(
         'labels' => $labels,
@@ -260,7 +256,7 @@ function ev_kirchen_termine_custom_post_type() {
         'hierarchical' => false,
         'public' => true,
         'show_ui' => true,
-        'show_in_menu' => false,
+        'show_in_menu' => false, // hides admin view
         'show_in_nav_menus' => true,
         'show_in_rest' => true,
         'show_in_admin_bar' => false,
@@ -278,20 +274,19 @@ add_action( 'init', 'ev_kirchen_termine_custom_post_type', 0 );
 
 
 
-abstract class ev_kirchen_termine_Meta_Box {
+class ev_kirchen_termine_Meta_Box {
     /**
      * Set up and add the meta box.
      */
     public static function add() {
-        $screens = [ 'event' ];
-        foreach ( $screens as $screen ) {
-            add_meta_box(
-                'event_data',          // Unique ID
-                'Veranstaltungsdaten', // Box title
-                [ self::class, 'html' ],   // Content callback, must be of type callable
-                $screen                  // Post type
-            );
-        }
+        add_meta_box(
+            'event_data',          // Unique ID
+            'Veranstaltungsdaten', // Box title
+            [ self::class, 'html' ],   // Content callback, must be of type callable
+            'event', // Posttype 
+            'normal',
+            'high'
+        );
     }
 
 
@@ -301,33 +296,42 @@ abstract class ev_kirchen_termine_Meta_Box {
      * @param int $post_id  The post ID.
      */
     public static function save( int $post_id ) {
-        if ( array_key_exists( 'event_start', $_POST ) ) {
-            update_post_meta(
-                $post_id,
-                '_ev_kirchen_termine_meta_key_start',
-                date("Y-m-d H:i:s", strtotime($_POST['event_start']))
-            );
+
+        // safty check (Nonce validation)
+        $nonce_value = isset( $_POST['ev_kirchen_termine_nonce'] ) 
+            ? sanitize_text_field( wp_unslash( $_POST['ev_kirchen_termine_nonce'] ) ) 
+            : '';
+
+        if ( empty( $nonce_value ) || ! wp_verify_nonce( $nonce_value, 'ev_kirchen_termine_save_meta' ) ) {
+            return;
         }
-        if ( array_key_exists( 'event_end', $_POST ) ) {
-            update_post_meta(
-                $post_id,
-                '_ev_kirchen_termine_meta_key_end',
-                date("Y-m-d H:i:s", strtotime($_POST['event_end']))
-            );
+
+        // Auto-Save von WordPress ignorieren
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+            return;
         }
-        if ( array_key_exists( 'event_id', $_POST ) ) {
-            update_post_meta(
-                $post_id,
-                '_ev_kirchen_termine_meta_key_id',
-                $_POST['event_id']
-            );
+
+        // Rechte prüfen
+        if ( ! current_user_can( 'edit_post', $post_id ) ) {
+            return;
         }
-        if ( array_key_exists( 'event_vid', $_POST ) ) {
-            update_post_meta(
-                $post_id,
-                '_ev_kirchen_termine_meta_key_vid',
-                $_POST['event_vid']
-            );
+
+        if ( isset( $_POST['event_start'] ) && ! empty( $_POST['event_start'] ) ) {
+            $clean_event_start = sanitize_text_field( wp_unslash( $_POST['event_start'] ) );
+            update_post_meta( $post_id, '_ev_kirchen_termine_meta_key_start', date("Y-m-d H:i:s", strtotime($clean_event_start)) );
+        }
+
+        if ( isset( $_POST['event_end'] ) && ! empty( $_POST['event_end'] ) ) {
+            $clean_event_end = sanitize_text_field( wp_unslash( $_POST['event_end'] ) );
+            update_post_meta( $post_id, '_ev_kirchen_termine_meta_key_end', date("Y-m-d H:i:s", strtotime($clean_event_end)) );
+        }
+
+        if ( isset( $_POST['event_id'] ) ) {
+            update_post_meta( $post_id, '_ev_kirchen_termine_meta_key_id', sanitize_text_field( wp_unslash( $_POST['event_id'] ) ) );
+        }
+
+        if ( isset( $_POST['event_vid'] ) ) {
+            update_post_meta( $post_id, '_ev_kirchen_termine_meta_key_vid', sanitize_text_field( wp_unslash( $_POST['event_vid'] ) ) );
         }
     }
 
@@ -338,43 +342,32 @@ abstract class ev_kirchen_termine_Meta_Box {
      * @param \WP_Post $post   Post object.
      */
     public static function html( $post ) {
-        $event_start = date("Y-m-d\TH:i", strtotime(get_post_meta( $post->ID, '_ev_kirchen_termine_meta_key_start', true )));
-        $event_end = date("Y-m-d\TH:i", strtotime(get_post_meta( $post->ID, '_ev_kirchen_termine_meta_key_end', true )));
-        $event_id = get_post_meta( $post->ID, '_ev_kirchen_termine_meta_key_id', true );
-        $event_vid = get_post_meta( $post->ID, '_ev_kirchen_termine_meta_key_vid', true );
-        ?>
+        wp_nonce_field( 'ev_kirchen_termine_save_meta', 'ev_kirchen_termine_nonce' );
+
+        $meta_start = get_post_meta( $post->ID, '_ev_kirchen_termine_meta_key_start', true );
+        $meta_end   = get_post_meta( $post->ID, '_ev_kirchen_termine_meta_key_end', true );
+
+        $event_start = ! empty( $meta_start ) ? date("Y-m-d\TH:i", strtotime($meta_start)) : '';
+        $event_end   = ! empty( $meta_end ) ? date("Y-m-d\TH:i", strtotime($meta_end)) : '';
+
+        $event_id    = get_post_meta( $post->ID, '_ev_kirchen_termine_meta_key_id', true );
+        $event_vid   = get_post_meta( $post->ID, '_ev_kirchen_termine_meta_key_vid', true );?>
         <table class="form-table">
-            <tr valign="top">
-                <th scope="row">
-                    <label for="event_start">Veranstaltungsbeginn</label>
-                </th>
-                <td>
-                    <input name="event_start" id="event_start" type="datetime-local" class="postbox" value="<?php echo esc_attr($event_start); ?>"></input>
-                </td>
+            <tr>
+                <th><label for="event_start">Veranstaltungsbeginn</label></th>
+                <td><input name="event_start" id="event_start" type="datetime-local" value="<?php echo esc_attr($event_start); ?>"></td>
             </tr>
-            <tr valign="top">
-                <th scope="row">
-                    <label for="event_end">Veranstaltungsende</label>
-                </th>
-                <td>
-                    <input name="event_end" id="event_end" type="datetime-local" class="postbox" value="<?php echo esc_attr($event_end); ?>"></input>
-                </td>
+            <tr>
+                <th><label for="event_end">Veranstaltungsende</label></th>
+                <td><input name="event_end" id="event_end" type="datetime-local" value="<?php echo esc_attr($event_end); ?>"></td>
             </tr>
-            <tr valign="top">
-                <th scope="row">
-                    <label for="event_id">Veranstaltungs-ID</label>
-                </th>
-                <td>
-                    <input name="event_id" id="event_id" type="number" class="postbox" value="<?php echo esc_attr($event_id); ?>"></input>
-                </td>
+            <tr>
+                <th><label for="event_id">Veranstaltungs-ID</label></th>
+                <td><input name="event_id" id="event_id" type="number" value="<?php echo esc_attr($event_id); ?>"></td>
             </tr>
-            <tr valign="top">
-                <th scope="row">
-                    <label for="event_id">Veranstalter-ID</label>
-                </th>
-                <td>
-                    <input name="event_id" id="event_vid" type="number" class="postbox" value="<?php echo esc_attr($event_vid); ?>"></input>
-                </td>
+            <tr>
+                <th><label for="event_vid">Veranstalter-ID</label></th>
+                <td><input name="event_vid" id="event_vid" type="number" value="<?php echo esc_attr($event_vid); ?>"></td>
             </tr>
         </table>
         <?php
