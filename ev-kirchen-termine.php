@@ -77,9 +77,7 @@ add_filter('single_template', function($original) {
 });
 
 
-
 include_once plugin_dir_path( __FILE__ ) . 'src/event_shortcode.php';
-include_once plugin_dir_path( __FILE__ ) . 'src/event_widget.php';
 
 
 add_action( 'pre_get_posts', function ( $q )
