@@ -87,11 +87,20 @@ function create_small_event_list( $atts) {
 
        $post_meta = get_post_meta($event->ID);
 
-       if(date("Y-m-d", strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0])) == date("Y-m-d", strtotime($post_meta["_ev_kirchen_termine_meta_key_end"][0]))) {
-            $timespan = date_i18n($date_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0]))." um ".date_i18n($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0]))." - ".date_i18n($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_end"][0]))." Uhr";
-       } else {
-           $timespan = date_i18n($date_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0]))." um ".date_i18n($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0]))." - ".date_i18n($date_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_end"][0]))." um ".date_i18n($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_end"][0]));
-       }
+        if(date("Y-m-d", strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0])) == date("Y-m-d", strtotime($post_meta["_ev_kirchen_termine_meta_key_end"][0]))) {
+            $timespan = wp_sprintf('%s um %s - %s Uhr',
+                date_i18n($date_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0])),
+                date_i18n($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0])),
+                date_i18n($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_end"][0]))
+            );
+        } else {
+            $timespan = wp_sprintf('%s um %s - %s um %s',
+                date_i18n($date_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0])),
+                date_i18n($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0])),
+                date_i18n($date_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_end"][0])),
+                date_i18n($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_end"][0]))
+            );
+        }
 
        $day_in_week = date_i18n("D", strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0]));
        $day = date_i18n("j", strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0]));
@@ -115,25 +124,42 @@ function create_small_event_list( $atts) {
                 $organizer = '<div class="evkite-events-location">'.$organizer.'</div>';
        }
 
-       $return .=
-           '<div class="type-evkite_events evkite-clearfix'.$highlight.'">
-               <div class="evkite-mini-calendar-event event--1 ">
-                   <div class="list-date"> <span class="list-dayname"> '.$day_in_week.' </span> <span class="list-daynumber">'.$day.'</span>
-                   </div>
-                   <div class="list-info">
-                       <h2 class="evkite-events-title"> <a href="'.$link.'" rel="bookmark">'.$title.'</a>
-                       </h2>
-                       '.$location.$organizer.'
-                       <div class="evkite-events-duration"> '.$timespan.'
-                       </div>
-                   </div>
-               </div>
-           </div>';
+        $return .= wp_sprintf(
+                '<div class="type-evkite_events evkite-clearfix %s">
+                    <div class="evkite-mini-calendar-event event--1 ">
+                        <div class="list-date">
+                            <span class="list-dayname">%s</span>
+                            <span class="list-daynumber">%s</span>
+                        </div>
+                        <div class="list-info">
+                            <h2 class="evkite-events-title">
+                                <a href="%s" rel="bookmark">%s</a>
+                            </h2>
+                            %s
+                            %s
+                            <div class="evkite-events-duration">%s</div>
+                        </div>
+                    </div>
+                </div>',
+                $highlight,
+                $day_in_week,
+                $day,
+                $link,
+                $title,
+                $location,
+                $organizer,
+                $timespan
+            );
 
    }
 
    if($a["show_more_link"]) {
-        $return .= '<a href="'.get_site_url().'/events/?channel='.$a["channel"].'&vid='.$a["vid"].'">mehr Veranstaltungen...</a>';
+        $return .= wp_sprintf(
+                '<a href="%s/events/?channel=%s&vid=%s">mehr Veranstaltungen...</a>',
+                get_site_url(),
+                $a["channel"],
+                $a["vid"]
+            );
    }
 
    $return .= "</div>";

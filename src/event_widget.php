@@ -88,7 +88,7 @@ class ev_event_widget extends WP_Widget {
                 foreach ($event_tags as $event_tag) {
                     $selected = "";
                     if(in_array($event_tag->slug, explode(",", $tag_filter))) $selected = " selected";
-                    echo sprintf(
+                    echo wp_sprintf(
                         '<option value="%s"%s>%s</option>',
                         esc_attr( $event_tag->slug ),
                         selected( in_array($event_tag->slug, explode(",", $tag_filter)), true, false ),

@@ -131,7 +131,7 @@ function ev_kirchen_termine_manage_settings() {
                                 $current_setting = get_option( 'ev_kirchen_termine_event_template' );
                                 foreach ( $templates as $template_name => $template_file ) {
                                     // Escape safely during output
-                                    echo sprintf(
+                                    echo wp_sprintf(
                                         '<option value="%s"%s>%s</option>',
                                         esc_attr( $template_file ),
                                         selected( $current_setting, $template_file, false ), // selected() returns securely formatted ' selected="selected"' or empty
@@ -158,7 +158,7 @@ function ev_kirchen_termine_manage_settings() {
                                 $current_setting = get_option("ev_kirchen_termine_map_type");
                                 foreach ($options as $option_key => $option_name) {
                                     // Escape safely during output
-                                    echo sprintf(
+                                    echo wp_sprintf(
                                         '<option value="%s"%s>%s</option>',
                                         esc_attr( $option_key ),
                                         selected( $current_setting, $option_key, false ),  // selected() returns securely formatted ' selected="selected"' or empty
