@@ -8,7 +8,7 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
         'ev_kirchen_termine_event_widget_css',
         $plugin_url . 'public/event-widget.css',
         array(),
-        "0.1.2"
+        EV_KIRCHEN_TERMINE_VERSION
     );
 
     $a = shortcode_atts( array (
@@ -232,14 +232,14 @@ function ev_kirchen_termine_create_calendar($atts) {
         'ev_kirchen_termine_fullcalendar_js',
         $plugin_url . 'public/fullcalendar/index.global.js',
         array(),
-        "0.1.2",
+        EV_KIRCHEN_TERMINE_VERSION,
         array('in_footer'  => true)
     );
     wp_enqueue_script(
         'ev_kirchen_termine_fullcalendar_local_js',
         $plugin_url . 'public/fullcalendar/de.global.js',
         array(),
-        "0.1.2",
+        EV_KIRCHEN_TERMINE_VERSION,
         array('in_footer'  => true)
     );
 
