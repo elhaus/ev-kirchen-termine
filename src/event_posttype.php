@@ -310,12 +310,12 @@ class ev_kirchen_termine_Meta_Box {
 
         if ( isset( $_POST['event_start'] ) && ! empty( $_POST['event_start'] ) ) {
             $clean_event_start = sanitize_text_field( wp_unslash( $_POST['event_start'] ) );
-            update_post_meta( $post_id, '_ev_kirchen_termine_meta_key_start', date("Y-m-d H:i:s", strtotime($clean_event_start)) );
+            update_post_meta( $post_id, '_ev_kirchen_termine_meta_key_start', gmdate("Y-m-d H:i:s", strtotime($clean_event_start)) );
         }
 
         if ( isset( $_POST['event_end'] ) && ! empty( $_POST['event_end'] ) ) {
             $clean_event_end = sanitize_text_field( wp_unslash( $_POST['event_end'] ) );
-            update_post_meta( $post_id, '_ev_kirchen_termine_meta_key_end', date("Y-m-d H:i:s", strtotime($clean_event_end)) );
+            update_post_meta( $post_id, '_ev_kirchen_termine_meta_key_end', gmdate("Y-m-d H:i:s", strtotime($clean_event_end)) );
         }
 
         if ( isset( $_POST['event_id'] ) ) {
@@ -339,8 +339,8 @@ class ev_kirchen_termine_Meta_Box {
         $meta_start = get_post_meta( $post->ID, '_ev_kirchen_termine_meta_key_start', true );
         $meta_end   = get_post_meta( $post->ID, '_ev_kirchen_termine_meta_key_end', true );
 
-        $event_start = ! empty( $meta_start ) ? date("Y-m-d\TH:i", strtotime($meta_start)) : '';
-        $event_end   = ! empty( $meta_end ) ? date("Y-m-d\TH:i", strtotime($meta_end)) : '';
+        $event_start = ! empty( $meta_start ) ? wp_date("Y-m-d\TH:i", strtotime($meta_start)) : '';
+        $event_end   = ! empty( $meta_end ) ? wp_date("Y-m-d\TH:i", strtotime($meta_end)) : '';
 
         $event_id    = get_post_meta( $post->ID, '_ev_kirchen_termine_meta_key_id', true );
         $event_vid   = get_post_meta( $post->ID, '_ev_kirchen_termine_meta_key_vid', true );?>

@@ -56,8 +56,8 @@ function ev_kirchen_termine_import_events($force = false) {
     $parameter["itemsPerPage"] = 3000;
     $parameter["highlight"] = "all";
     $parameter["past"] = 2; // load also past events
-    $parameter["start"] = date("Y-m-d", strtotime("-30 days"));
-    $parameter["end"] = date("Y-m-d", strtotime("+120 days"));
+    $parameter["start"] = wp_date("Y-m-d", strtotime("-30 days"));
+    $parameter["end"] = wp_date("Y-m-d", strtotime("+120 days"));
 
     $ev_kirchen_termine_webpage = get_option("ev_kirchen_termine_webpage");
 
@@ -244,22 +244,39 @@ function ev_kirchen_termine_import_events($force = false) {
 
         $start_datetime = get_date_from_gmt($event["START_RFC"]);
         $end_datetime   = get_date_from_gmt($event["END_RFC"]);
+        $start_timestamp = strtotime($event["START_RFC"]);
+        $end_timestamp   = strtotime($event["END_RFC"]);
 
-        if(date("Y-m-d", strtotime($start_datetime)) == date("Y-m-d", strtotime($end_datetime))) {
-             $timespan  = date_i18n($date_format, strtotime($start_datetime))." um ".date_i18n($time_format, strtotime($start_datetime))." - ".date_i18n($time_format, strtotime($end_datetime))." Uhr";
-             $date      = date_i18n($date_format, strtotime($start_datetime));
-             $time      = date_i18n($time_format, strtotime($start_datetime))." - ".date_i18n($time_format, strtotime($end_datetime));
+        if(wp_date("Y-m-d", $start_timestamp) == wp_date("Y-m-d", $end_timestamp)) {
+            $timespan  = wp_sprintf('%s um %s - %s Uhr',
+                wp_date($date_format, $start_timestamp),
+                wp_date($time_format, $start_timestamp),
+                wp_date($time_format, $end_timestamp)
+            );
+            $date      = wp_date($date_format, $start_timestamp);
+            $time      = wp_sprintf('%s - %s',
+                wp_date($time_format, $start_timestamp),
+                wp_date($time_format, $end_timestamp)
+            );
         } else {
-            $timespan   = date_i18n($date_format, strtotime($start_datetime))." um ".date_i18n($time_format, strtotime($start_datetime))." - ".date_i18n($date_format, strtotime($end_datetime))." um ".date_i18n($time_format, strtotime($end_datetime));
-            $date       = date_i18n($date_format, strtotime($start_datetime))." Uhr - ".date_i18n($date_format, strtotime($end_datetime))." Uhr";
-            $time       = $timespan;
+            $timespan  = wp_sprintf('%s um %s - %s um %s',
+                wp_date($date_format, $start_timestamp),
+                wp_date($time_format, $start_timestamp),
+                wp_date($date_format, $end_timestamp),
+                wp_date($time_format, $end_timestamp)
+            );
+            $date      = wp_sprintf('%s - %s',
+                wp_date($date_format, $start_timestamp),
+                wp_date($date_format, $end_timestamp),
+            );
+            $time      = $timespan;
         }
 
         $media          = "";
         if(strpos($event["_event_LINK"], "https://youtu.be") !== false || strpos($event["_event_LINK"], "https://www.youtube.com") !== false) {
             $media     .= '<a target="_blank" title="YouTube" class="btn" style="background-color: #e52d27;" href="'.$event["_event_LINK"].'">zu YouTube</a><br/>';
         } elseif(strpos($event["_event_LINK"], ".zoom.us/j/") !== false) {
-            if(date("Y-m-d", strtotime($end_datetime)) >= date("Y-m-d")) {
+            if(wp_date("Y-m-d", $end_timestamp) >= wp_date("Y-m-d")) {
                 $media     .= '<a target="_blank" title="Zoom" class="btn" style="background-color: #2D8CFF;" href="'.$event["_event_LINK"].'">zum Zoom-Meeting</a><br/>';
             } else {
                 $media     .= '<a target="_blank" title="Zoom" class="btn" style="background-color: #2D8CFF;" href="#" disabled>das Zoom-Meeting ist schon vorbei</a><br/>';
@@ -292,7 +309,7 @@ function ev_kirchen_termine_import_events($force = false) {
         $google_cal_link_parameter = array();
         $google_cal_link_parameter["action"] = "TEMPLATE";
         $google_cal_link_parameter["text"] = $event["_event_TITLE"];
-        $google_cal_link_parameter["dates"] = date("Ymd\THis", strtotime($start_datetime))."/".date("Ymd\THis", strtotime($end_datetime));
+        $google_cal_link_parameter["dates"] = wp_date("Ymd\THis", $start_timestamp)."/".wp_date("Ymd\THis", $end_timestamp);
         $google_cal_link_parameter["details"] = $event["_event_LONG_DESCRIPTION"];
         $google_cal_link_parameter["location"] = $event["_place_STREET_NR"].", ".$event["_place_ZIP"]." ".$event["_place_CITY"];
         $google_cal_link_parameter["trp"] = true;
@@ -430,7 +447,7 @@ function ev_kirchen_termine_import_events($force = false) {
             $parameter_event_shema["image"][] = $event["_place_IMAGE"];
 
 
-        // Nasprechpartner der Veranstaltung
+        // Ansprechpartner der Veranstaltung
 
         if(!empty($event["_event_PERSON_ID"]))
             $parameter_event_shema["performer"] = array(
@@ -555,8 +572,8 @@ function ev_kirchen_termine_import_events($force = false) {
             'post_title'   => $event["_event_TITLE"],
             'tags_input'   => $event_tags,
             'meta_input'   => array(
-                '_ev_kirchen_termine_meta_key_start' => $start_datetime,
-                '_ev_kirchen_termine_meta_key_end' => $end_datetime,
+                '_ev_kirchen_termine_meta_key_start' => gmdate("Y-m-d H:i:s", $start_timestamp),
+                '_ev_kirchen_termine_meta_key_end' => gmdate("Y-m-d H:i:s", $end_timestamp),
                 '_ev_kirchen_termine_meta_key_location_json' => $location_json,
                 '_ev_kirchen_termine_meta_key_id' => (int) $event["ID"],
                 '_ev_kirchen_termine_meta_key_vid' => (int) $event["_event_USER_ID"],
@@ -576,13 +593,13 @@ function ev_kirchen_termine_import_events($force = false) {
         }
 
         if(empty($current_id)) {
-            $args['post_name'] = date("Y-m-d", strtotime($start_datetime)) ." - " .$event["_event_TITLE"];
+            $args['post_name'] = wp_date("Y-m-d", $start_timestamp) ." - " .$event["_event_TITLE"];
             if($event["_user_ID"] !== $parameter["vid"])
                 $args['post_name'] .= ' - '.$event["_user_REALNAME"];
             $id = wp_insert_post($args);
         } elseif(
-            get_date_from_gmt( date("Y-m-d H:i:s", filemtime(__FILE__)), 'Y-m-d H:i:s' ) > get_the_modified_date("Y-m-d H:i:s", $current_id) ||
-            date("Y-m-d H:i:s", strtotime($event["_event_MODIFIED"])) > get_the_modified_date("Y-m-d H:i:s", $current_id) ||
+            wp_date("Y-m-d H:i:s", filemtime(__FILE__)) > get_the_modified_date("Y-m-d H:i:s", $current_id) ||
+            wp_date("Y-m-d H:i:s", strtotime($event["_event_MODIFIED"])) > get_the_modified_date("Y-m-d H:i:s", $current_id) ||
             $force
         ) {
             $args["ID"] = $current_id;
