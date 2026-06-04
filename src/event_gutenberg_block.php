@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-function evkirchentermin_smalleventlist_block_init()
+function ev_kirchen_termine_smalleventlist_block_init()
 {
   /**
    * Check if Gutemberg is active
@@ -93,11 +93,11 @@ function evkirchentermin_smalleventlist_block_init()
       'editor_script'   => 'small-event-list',
 
     /** The callback called by the javascript file to render the block */
-      'render_callback' => 'evkirchentermin_smalleventlist_block_render',
+      'render_callback' => 'ev_kirchen_termine_smalleventlist_block_render',
   ) );
 
 }
-add_action( 'init', 'evkirchentermin_smalleventlist_block_init' );
+add_action( 'init', 'ev_kirchen_termine_smalleventlist_block_init' );
 
 /**
  * Define the server side callback to render your block in the front end
@@ -106,13 +106,13 @@ add_action( 'init', 'evkirchentermin_smalleventlist_block_init' );
  * @return string
  * @param array $attributes The attributes that were set on the block or shortcode.
  */
-function evkirchentermin_smalleventlist_block_render( $attributes )
+function ev_kirchen_termine_smalleventlist_block_render( $attributes )
 {
   
 if(is_array($attributes["channel"]))
     $attributes["channel"] = implode(",", $attributes["channel"]);
 
-  $content = create_small_event_list($attributes);
+  $content = ev_kirchen_termine_create_small_event_list($attributes);
 
   return $content;
 }

@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-function setup_ev_kirchen_termine_admin_menus() {
+function ev_kirchen_termine_setup_admin_menus() {
     add_submenu_page('options-general.php',
     'Event Settings', 'Ev. Kirchen Termine Einstellungen', 'manage_options',
     'ev_kirchen_termine_settings', 'ev_kirchen_termine_manage_settings');
@@ -212,7 +212,7 @@ function ev_kirchen_termine_manage_settings() {
 
 // This tells WordPress to call the function named "setup_theme_admin_menus"
 // when it's time to create the menu pages.
-add_action("admin_menu", "setup_ev_kirchen_termine_admin_menus");
+add_action("admin_menu", "ev_kirchen_termine_setup_admin_menus");
 
 
 

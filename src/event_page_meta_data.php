@@ -1,9 +1,9 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-add_filter( 'the_content', 'add_event_postmeta_to_content', 5 );
+add_filter( 'the_content', 'ev_kirchen_termine_add_event_postmeta_to_content', 5 );
 
-function add_event_postmeta_to_content( $content ) {
+function ev_kirchen_termine_add_event_postmeta_to_content( $content ) {
 
     // Check if we're inside the main loop in a single Post.
 
@@ -14,7 +14,7 @@ function add_event_postmeta_to_content( $content ) {
         remove_filter( 'the_content', 'wpautop' );
 
         if(get_option("ev_kirchen_termine_show_share_icons")) {
-            $content = $content . add_postmeta_to_event($post->ID);
+            $content = $content . ev_kirchen_termine_add_postmeta_to_event($post->ID);
         }
 
     }
@@ -24,7 +24,7 @@ function add_event_postmeta_to_content( $content ) {
 }
 
 
-function add_postmeta_to_event($post_id) {
+function ev_kirchen_termine_add_postmeta_to_event($post_id) {
 
     $post_meta = get_post_meta($post_id);
 

@@ -1,9 +1,9 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-add_filter( 'the_content', 'add_share_icons_to_content', 20 );
+add_filter( 'the_content', 'ev_kirchen_termine_add_share_icons_to_content', 20 );
 
-function add_share_icons_to_content( $content ) {
+function ev_kirchen_termine_add_share_icons_to_content( $content ) {
 
     // Check if we're inside the main loop in a single Post.
 
@@ -14,7 +14,7 @@ function add_share_icons_to_content( $content ) {
         remove_filter( 'the_content', 'wpautop' );
 
         if(get_option("ev_kirchen_termine_show_share_icons")) {
-            $content = $content . social_icons();
+            $content = $content . ev_kirchen_termine_social_icons();
         }
 
     }
@@ -24,7 +24,7 @@ function add_share_icons_to_content( $content ) {
 }
 
 
-function social_icons() {
+function ev_kirchen_termine_social_icons() {
 
     $post_link  = esc_url( get_the_permalink() );
     $post_title = get_the_title();

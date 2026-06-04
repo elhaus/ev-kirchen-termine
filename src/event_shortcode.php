@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-function create_small_event_list( $atts) {
+function ev_kirchen_termine_create_small_event_list( $atts) {
 
     $plugin_url = plugin_dir_url( dirname(__FILE__) );
     wp_enqueue_style(
@@ -168,7 +168,7 @@ function create_small_event_list( $atts) {
 
 }
 
-add_shortcode( 'events_list', 'create_small_event_list' );
+add_shortcode( 'events_list', 'ev_kirchen_termine_create_small_event_list' );
 
 
 add_shortcode( 'events_calendar', 'ev_kirchen_termine_create_calendar' );
