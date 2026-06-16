@@ -15,7 +15,7 @@ The events will be handled as a custom post type.
 
 #### Small list of events
 
-`[events_list channel="" limit="5" highlight="" event_ids="" vid=""]`
+`[evkite_events_list channel="" limit="5" highlight="" event_ids="" vid=""]`
  - channel (optional)
  - limit (optional) - default: 5
  - highlight (optional)
@@ -24,7 +24,7 @@ The events will be handled as a custom post type.
 
 #### calendar view of events
 
-`[events_calendar channel="" vid=""]`
+`[evkite_events_calendar channel="" vid=""]`
  - channel (optional)
  - vid (optional)
 
@@ -41,5 +41,5 @@ This plugin communicates with the following external endpoints:
 
 2. **Map Provider via Iframes**
    Depending on the chosen settings in the plugin configuration dashboard, event locations are displayed using interactive map iframes. This triggers client-side external connections:
-   * **OpenStreetMap Choice:** If configured to use OpenStreetMap, an iframe connects to `https://*.openstreetmap.org` (or a related tile provider) to display the venue. 
-   * **Google Maps Choice:** If configured to use Google Maps, an iframe embeds maps from `https://www.google.com/maps`, which is subject to Google's privacy policy and tracks user interactions.
+   * **OpenStreetMap Choice:** If configured to use OpenStreetMap, an iframe connects to `https://*.openstreetmap.org` (or a related tile provider) to display the venue on a map. The privacy policy of OpenStreetMap can be found under: https://osmfoundation.org/wiki/Privacy_Policy
+   * **Google Maps Choice:** If configured to use Google Maps, an iframe embeds maps from `https://www.google.com/maps`, which is subject to Google's privacy policy and tracks user interactions. The Google privacy policy can be found under: https://policies.google.com/privacy
