@@ -20,9 +20,9 @@ function ev_kirchen_termine_smalleventlist_block_init()
       array('in_footer'  => true)
   );
 
-  // Get all IDs of the 'event' post type
+  // Get all IDs of the 'evkite_event' post type
   $event_ids = get_posts( array(
-      'post_type'      => 'event',
+      'post_type'      => 'evkite_event',
       'posts_per_page' => -1,
       'fields'         => 'ids', // optimized query returning only IDs
   ) );

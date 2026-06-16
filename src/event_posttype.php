@@ -259,7 +259,7 @@ function ev_kirchen_termine_custom_post_type() {
         'publicly_queryable' => true,
         'rewrite' => $rewrite,
     );
-    register_post_type( 'event', $args );
+    register_post_type( 'evkite_event', $args );
 }
 // Hook into the 'init' action
 add_action( 'init', 'ev_kirchen_termine_custom_post_type', 0 );
@@ -275,7 +275,7 @@ class ev_kirchen_termine_Meta_Box {
             'event_data',          // Unique ID
             'Veranstaltungsdaten', // Box title
             [ self::class, 'html' ],   // Content callback, must be of type callable
-            'event', // Posttype 
+            'evkite_event', // Posttype 
             'normal',
             'high'
         );

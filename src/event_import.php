@@ -23,7 +23,7 @@ function ev_kirchen_termine_import_events_task_plugin_activate() {
             'post_title'     => ucwords('Termine'),
             'post_name'      => strtolower(trim('events')),
             'post_status'    => 'publish',
-            'post_content'   => '[events_calendar]',
+            'post_content'   => '[evkite_events_calendar]',
             'post_type'      => 'page',
             )
         );
@@ -504,7 +504,7 @@ function ev_kirchen_termine_import_events($force = false) {
 
 
         $args = array(
-            'post_type'    => 'event',
+            'post_type'    => 'evkite_event',
             'post_status'  => 'publish',
             'post_excerpt' => $timespan.' / </br>'.$event["_place_NAME"].' / </br>mit '.$event["_person_NAME"],
             'post_content' =>

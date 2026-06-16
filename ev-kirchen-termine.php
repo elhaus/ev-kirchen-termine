@@ -3,7 +3,7 @@
  * Plugin Name:       Ev. Kirchen Termine
  * Plugin URI:        https://github.com/elhaus/ev-kirchen-termine
  * Description:       Zeige Veranstaltungen aus dem Veranstaltungskalendar der Ev. Kirchen
- * Version:           0.1.3
+ * Version:           0.1.4
  * Author:            Jan Elhaus
  * Author URI:        https://github.com/elhaus
  * License:           GPL v2 or later
@@ -15,7 +15,7 @@
 
 if (!defined('ABSPATH')) die('No direct access allowed');
 
-const EV_KIRCHEN_TERMINE_VERSION = '0.1.3';
+const EV_KIRCHEN_TERMINE_VERSION = '0.1.4';
 
 
 function ev_kirchen_termin_load_plugin_css_js() {
@@ -62,7 +62,7 @@ add_filter('post_class', function($classes){
 
     global $post;
     $post_type = $post->post_type;
-    if($post_type == "event")
+    if($post_type == "evkite_event")
         $classes[] = "single-evkite_events";
 
     return $classes;
@@ -75,7 +75,7 @@ add_filter('single_template', function($original) {
 
     global $post;
     $post_type = $post->post_type;
-    if($post_type == "event")
+    if($post_type == "evkite_event")
         $template = locate_template(get_option("ev_kirchen_termine_event_template"));
     if(!empty($template))
         return $template;
@@ -95,7 +95,7 @@ add_action( 'pre_get_posts', function ( $q )
     ) {
         $post_types = $q->get( 'post_type', array());
         if(!is_array($post_types)) $post_types = array($post_types);
-        $post_types[] = "event";
+        $post_types[] = "evkite_event";
         $post_types[] = "post";
         $q->set( 'post_type', $post_types ); // Change 'custom_post_type' to YOUR Custom Post Type
                                                               // You can add multiple CPT's separated by comma's

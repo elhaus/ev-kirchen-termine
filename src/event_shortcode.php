@@ -23,7 +23,7 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
     ), $atts );
 
     $args = array(
-        'post_type'  => 'event',
+        'post_type'  => 'evkite_event',
         'meta_query' => array(
 			'relation' => 'AND',
 			'start' => array(
@@ -45,7 +45,7 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
 			'compare' 	=> 'IN',
 		);
 	} else {
-		$args['tag'] = $a["channel"];
+		$args['tag'] = sanitize_text_field($a["channel"]);
         $args['meta_query']['end_date'] = array(
                 'key'     => '_ev_kirchen_termine_meta_key_end',
                 'value'   => wp_date("Y-m-d H:i"),
@@ -82,47 +82,51 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
 
     foreach ($events as $event) {
 
-       $title = $event->post_title;
-       $link = $event->guid;
+        $title = $event->post_title;
+        $link  = esc_url( get_permalink( $event->ID ) );
 
-       $post_meta = get_post_meta($event->ID);
+        $post_meta = get_post_meta($event->ID);
 
-        if(wp_date("Y-m-d", strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0])) == wp_date("Y-m-d", strtotime($post_meta["_ev_kirchen_termine_meta_key_end"][0]))) {
-            $timespan = wp_sprintf('%s um %s - %s Uhr',
-                wp_date($date_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0])),
-                wp_date($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0])),
-                wp_date($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_end"][0]))
+        $meta_start = isset( $post_meta["_ev_kirchen_termine_meta_key_start"][0] ) ? $post_meta["_ev_kirchen_termine_meta_key_start"][0] : '';
+        $meta_end   = isset( $post_meta["_ev_kirchen_termine_meta_key_end"][0] ) ? $post_meta["_ev_kirchen_termine_meta_key_end"][0] : '';
+
+        if ( wp_date( "Y-m-d", strtotime( $meta_start ) ) === wp_date( "Y-m-d", strtotime( $meta_end ) ) ) {
+            $timespan = wp_sprintf( '%s um %s - %s Uhr',
+                wp_date( $date_format, strtotime( $meta_start ) ),
+                wp_date( $time_format, strtotime( $meta_start ) ),
+                wp_date( $time_format, strtotime( $meta_end ) )
             );
         } else {
-            $timespan = wp_sprintf('%s um %s - %s um %s',
-                wp_date($date_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0])),
-                wp_date($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0])),
-                wp_date($date_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_end"][0])),
-                wp_date($time_format, strtotime($post_meta["_ev_kirchen_termine_meta_key_end"][0]))
+            $timespan = wp_sprintf( '%s um %s - %s um %s',
+                wp_date( $date_format, strtotime( $meta_start ) ),
+                wp_date( $time_format, strtotime( $meta_start ) ),
+                wp_date( $date_format, strtotime( $meta_end ) ),
+                wp_date( $time_format, strtotime( $meta_end ) )
             );
         }
 
-       $day_in_week = wp_date("D", strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0]));
-       $day = wp_date("j", strtotime($post_meta["_ev_kirchen_termine_meta_key_start"][0]));
+        $day_in_week = esc_html( wp_date( "D", strtotime( $meta_start ) ) );
+        $day         = esc_html( wp_date( "j", strtotime( $meta_start ) ) );
 
-       $highlight = "";
-       if($post_meta["_ev_kirchen_termine_meta_key_highlight"][0])
-            $highlight = " evkite-event-featured";
+        $highlight = "";
+        if($post_meta["_ev_kirchen_termine_meta_key_highlight"][0])
+            $highlight = sanitize_html_class( 'evkite-event-featured' );
 
-       $location = "";
-       if($a["show_location"]) {
-            $location = maybe_unserialize($post_meta["_ev_kirchen_termine_meta_key_location_json"][0])["name"];
-            if(!empty($location))
-                $location = '<div class="evkite-events-location">Ort: '.$location.'</div>';
-       }
+        $location = "";
+        if ( $a["show_location"] && ! empty( $post_meta["_ev_kirchen_termine_meta_key_location_json"][0] ) ) {
+            $location_data = maybe_unserialize( $post_meta["_ev_kirchen_termine_meta_key_location_json"][0] );
+            if ( ! empty( $location_data["name"] ) ) {
+                $location = '<div class="evkite-events-location">Ort: ' . esc_html( $location_data["name"] ) . '</div>';
+            }
+        }
 
-
-       $organizer = "";
-       if($a["show_organizer"]) {
-            $organizer = maybe_unserialize($post_meta["_ev_kirchen_termine_meta_key_user_data"][0])["name"];
-            if(!empty($organizer))
-                $organizer = '<div class="evkite-events-location">'.$organizer.'</div>';
-       }
+        $organizer = "";
+        if ( $a["show_organizer"] && ! empty( $post_meta["_ev_kirchen_termine_meta_key_user_data"][0] ) ) {
+            $user_data = maybe_unserialize( $post_meta["_ev_kirchen_termine_meta_key_user_data"][0] );
+            if ( ! empty( $user_data["name"] ) ) {
+                $organizer = '<div class="evkite-events-location">' . esc_html( $user_data["name"] ) . '</div>';
+            }
+        }
 
         $return .= wp_sprintf(
                 '<div class="type-evkite_events evkite-clearfix %s">
@@ -148,19 +152,21 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
                 $title,
                 $location,
                 $organizer,
-                $timespan
+                esc_html( $timespan )
             );
 
    }
 
-   if($a["show_more_link"]) {
-        $return .= wp_sprintf(
-                '<a href="%s/events/?channel=%s&vid=%s">mehr Veranstaltungen...</a>',
-                get_site_url(),
-                $a["channel"],
-                $a["vid"]
-            );
-   }
+   if ( $a["show_more_link"] ) {
+        $more_link_url = esc_url( sprintf(
+            '%s/events/?channel=%s&vid=%s',
+            get_site_url(),
+            urlencode( $a["channel"] ),
+            urlencode( $a["vid"] )
+        ) );
+
+        $return .= sprintf( '<a href="%s">mehr Veranstaltungen...</a>', $more_link_url );
+    }
 
    $return .= "</div>";
 
@@ -168,10 +174,10 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
 
 }
 
-add_shortcode( 'events_list', 'ev_kirchen_termine_create_small_event_list' );
+add_shortcode( 'evkite_events_list', 'ev_kirchen_termine_create_small_event_list' );
 
 
-add_shortcode( 'events_calendar', 'ev_kirchen_termine_create_calendar' );
+add_shortcode( 'evkite_events_calendar', 'ev_kirchen_termine_create_calendar' );
 
 
 function ev_kirchen_termine_create_calendar($atts) {
@@ -189,7 +195,7 @@ function ev_kirchen_termine_create_calendar($atts) {
     }
 
     $args = array(
-        'post_type'  => 'event',
+        'post_type'  => 'evkite_event',
         'tag'        => $a["channel"],
         'posts_per_page' => 600,
     );
