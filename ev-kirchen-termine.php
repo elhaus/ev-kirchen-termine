@@ -3,7 +3,7 @@
  * Plugin Name:       Ev. Kirchen Termine
  * Plugin URI:        https://github.com/elhaus/ev-kirchen-termine
  * Description:       Zeige Veranstaltungen aus dem Veranstaltungskalendar der Ev. Kirchen
- * Version:           0.1.5
+ * Version:           0.1.6
  * Author:            Jan Elhaus
  * Author URI:        https://github.com/elhaus
  * License:           GPL v2 or later
@@ -15,7 +15,7 @@
 
 if (!defined('ABSPATH')) die('No direct access allowed');
 
-const EV_KIRCHEN_TERMINE_VERSION = '0.1.5';
+const EV_KIRCHEN_TERMINE_VERSION = '0.1.6';
 
 
 function ev_kirchen_termin_load_plugin_css_js() {
