@@ -1,0 +1,22 @@
+# Git-directories and files (and hidden files)
+*.git*
+.*
+"*/.*"
+/.git
+/.github
+.distignore
+.gitignore
+
+# dependencies and tools
+node_modules/*
+/node_modules
+composer.*
+dev-helpers*
+
+# build and documentation files
+build*
+*.md
+*.dist
+
+# folder for Wordpress assets
+/.wordpress-org

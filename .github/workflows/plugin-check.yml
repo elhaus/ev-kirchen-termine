@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Run Official WordPress Plugin Check
         uses: wordpress/plugin-check-action@v1
         with:
           exclude-directories: '.github'
-          exclude-files: '.gitignore'
+          exclude-files: '.gitignore,.distignore'
