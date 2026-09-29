@@ -44,6 +44,36 @@ add_action('ev_kirchen_termine_import_events_task', 'ev_kirchen_termine_import_e
  *
 **/
 
+/**
+ * Loads the events from the given XML url and returns them as a list of arrays.
+ * Returns an empty array if the request fails or no events are available.
+ */
+function ev_kirchen_termine_fetch_events($url) {
+
+    //read xml file from url in php
+    $xml = file_get_contents($url);
+    if(empty($xml))
+        return array();
+
+    try {
+        $data = new SimpleXMLElement($xml);
+    } catch (Exception $e) {
+        return array();
+    }
+
+    //convert xml to array in php
+    $export = json_decode(json_encode($data->Export), true);
+
+    if(empty($export["Veranstaltung"]) || !is_array($export["Veranstaltung"]))
+        return array();
+
+    // a single event is not wrapped in a list
+    if(isset($export["Veranstaltung"]["ID"]))
+        return array($export["Veranstaltung"]);
+
+    return $export["Veranstaltung"];
+}
+
 function ev_kirchen_termine_import_events($force = false) {
 
     global $wpdb;
@@ -74,11 +104,7 @@ function ev_kirchen_termine_import_events($force = false) {
 
         $url = $ev_kirchen_termine_webpage.'/Veranstalter/xml.php?'.http_build_query($parameter);
 
-        //read xml file from url in php
-        $data = new SimpleXMLElement(file_get_contents($url));
-
-        //convert xml to array in php
-        $events_data = array_merge($events_data, json_decode(json_encode($data->Export), true)["Veranstaltung"]);
+        $events_data = array_merge($events_data, ev_kirchen_termine_fetch_events($url));
 
     }
 
@@ -94,11 +120,7 @@ function ev_kirchen_termine_import_events($force = false) {
 
         $url = $ev_kirchen_termine_webpage.'/Veranstalter/xml.php?'.http_build_query($parameter);
 
-        //read xml file from url in php
-        $data = new SimpleXMLElement(file_get_contents($url));
-
-        //convert xml to array in php
-        $events_data = array_merge($events_data, json_decode(json_encode($data->Export), true)["Veranstaltung"]);
+        $events_data = array_merge($events_data, ev_kirchen_termine_fetch_events($url));
 
     }
 
@@ -107,11 +129,7 @@ function ev_kirchen_termine_import_events($force = false) {
 
         $url = $ev_kirchen_termine_webpage.'/Veranstalter/xml.php?'.html_entity_decode(get_option("ev_kirchen_termine_custom_filter"));
 
-        //read xml file from url in php
-        $data = new SimpleXMLElement(file_get_contents($url));
-
-        //convert xml to array in php
-        $events_data = array_merge($events_data, json_decode(json_encode($data->Export), true)["Veranstaltung"]);
+        $events_data = array_merge($events_data, ev_kirchen_termine_fetch_events($url));
 
     }
 
