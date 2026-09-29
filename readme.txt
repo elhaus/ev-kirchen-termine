@@ -2,7 +2,7 @@
 
 Contributors: jan2000
 Tags: events, kirche
-Tested up to: 7.1.2
+Tested up to: 7.1
 Stable tag: 0.1.7
 License: GPL v2 or later
 
