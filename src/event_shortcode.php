@@ -19,6 +19,7 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
        'vid' => "",
        'show_location' => true,
        'show_organizer' => false,
+       'show_contact_person' => false,
        'show_more_link' => true,
     ), $atts );
 
@@ -128,6 +129,14 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
             }
         }
 
+        $contact_person = "";
+        if ( $a["show_contact_person"] && ! empty( $post_meta["_ev_kirchen_termine_meta_key_person_data"][0] ) ) {
+            $person_data = maybe_unserialize( $post_meta["_ev_kirchen_termine_meta_key_person_data"][0] );
+            if ( ! empty( $person_data["name"] ) ) {
+                $contact_person = '<div class="evkite-events-location">Ansprechperson: ' . esc_html( $person_data["name"] ) . '</div>';
+            }
+        }
+
         $return .= wp_sprintf(
                 '<div class="type-evkite_events evkite-clearfix %s">
                     <div class="evkite-mini-calendar-event event--1 ">
@@ -141,6 +150,7 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
                             </h2>
                             %s
                             %s
+                            %s
                             <div class="evkite-events-duration">%s</div>
                         </div>
                     </div>
@@ -152,6 +162,7 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
                 $title,
                 $location,
                 $organizer,
+                $contact_person,
                 esc_html( $timespan )
             );
 

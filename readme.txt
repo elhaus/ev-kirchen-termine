@@ -2,8 +2,8 @@
 
 Contributors: jan2000
 Tags: events, kirche
-Tested up to: 7.0
-Stable tag: 0.1.6
+Tested up to: 7.1.2
+Stable tag: 0.1.7
 License: GPL v2 or later
 
 This Plugin imports events form event databases like https://www.veranstaltungen-ekvw.de/.

@@ -16,7 +16,7 @@ function ev_kirchen_termine_smalleventlist_block_init()
       'small-event-list',
       plugins_url( 'event_gutenberg_block.js', __FILE__ ),
       array('wp-i18n', 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor'),
-      "0.1.2",
+      "0.1.7",
       array('in_footer'  => true)
   );
 
@@ -76,6 +76,9 @@ function ev_kirchen_termine_smalleventlist_block_init()
               'type' => 'boolean'
           ),
           'show_organizer' => array(
+              'type' => 'boolean'
+          ),
+          'show_contact_person' => array(
               'type' => 'boolean'
           ),
           'show_more_link' => array(

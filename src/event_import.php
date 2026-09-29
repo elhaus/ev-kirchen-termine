@@ -520,6 +520,13 @@ function ev_kirchen_termine_import_events($force = false) {
             "image"=> $event["_user_IMAGE"],
         );
 
+        $person_data = array(
+            "id"=> $event["_event_PERSON_ID"],
+            "name"=> $event["_person_NAME"],
+            "email"=> $event["_person_EMAIL"],
+            "contact"=> $event["_person_CONTACT"],
+        );
+
 
         $args = array(
             'post_type'    => 'evkite_event',
@@ -596,6 +603,7 @@ function ev_kirchen_termine_import_events($force = false) {
                 '_ev_kirchen_termine_meta_key_id' => (int) $event["ID"],
                 '_ev_kirchen_termine_meta_key_vid' => (int) $event["_event_USER_ID"],
                 '_ev_kirchen_termine_meta_key_user_data' => $user_data,
+                '_ev_kirchen_termine_meta_key_person_data' => $person_data,
                 '_ev_kirchen_termine_meta_key_highlight' => ($event["_event_HIGHLIGHT"] !== "low"),
             )
         );
