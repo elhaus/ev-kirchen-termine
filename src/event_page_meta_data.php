@@ -44,9 +44,10 @@ function ev_kirchen_termine_add_postmeta_to_event($post_id) {
 
     // OSM Embed URL generieren
     $para = array(
-        "bbox"   => ( $geo_long + $zoom ) . "," . ( $geo_lat + $zoom ) . "," . ( $geo_long - $zoom ) . "," . ( $geo_lat - $zoom ),
+        // Reihenfolge: minLon,minLat,maxLon,maxLat (mit Punkt als Dezimaltrenner, unabhängig von der Locale)
+        "bbox"   => sprintf( '%F,%F,%F,%F', $geo_long - $zoom, $geo_lat - $zoom, $geo_long + $zoom, $geo_lat + $zoom ),
         "layer"  => "mapnik",
-        "marker" => $geo_lat . "," . $geo_long,
+        "marker" => sprintf( '%F,%F', $geo_lat, $geo_long ),
     );
     $osm_iframe_url = 'https://www.openstreetmap.org/export/embed.html?' . http_build_query($para);
     
