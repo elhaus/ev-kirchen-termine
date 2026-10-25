@@ -60,6 +60,11 @@ registerBlockType( 'evkirchentermin/small-event-list', {
       default: ""
     },
 
+    'title_level': {
+      type: 'integer',
+      default: 2
+    },
+
   },
 
 

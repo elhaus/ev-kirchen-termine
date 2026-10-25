@@ -2,8 +2,10 @@
 /**
  * Plugin Name:       Ev. Kirchen Termine
  * Plugin URI:        https://github.com/elhaus/ev-kirchen-termine
- * Description:       Zeige Veranstaltungen aus dem Veranstaltungskalendar der Ev. Kirchen
- * Version:           0.1.7
+ * Description:       Shows events from the event calendar of the Protestant churches.
+ * Version:           0.2.0
+ * Requires at least: 6.3
+ * Requires PHP:      7.4
  * Author:            Jan Elhaus
  * Author URI:        https://github.com/elhaus
  * License:           GPL v2 or later
@@ -15,7 +17,7 @@
 
 if (!defined('ABSPATH')) die('No direct access allowed');
 
-const EV_KIRCHEN_TERMINE_VERSION = '0.1.6';
+const EV_KIRCHEN_TERMINE_VERSION = '0.2.0';
 
 
 function ev_kirchen_termin_load_plugin_css_js() {
@@ -28,27 +30,47 @@ function ev_kirchen_termin_load_plugin_css_js() {
         EV_KIRCHEN_TERMINE_VERSION
     );
 
-    wp_enqueue_script('jquery');
-    wp_register_script( 
-        'ev_kirchen_events_js',
-        $plugin_url . 'public/events.js',
-        array('jquery'),
-        EV_KIRCHEN_TERMINE_VERSION,
-        array('in_footer'  => true)
-    );
-    wp_localize_script( 'ev_kirchen_events_js', 'ev_kirchen_events_js_data', array(
-        'ajaxurl' => $plugin_url,
-    ));
-    wp_enqueue_script( 'ev_kirchen_events_js' );
-
 }
 
 add_action( 'wp_enqueue_scripts', 'ev_kirchen_termin_load_plugin_css_js' );
 
 
+// Scripts are only registered here, the calendar shortcode enqueues them when needed.
+// Registered on init because block themes render the content before wp_enqueue_scripts.
+function ev_kirchen_termine_register_scripts() {
+    $plugin_url = plugin_dir_url( __FILE__ );
+
+    wp_register_script(
+        'ev_kirchen_termine_fullcalendar_js',
+        $plugin_url . 'public/fullcalendar/index.global.js',
+        array(),
+        EV_KIRCHEN_TERMINE_VERSION,
+        array('in_footer'  => true)
+    );
+    wp_register_script(
+        'ev_kirchen_termine_fullcalendar_local_js',
+        $plugin_url . 'public/fullcalendar/de.global.js',
+        array('ev_kirchen_termine_fullcalendar_js'),
+        EV_KIRCHEN_TERMINE_VERSION,
+        array('in_footer'  => true)
+    );
+    wp_register_script(
+        'ev_kirchen_events_js',
+        $plugin_url . 'public/events.js',
+        array('ev_kirchen_termine_fullcalendar_local_js'),
+        EV_KIRCHEN_TERMINE_VERSION,
+        array('in_footer'  => true)
+    );
+
+}
+
+add_action( 'init', 'ev_kirchen_termine_register_scripts' );
+
+
 include_once plugin_dir_path( __FILE__ ) . 'src/event_posttype.php';
 include_once plugin_dir_path( __FILE__ ) . 'src/event_share_button.php';
 include_once plugin_dir_path( __FILE__ ) . 'src/event_page_meta_data.php';
+include_once plugin_dir_path( __FILE__ ) . 'src/event_osm_map_image.php';
 include_once plugin_dir_path( __FILE__ ) . 'src/event_import.php';
 include_once plugin_dir_path( __FILE__ ) . 'src/event_dashboard_widget.php';
 

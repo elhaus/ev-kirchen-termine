@@ -21,7 +21,15 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
        'show_organizer' => false,
        'show_contact_person' => false,
        'show_more_link' => true,
+       'title_level' => 2,
     ), $atts );
+
+    // shortcode attributes are strings, e.g. show_more_link="false"
+    foreach (array('show_location', 'show_organizer', 'show_contact_person', 'show_more_link') as $bool_attribute)
+        $a[$bool_attribute] = filter_var($a[$bool_attribute], FILTER_VALIDATE_BOOLEAN);
+
+    // heading level of the event titles, so the list fits into the heading structure of the page
+    $title_tag = 'h' . min(6, max(2, (int) $a["title_level"]));
 
     $args = array(
         'post_type'  => 'evkite_event',
@@ -79,7 +87,7 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
 
     $return = '<div class="small_event_list">';
     if(empty($events))
-        $return .= "Es stehen aktuell keine Veranstaltungen an.<br/>";
+        $return .= esc_html__( 'There are currently no upcoming events.', 'ev-kirchen-termine' ) . '<br/>';
 
     foreach ($events as $event) {
 
@@ -92,13 +100,15 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
         $meta_end   = isset( $post_meta["_ev_kirchen_termine_meta_key_end"][0] ) ? $post_meta["_ev_kirchen_termine_meta_key_end"][0] : '';
 
         if ( wp_date( "Y-m-d", strtotime( $meta_start ) ) === wp_date( "Y-m-d", strtotime( $meta_end ) ) ) {
-            $timespan = wp_sprintf( '%s um %s - %s Uhr',
+            /* translators: 1: date, 2: start time, 3: end time */
+            $timespan = wp_sprintf( __( '%1$s at %2$s - %3$s', 'ev-kirchen-termine' ),
                 wp_date( $date_format, strtotime( $meta_start ) ),
                 wp_date( $time_format, strtotime( $meta_start ) ),
                 wp_date( $time_format, strtotime( $meta_end ) )
             );
         } else {
-            $timespan = wp_sprintf( '%s um %s - %s um %s',
+            /* translators: 1: start date, 2: start time, 3: end date, 4: end time */
+            $timespan = wp_sprintf( __( '%1$s at %2$s - %3$s at %4$s', 'ev-kirchen-termine' ),
                 wp_date( $date_format, strtotime( $meta_start ) ),
                 wp_date( $time_format, strtotime( $meta_start ) ),
                 wp_date( $date_format, strtotime( $meta_end ) ),
@@ -117,7 +127,7 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
         if ( $a["show_location"] && ! empty( $post_meta["_ev_kirchen_termine_meta_key_location_json"][0] ) ) {
             $location_data = maybe_unserialize( $post_meta["_ev_kirchen_termine_meta_key_location_json"][0] );
             if ( ! empty( $location_data["name"] ) ) {
-                $location = '<div class="evkite-events-location">Ort: ' . esc_html( $location_data["name"] ) . '</div>';
+                $location = '<div class="evkite-events-location">' . esc_html( sprintf( /* translators: %s: location name */ __( 'Location: %s', 'ev-kirchen-termine' ), $location_data["name"] ) ) . '</div>';
             }
         }
 
@@ -133,21 +143,21 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
         if ( $a["show_contact_person"] && ! empty( $post_meta["_ev_kirchen_termine_meta_key_person_data"][0] ) ) {
             $person_data = maybe_unserialize( $post_meta["_ev_kirchen_termine_meta_key_person_data"][0] );
             if ( ! empty( $person_data["name"] ) ) {
-                $contact_person = '<div class="evkite-events-location">Ansprechperson: ' . esc_html( $person_data["name"] ) . '</div>';
+                $contact_person = '<div class="evkite-events-location">' . esc_html( sprintf( /* translators: %s: name of the contact person */ __( 'Contact person: %s', 'ev-kirchen-termine' ), $person_data["name"] ) ) . '</div>';
             }
         }
 
         $return .= wp_sprintf(
                 '<div class="type-evkite_events evkite-clearfix %s">
                     <div class="evkite-mini-calendar-event event--1 ">
-                        <div class="list-date">
+                        <div class="list-date" aria-hidden="true">
                             <span class="list-dayname">%s</span>
                             <span class="list-daynumber">%s</span>
                         </div>
                         <div class="list-info">
-                            <h2 class="evkite-events-title">
+                            <%s class="evkite-events-title">
                                 <a href="%s" rel="bookmark">%s</a>
-                            </h2>
+                            </%s>
                             %s
                             %s
                             %s
@@ -158,8 +168,10 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
                 $highlight,
                 $day_in_week,
                 $day,
+                $title_tag,
                 $link,
-                $title,
+                esc_html( $title ),
+                $title_tag,
                 $location,
                 $organizer,
                 $contact_person,
@@ -176,7 +188,7 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
             urlencode( $a["vid"] )
         ) );
 
-        $return .= sprintf( '<a href="%s">mehr Veranstaltungen...</a>', $more_link_url );
+        $return .= sprintf( '<a href="%s">%s</a>', $more_link_url, esc_html__( 'more events...', 'ev-kirchen-termine' ) );
     }
 
    $return .= "</div>";
@@ -243,24 +255,9 @@ function ev_kirchen_termine_create_calendar($atts) {
     }
 
 
-    $plugin_url = plugin_dir_url( dirname(__FILE__) );
+    wp_enqueue_script('ev_kirchen_events_js');
 
-    wp_enqueue_script(
-        'ev_kirchen_termine_fullcalendar_js',
-        $plugin_url . 'public/fullcalendar/index.global.js',
-        array(),
-        EV_KIRCHEN_TERMINE_VERSION,
-        array('in_footer'  => true)
-    );
-    wp_enqueue_script(
-        'ev_kirchen_termine_fullcalendar_local_js',
-        $plugin_url . 'public/fullcalendar/de.global.js',
-        array(),
-        EV_KIRCHEN_TERMINE_VERSION,
-        array('in_footer'  => true)
-    );
-
-    $data_json = wp_json_encode( array( 'events' => array_values($show_events) ) );
+    $data_json = wp_json_encode( array( 'events' => array_values($show_events), 'locale' => strtolower( substr( determine_locale(), 0, 2 ) ) ) );
     $inline_script = "var evkiteCalendarData = {$data_json};";
 
     wp_add_inline_script('ev_kirchen_events_js', $inline_script, 'before');
