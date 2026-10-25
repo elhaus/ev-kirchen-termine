@@ -33,6 +33,7 @@ function ev_kirchen_termine_create_small_event_list( $atts) {
 
     $args = array(
         'post_type'  => 'evkite_event',
+        // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- needed to sort and filter by event date, only on the plugin's own post type
         'meta_query' => array(
 			'relation' => 'AND',
 			'start' => array(
@@ -210,12 +211,14 @@ function ev_kirchen_termine_create_calendar($atts) {
         'vid' => "",
     ), $atts );
 
+    // phpcs:disable WordPress.Security.NonceVerification.Recommended -- public, read-only filter from links like /events/?channel=...
     if(empty($a["channel"]) && !empty($_GET["channel"])) {
         $a["channel"] = sanitize_text_field( wp_unslash( $_GET["channel"] ) );
     }
     if(empty($a["vid"]) && !empty($_GET["vid"])) {
         $a["vid"] = sanitize_text_field( wp_unslash( $_GET["vid"] ) );
     }
+    // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
     $args = array(
         'post_type'  => 'evkite_event',

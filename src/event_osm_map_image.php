@@ -67,8 +67,8 @@ function ev_kirchen_termine_get_osm_map_image_id($lat, $lon, $place_name = "") {
         'post_status'    => 'inherit',
         'posts_per_page' => 1,
         'fields'         => 'ids',
-        'meta_key'       => '_ev_kirchen_termine_osm_map_key',
-        'meta_value'     => $key,
+        'meta_key'       => '_ev_kirchen_termine_osm_map_key', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- runs during the import only
+        'meta_value'     => $key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- runs during the import only
     ));
 
     if(!empty($existing))
@@ -124,7 +124,7 @@ function ev_kirchen_termine_delete_unused_osm_map_images($used_attachment_ids) {
         'post_status'    => 'inherit',
         'posts_per_page' => -1,
         'fields'         => 'ids',
-        'meta_key'       => '_ev_kirchen_termine_osm_map_key',
+        'meta_key'       => '_ev_kirchen_termine_osm_map_key', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- runs during the import only
     ));
 
     foreach ($attachments as $attachment_id) {

@@ -122,8 +122,8 @@ function ev_kirchen_termine_get_local_image_url($remote_url) {
         'post_status'    => 'inherit',
         'posts_per_page' => 1,
         'fields'         => 'ids',
-        'meta_key'       => '_ev_kirchen_termine_source_url',
-        'meta_value'     => $remote_url,
+        'meta_key'       => '_ev_kirchen_termine_source_url', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- runs during the import only
+        'meta_value'     => $remote_url, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- runs during the import only
     ));
 
     if(!empty($existing))
@@ -152,7 +152,7 @@ function ev_kirchen_termine_delete_unused_images($used_remote_urls) {
         'post_status'    => 'inherit',
         'posts_per_page' => -1,
         'fields'         => 'ids',
-        'meta_key'       => '_ev_kirchen_termine_source_url',
+        'meta_key'       => '_ev_kirchen_termine_source_url', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- runs during the import only
     ));
 
     foreach ($attachments as $attachment_id) {
@@ -174,8 +174,22 @@ function ev_kirchen_termine_image_url($remote_url) {
 
 function ev_kirchen_termine_import_events($force = false) {
 
-    global $wpdb;
-    $old_posts_meta = $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE meta_key LIKE '_ev_kirchen_termine_meta_key_id'");
+    // existing event posts, mapped by the event id of the event database
+    $old_post_ids = get_posts(array(
+        'post_type'      => 'evkite_event',
+        'post_status'    => array_keys(get_post_stati()),
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+        'no_found_rows'  => true,
+    ));
+    update_meta_cache('post', $old_post_ids);
+
+    $old_posts = array();
+    foreach ($old_post_ids as $old_post_id) {
+        $old_event_id = get_post_meta($old_post_id, '_ev_kirchen_termine_meta_key_id', true);
+        if($old_event_id !== '')
+            $old_posts[(string) $old_event_id] = $old_post_id;
+    }
 
     $events = array();
     $events_data = array();
@@ -324,19 +338,10 @@ function ev_kirchen_termine_import_events($force = false) {
 
 
     // Delete old/delted Events
-    foreach ($old_posts_meta as $old_post_meta) {
-
-        $delete_post = true;
-        foreach ($events as $event) {
-            if($old_post_meta->meta_value == $event["ID"]) {
-                $delete_post = false;
-                break;
-            }
-        }
-
-        if($delete_post)
-            wp_delete_post($old_post_meta->post_id, true);
-
+    $current_event_ids = array_map('strval', array_column($events, 'ID'));
+    foreach ($old_posts as $old_event_id => $old_post_id) {
+        if(!in_array((string) $old_event_id, $current_event_ids, true))
+            wp_delete_post($old_post_id, true);
     }
 
     $used_image_urls = array();
@@ -712,13 +717,7 @@ function ev_kirchen_termine_import_events($force = false) {
 
         $args["post_content"] = str_replace(array("\n","\r","\t"), "", $args["post_content"]);
 
-        $current_id = NULL;
-
-        foreach ($old_posts_meta as $old_post_meta) {
-            if($old_post_meta->meta_value == $event["ID"]) {
-                $current_id = $old_post_meta->post_id;
-            }
-        }
+        $current_id = isset($old_posts[(string) $event["ID"]]) ? $old_posts[(string) $event["ID"]] : NULL;
 
         if(empty($current_id)) {
             $args['post_name'] = wp_date("Y-m-d", $start_timestamp) ." - " .$event["_event_TITLE"];

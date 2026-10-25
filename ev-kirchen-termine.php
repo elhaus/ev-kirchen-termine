@@ -23,12 +23,17 @@ const EV_KIRCHEN_TERMINE_VERSION = '0.2.0';
 function ev_kirchen_termin_load_plugin_css_js() {
     $plugin_url = plugin_dir_url( __FILE__ );
 
-    wp_enqueue_style(
+    wp_register_style(
         'ev_kirchen_events_css',
         $plugin_url . 'public/events.css',
         array(),
         EV_KIRCHEN_TERMINE_VERSION
     );
+
+    // only needed for the event pages and the tag archives, which also list events
+    if ( is_singular( 'evkite_event' ) || is_tag() ) {
+        wp_enqueue_style( 'ev_kirchen_events_css' );
+    }
 
 }
 
