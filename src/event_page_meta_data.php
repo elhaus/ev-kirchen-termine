@@ -95,43 +95,58 @@ function ev_kirchen_termine_add_postmeta_to_event($post_id) {
             $map_url = $osm_map_url;
             break;
         case "osm_image":
+            // map image rendered during the import and stored in the media library
+            $map_image_url = !empty($location["map_image_id"]) ? wp_get_attachment_url($location["map_image_id"]) : "";
+            if(!empty($map_image_url))
+                $map = '<a href="'.esc_url($osm_map_url).'"><img width="'.EV_KIRCHEN_TERMINE_OSM_WIDTH.'" height="'.EV_KIRCHEN_TERMINE_OSM_HEIGHT.'" loading="lazy" style="width: 100%; height: auto; border: 1px solid black" src="'.esc_url($map_image_url).'" alt="'.esc_attr(sprintf(/* translators: %s: location name */ __('Map: %s', 'ev-kirchen-termine'), $location["name"])).'"></a>
+                        <small class="evkite-map-attribution">&copy; <a href="https://www.openstreetmap.org/copyright">'.esc_html__('OpenStreetMap contributors', 'ev-kirchen-termine').'</a></small>';
+            $map_url = $osm_map_url;
+            break;
+        case "link_only":
+        default:
+            // no embedded map, the visitor's browser does not connect to any map provider
             $map = "";
             $map_url = $osm_map_url;
 
     }
+
+    // iframes need a fixed height, images scale with their width
+    $map_container_style = in_array(get_option("ev_kirchen_termine_map_type"), array("google_iframe", "osm_iframe"), true) ? "height: 350px; " : "";
 
     $barrier_free = "";
     $equipped     = ! empty( $location["equipped"] ) ? explode( ",", $location["equipped"] ) : array();
     $plugin_img_url = plugins_url( 'public/img/', dirname(__FILE__) ); // Best Practice für Plugin-Pfade
 
     if(in_array("1", $equipped)) {
-        $barrier_free .= '<img class="equipicon" title="Rollstuhlgerecht" alt="Rollstuhlgerecht" src="' . esc_url( $plugin_img_url . '1_rollstuhlgerecht.png' ) . '">';
+        $barrier_free .= '<img class="equipicon" title="'.esc_attr__('Wheelchair accessible', 'ev-kirchen-termine').'" alt="'.esc_attr__('Wheelchair accessible', 'ev-kirchen-termine').'" src="' . esc_url( $plugin_img_url . '1_rollstuhlgerecht.png' ) . '">';
     }
     if(in_array("2", $equipped)) {
-        $barrier_free .= '<img class="equipicon" title="Induktionsanlage für Hörgeräte" alt="Induktionsanlage" src="' . esc_url( $plugin_img_url . '2_induktion.png' ) . '">';
+        $barrier_free .= '<img class="equipicon" title="'.esc_attr__('Induction loop for hearing aids', 'ev-kirchen-termine').'" alt="'.esc_attr__('Induction loop', 'ev-kirchen-termine').'" src="' . esc_url( $plugin_img_url . '2_induktion.png' ) . '">';
     }
     if(in_array("3", $equipped)) {
-        $barrier_free .= '<img class="equipicon" title="Behinderten-WC" alt="Behinderten-WC" src="' . esc_url( $plugin_img_url . '3_behinderten-wc.png' ) . '">';
+        $barrier_free .= '<img class="equipicon" title="'.esc_attr__('Accessible toilet', 'ev-kirchen-termine').'" alt="'.esc_attr__('Accessible toilet', 'ev-kirchen-termine').'" src="' . esc_url( $plugin_img_url . '3_behinderten-wc.png' ) . '">';
     }
     if(in_array("4", $equipped)) {
-        $barrier_free .= '<img class="equipicon" title="Behindertenparkplatz" alt="Behindertenparkplatz" src="' . esc_url( $plugin_img_url . '4_behindertenparkplatz.png' ) . '">';
+        $barrier_free .= '<img class="equipicon" title="'.esc_attr__('Accessible parking', 'ev-kirchen-termine').'" alt="'.esc_attr__('Accessible parking', 'ev-kirchen-termine').'" src="' . esc_url( $plugin_img_url . '4_behindertenparkplatz.png' ) . '">';
     }
     if(!empty($location["equipped_text"])) {
         $barrier_free .= '<p class="equipicon">' . esc_html( $location["equipped_text"] ) . '</p>';
     }
 
     if(!empty($barrier_free)) {
-        $barrier_free = '<h3 class="evkite-events-single-section-title">Angaben zur Barrierefreiheit</h3><div>' .$barrier_free.'</div>';
+        $barrier_free = '<h3 class="evkite-events-single-section-title">'.esc_html__('Accessibility information', 'ev-kirchen-termine').'</h3><div>' .$barrier_free.'</div>';
     } else {
-        $barrier_free = '<h3 class="evkite-events-single-section-title">Keine Angaben zur Barrierefreiheit</h3>';
+        $barrier_free = '<h3 class="evkite-events-single-section-title">'.esc_html__('No accessibility information', 'ev-kirchen-termine').'</h3>';
     }
 
 
     return '<div class="evkite-events-single-section evkite-events-event-meta secondary evkite-clearfix">
                         <div class="evkite-events-meta-group evkite-events-meta-group-venue">
-                            <h2 class="evkite-events-single-section-title">Veranstaltungsort</h2>
+                            <h2 class="evkite-events-single-section-title">'.esc_html__('Venue', 'ev-kirchen-termine').'</h2>
                             <dl>
+                                <dt class="evkite-venue-label">' . esc_html__( 'Venue:', 'ev-kirchen-termine' ) . '</dt>
                                 <dd class="evkite-venue">' . esc_html( $location["name"] ) . '</dd>
+                                <dt class="evkite-venue-location-label">' . esc_html__( 'Address:', 'ev-kirchen-termine' ) . '</dt>
                                 <dd class="evkite-venue-location">
                                     <address class="evkite-events-address">
                                         <span class="evkite-address">
@@ -139,19 +154,19 @@ function ev_kirchen_termine_add_postmeta_to_event($post_id) {
                                             <span class="evkite-postal-code">' . esc_html( $location["postalCode"] ) . '</span><span class="evkite-delimiter">, </span><span class="evkite-locality">' . esc_html( $location["city"] ) . '</span>
                                         </span>
                                         </br></br>
-                                        <a class="evkite-events-gmap" rel="noopener" href="' . esc_url( $google_map_url ) . '" title="Klicken, um Google Karte anzuzeigen" target="_blank">+ Google Maps</a>
-                                        <a class="evkite-events-gmap hide-on-non-ios" rel="noopener" href="' . esc_url( 'maps://maps.apple.com/?q=' . urlencode( $address_query ) ) . '" title="Klicken, um Apple Karten anzuzeigen" target="_blank">+ Apple Karten</a>
+                                        <a class="evkite-events-gmap" rel="noopener" href="' . esc_url( $google_map_url ) . '" title="'.esc_attr__('Click to show Google map', 'ev-kirchen-termine').'" target="_blank">+ Google Maps</a>
+                                        <a class="evkite-events-gmap hide-on-non-ios" rel="noopener" href="' . esc_url( 'maps://maps.apple.com/?q=' . urlencode( $address_query ) ) . '" title="'.esc_attr__('Click to show Apple Maps', 'ev-kirchen-termine').'" target="_blank">+ '.esc_html__('Apple Maps', 'ev-kirchen-termine').'</a>
                                     </address>
                                 </dd>
                             </dl>
                             '.$barrier_free.'
                         </div>
                         <div class="evkite-events-venue-map">
-                            <div id="evkite-events-gmap-0" style="height: 350px; width: 100%">
+                            <div id="evkite-events-gmap-0" style="'.$map_container_style.'width: 100%">
                                 '.$map.'
                                 <br/>
                                 <small>
-                                    <a href="' . esc_url( $map_url ) . '">Größere Karte anzeigen</a>
+                                    <a href="' . esc_url( $map_url ) . '">'.esc_html__('View larger map', 'ev-kirchen-termine').'</a>
                                 </small>
                             </div>
                         </div>

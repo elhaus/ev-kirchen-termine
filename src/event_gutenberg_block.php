@@ -16,9 +16,11 @@ function ev_kirchen_termine_smalleventlist_block_init()
       'small-event-list',
       plugins_url( 'event_gutenberg_block.js', __FILE__ ),
       array('wp-i18n', 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor'),
-      "0.1.7",
+      EV_KIRCHEN_TERMINE_VERSION,
       array('in_footer'  => true)
   );
+  // translations for the __() calls in the block script (language packs from translate.wordpress.org)
+  wp_set_script_translations( 'small-event-list', 'ev-kirchen-termine', plugin_dir_path( dirname(__FILE__) ) . 'languages' );
 
   // Get all IDs of the 'evkite_event' post type
   $event_ids = get_posts( array(
@@ -86,6 +88,9 @@ function ev_kirchen_termine_smalleventlist_block_init()
           ),
 		      'vid' => array(
               'type' => 'string'
+          ),
+          'title_level' => array(
+              'type' => 'integer'
           )
       ),
 

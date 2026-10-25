@@ -1,21 +1,18 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
-"POT-Creation-Date: 2022-02-06 23:39+0100\n"
-"PO-Revision-Date: 2022-02-06 23:40+0100\n"
-"Last-Translator: \n"
+"Project-Id-Version: ev-kirchen-termine\n"
+"Report-Msgid-Bugs-To: https://github.com/elhaus/ev-kirchen-termine/issues\n"
+"POT-Creation-Date: 2026-10-25 16:16+0100\n"
+"PO-Revision-Date: 2026-10-25 16:30+0100\n"
+"Last-Translator: Jan Elhaus\n"
 "Language-Team: \n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
-"X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e\n"
-"X-Poedit-SearchPath-0: .\n"
 
-#: src/event_dashboard_widget.php:9 src/event_dashboard_widget.php:28
+#: src/event_dashboard_widget.php:9 src/event_dashboard_widget.php:29
 msgid "Refresh events"
 msgstr "Veranstaltungen aktualisieren"
 
@@ -23,85 +20,441 @@ msgstr "Veranstaltungen aktualisieren"
 msgid "events refreshed"
 msgstr "Veranstaltungen aktualisiert"
 
-#: src/event_gutenberg_block.js:16
-msgid "small event list"
-msgstr "Kleine Veranstaltungsliste"
+#: src/event_import.php:23
+msgid "Events"
+msgstr "Termine"
 
-#: src/event_gutenberg_block.js:70
-msgid "Settings"
-msgstr "Einstellungen"
+#. translators: 1: date, 2: start time, 3: end time
+#: src/event_import.php:350 src/event_shortcode.php:104
+#, php-format
+msgid "%1$s at %2$s - %3$s"
+msgstr "%1$s um %2$s - %3$s Uhr"
 
-#: src/event_gutenberg_block.js:75
-msgid "Channel Filter"
-msgstr "Kanal Filter"
+#. translators: 1: start date, 2: start time, 3: end date, 4: end time
+#: src/event_import.php:362 src/event_shortcode.php:111
+#, php-format
+msgid "%1$s at %2$s - %3$s at %4$s"
+msgstr "%1$s um %2$s - %3$s um %4$s"
 
-#: src/event_gutenberg_block.js:87
-msgid "Count"
-msgstr "Anzahl"
+#: src/event_import.php:377
+msgid "Go to YouTube"
+msgstr "zu YouTube"
 
-#: src/event_gutenberg_block.js:101
-msgid "Include Event-IDs"
-msgstr "Veranstaltungs-IDs einbeziehen"
+#: src/event_import.php:380
+msgid "Join the Zoom meeting"
+msgstr "zum Zoom-Meeting"
 
-#: src/event_gutenberg_block.js:113
-msgid "VID Filter"
-msgstr "VID Filter"
+#: src/event_import.php:382
+msgid "The Zoom meeting is already over"
+msgstr "das Zoom-Meeting ist schon vorbei"
 
-#: src/event_posttype.php:15
+#: src/event_import.php:385
+msgid "Website"
+msgstr "Webseite"
+
+#: src/event_import.php:385
+msgid "Go to the event page"
+msgstr "zur Veranstaltungsseite"
+
+#: src/event_import.php:398
+msgid "Event image"
+msgstr "Veranstaltungsbild"
+
+#: src/event_import.php:406 src/event_import.php:411
+msgid "Register"
+msgstr "Anmelden"
+
+#: src/event_import.php:408 src/event_import.php:412
+msgid "Go to registration"
+msgstr "zur Anmeldung"
+
+#: src/event_import.php:431
+msgid "(opens in a new tab)"
+msgstr "(öffnet in neuem Tab)"
+
+#: src/event_import.php:462
+msgid "Contact person"
+msgstr "Ansprechpartner"
+
+#: src/event_import.php:466 src/event_import.php:679
+msgid "Email:"
+msgstr "E-Mail:"
+
+#: src/event_import.php:468 src/event_import.php:677
+msgid "Contact:"
+msgstr "Kontakt:"
+
+#. translators: %s: name of the contact person
+#: src/event_import.php:628
+#, php-format
+msgid "with %s"
+msgstr "mit %s"
+
+#: src/event_import.php:634 src/event_posttype.php:240
+msgid "All events"
+msgstr "Alle Veranstaltungen"
+
+#: src/event_import.php:647
+msgid "Download .ics file"
+msgstr ".ics Datei herunterladen"
+
+#: src/event_import.php:647
+msgid "Export iCal"
+msgstr "Exportiere iCal"
+
+#: src/event_import.php:648
+msgid "Add to Google Calendar"
+msgstr "zu Google Kalender hinzufügen"
+
+#: src/event_import.php:649
+msgid "Add to Outlook.com / Office 365 calendar"
+msgstr "zu Outlook.com / Office365 Kalender hinzufügen"
+
+#: src/event_import.php:649
+msgid "Add to Outlook.com calendar"
+msgstr "zu Outlook.com Kalender hinzufügen"
+
+#: src/event_import.php:653
+msgid "Details"
+msgstr "Details"
+
+#: src/event_import.php:655
+msgid "Date:"
+msgstr "Datum:"
+
+#: src/event_import.php:659
+msgid "Time:"
+msgstr "Zeit:"
+
+#: src/event_import.php:663
+msgid "Event category:"
+msgstr "Veranstaltungskategorie:"
+
+#: src/event_import.php:665
+msgid "Event tags:"
+msgstr "Veranstaltung-Tags:"
+
+#: src/event_import.php:671
+msgid "Organizer / published by"
+msgstr "Veranstalter / veröffentlicht von"
+
+#: src/event_import.php:681
+msgid "Website:"
+msgstr "Website:"
+
+#. translators: %s: location name
+#: src/event_osm_map_image.php:95 src/event_page_meta_data.php:101
+#, php-format
+msgid "Map: %s"
+msgstr "Karte: %s"
+
+#: src/event_osm_map_image.php:95
+msgid "Map"
+msgstr "Karte"
+
+#: src/event_page_meta_data.php:102
+msgid "OpenStreetMap contributors"
+msgstr "OpenStreetMap-Mitwirkende"
+
+#: src/event_page_meta_data.php:121
+msgid "Wheelchair accessible"
+msgstr "Rollstuhlgerecht"
+
+#: src/event_page_meta_data.php:124
+msgid "Induction loop for hearing aids"
+msgstr "Induktionsanlage für Hörgeräte"
+
+#: src/event_page_meta_data.php:124
+msgid "Induction loop"
+msgstr "Induktionsanlage"
+
+#: src/event_page_meta_data.php:127
+msgid "Accessible toilet"
+msgstr "Behinderten-WC"
+
+#: src/event_page_meta_data.php:130
+msgid "Accessible parking"
+msgstr "Behindertenparkplatz"
+
+#: src/event_page_meta_data.php:137
+msgid "Accessibility information"
+msgstr "Angaben zur Barrierefreiheit"
+
+#: src/event_page_meta_data.php:139
+msgid "No accessibility information"
+msgstr "Keine Angaben zur Barrierefreiheit"
+
+#: src/event_page_meta_data.php:145
+msgid "Venue"
+msgstr "Veranstaltungsort"
+
+#: src/event_page_meta_data.php:155
+msgid "Click to show Google map"
+msgstr "Klicken, um Google Karte anzuzeigen"
+
+#: src/event_page_meta_data.php:156
+msgid "Click to show Apple Maps"
+msgstr "Klicken, um Apple Karten anzuzeigen"
+
+#: src/event_page_meta_data.php:156
+msgid "Apple Maps"
+msgstr "Apple Karten"
+
+#: src/event_page_meta_data.php:167
+msgid "View larger map"
+msgstr "Größere Karte anzeigen"
+
+#: src/event_posttype.php:6 src/event_posttype.php:16
 msgid "Ev. Kirchen Termine - settings"
 msgstr "Ev. Kirchen Termine - Einstellungen"
 
-#: src/event_posttype.php:52
+#: src/event_posttype.php:6
+msgid "Ev. Kirchen Termine settings"
+msgstr "Ev. Kirchen Termine Einstellungen"
+
+#: src/event_posttype.php:12
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Sie haben nicht die nötigen Rechte, um diese Seite aufzurufen."
+
+#: src/event_posttype.php:59
+msgid ""
+"For parish websites, please enter the vid and leave the region field empty. "
+"For church district websites, enter \"all\" as vid and fill in the region of "
+"the church district."
+msgstr ""
+"Für Webseiten von Kirchengemeinden tragen Sie bitte die vid ein und lassen "
+"Sie das Feld region leer. Für Webseiten von Kirchenkreisen tragen Sie in vid "
+"\"all\" ein und füllen Sie region entsprechend des Kirchenkreises aus."
+
+#: src/event_posttype.php:60
+msgid ""
+"The category filter refers to the \"eventtype\". If the field is left empty, "
+"no further filtering is applied. If you enter e.g. 1, only church services "
+"are imported. More details:"
+msgstr ""
+"Der Kategorie Filter bezieht sich auf den \"eventtype\". Lassen Sie das Feld "
+"leer, wird nicht weiter gefiltert. Tragen Sie z.B. 1 ein, werden nur "
+"Gottesdienste importiert. Genauere Angaben unter:"
+
+#: src/event_posttype.php:65
 msgid "Ev. Termine website:"
 msgstr "Ev. Termine Webseite:"
 
-#: src/event_posttype.php:62
+#: src/event_posttype.php:75
 msgid "Organizer ID [vid]:"
 msgstr "Veranstalter ID [vid]:"
 
-#: src/event_posttype.php:72 src/event_posttype.php:92
+#: src/event_posttype.php:85 src/event_posttype.php:105
 msgid "Category Filter"
 msgstr "Katergorie Filter"
 
-#: src/event_posttype.php:82
+#: src/event_posttype.php:95
 msgid "Church district/deanery number"
 msgstr "Kirchenkreis/Dekanats-Nummer"
 
-#: src/event_posttype.php:101
+#: src/event_posttype.php:115
+msgid "Custom Filter"
+msgstr "Eigener Filter"
+
+#: src/event_posttype.php:124
 msgid "Event Pages Template:"
 msgstr "Veranstaltungsseiten Template:"
 
-#: src/event_posttype.php:119
+#: src/event_posttype.php:128
+msgid "Default"
+msgstr "Standard"
+
+#: src/event_posttype.php:147
+msgid "Map type:"
+msgstr "Kartentyp:"
+
+#: src/event_posttype.php:153
+msgid "No map, link only (privacy friendly)"
+msgstr "Keine Karte, nur Link (datenschutzfreundlich)"
+
+#: src/event_posttype.php:154
+msgid "OpenStreetMap image, stored in the media library (privacy friendly)"
+msgstr ""
+"OpenStreetMap-Bild, in der Mediathek gespeichert (datenschutzfreundlich)"
+
+#: src/event_posttype.php:155
+msgid "Google Maps iframe"
+msgstr "Google Maps iframe"
+
+#: src/event_posttype.php:156
+msgid "Google Maps image"
+msgstr "Google Maps Bild"
+
+#: src/event_posttype.php:157
+msgid "OpenStreetMap iframe"
+msgstr "OpenStreetMap iframe"
+
+#: src/event_posttype.php:176
+msgid "Google Maps API key"
+msgstr "Google Maps API-Schlüssel"
+
+#: src/event_posttype.php:185
 msgid "Other settings:"
 msgstr "Weitere Einstellungen:"
 
-#: src/event_posttype.php:127
+#: src/event_posttype.php:193
 msgid "Enable Share links on event page"
 msgstr "Aktiviere Teilen-Links auf Veranstaltungsseite"
 
-#: src/event_posttype.php:134
-msgid "registration form with number of remaining places"
-msgstr "Anmelde/Rückmeldeformular mit Anzahl der Restplätze"
+#: src/event_posttype.php:200
+msgid "Show Events in Search"
+msgstr "Veranstaltungen in der Suche anzeigen"
 
-#: src/event_posttype.php:141
+#: src/event_posttype.php:207
+msgid ""
+"Store event images in the media library (privacy friendly, no images are "
+"loaded from the event database server)"
+msgstr ""
+"Veranstaltungsbilder in der Mediathek speichern (datenschutzfreundlich, es "
+"werden keine Bilder vom Server des Veranstaltungskalenders geladen)"
+
+#: src/event_posttype.php:215
 msgid "save settings"
 msgstr "Einstellungen speichern"
 
-#: src/event_widget.php:13
-msgid "Ev. Kirchen Termine - calendar"
-msgstr "Ev. Kirchen Termine - Kalendar"
+#: src/event_posttype.php:237
+msgctxt "post type general name"
+msgid "Protestant events"
+msgstr "Evangelische Termine"
 
-#: src/event_widget.php:16
-msgid ""
-"Calendar widget that displays all appointments or appointments with specific "
-"tags."
-msgstr ""
-"Kalender-Widget, das alle Termine oder Termine mit bestimmten Tags anzeigt."
+#: src/event_posttype.php:238
+msgctxt "post type singular name"
+msgid "Event"
+msgstr "Veranstaltung"
 
-#: src/event_widget.php:70
-msgid "Filter:"
-msgstr "Filter:"
+#: src/event_posttype.php:239
+msgid "Protestant events"
+msgstr "Evangelische Termine"
 
-#: src/event_widget.php:82
-msgid "Number of events:"
-msgstr "Anzahl der Veranstaltungen:"
+#: src/event_posttype.php:241
+msgid "View event"
+msgstr "Veranstaltung ansehen"
+
+#: src/event_posttype.php:242
+msgid "New event"
+msgstr "Neue Veranstaltung"
+
+#: src/event_posttype.php:243
+msgid "Add event"
+msgstr "Veranstaltung hinzufügen"
+
+#: src/event_posttype.php:244
+msgid "Edit event"
+msgstr "Veranstaltung bearbeiten"
+
+#: src/event_posttype.php:245
+msgid "Update event"
+msgstr "Veranstaltung aktualisieren"
+
+#: src/event_posttype.php:285
+msgid "Event data"
+msgstr "Veranstaltungsdaten"
+
+#: src/event_posttype.php:358
+msgid "Event start"
+msgstr "Veranstaltungsbeginn"
+
+#: src/event_posttype.php:362
+msgid "Event end"
+msgstr "Veranstaltungsende"
+
+#: src/event_posttype.php:366
+msgid "Event ID"
+msgstr "Veranstaltungs-ID"
+
+#: src/event_posttype.php:370
+msgid "Organizer ID"
+msgstr "Veranstalter-ID"
+
+#: src/event_shortcode.php:90
+msgid "There are currently no upcoming events."
+msgstr "Es stehen aktuell keine Veranstaltungen an."
+
+#. translators: %s: location name
+#: src/event_shortcode.php:130
+#, php-format
+msgid "Location: %s"
+msgstr "Ort: %s"
+
+#. translators: %s: name of the contact person
+#: src/event_shortcode.php:146
+#, php-format
+msgid "Contact person: %s"
+msgstr "Ansprechperson: %s"
+
+#: src/event_shortcode.php:191
+msgid "more events..."
+msgstr "mehr Veranstaltungen..."
+
+#: src/event_gutenberg_block.js:18
+msgid "small event list"
+msgstr "Kleine Veranstaltungsliste"
+
+#: src/event_gutenberg_block.js:109
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: src/event_gutenberg_block.js:114
+msgid "Channel Filter"
+msgstr "Kanal Filter"
+
+#: src/event_gutenberg_block.js:128
+msgid "Count"
+msgstr "Anzahl"
+
+#: src/event_gutenberg_block.js:142
+msgid "Include Event-IDs"
+msgstr "Veranstaltungs-IDs einbeziehen"
+
+#: src/event_gutenberg_block.js:154
+msgid "Show location"
+msgstr "Ort anzeigen"
+
+#: src/event_gutenberg_block.js:166
+msgid "Show organizer"
+msgstr "Veranstalter anzeigen"
+
+#: src/event_gutenberg_block.js:178
+msgid "Show contact person"
+msgstr "Ansprechperson anzeigen"
+
+#: src/event_gutenberg_block.js:190
+msgid "Show more events link"
+msgstr "Link zu weiteren Veranstaltungen anzeigen"
+
+#: src/event_gutenberg_block.js:202
+msgid "VID Filter"
+msgstr "VID Filter"
+
+#: src/event_import.php
+msgid "Name:"
+msgstr "Name:"
+
+#: src/event_page_meta_data.php
+msgid "Venue:"
+msgstr "Ort:"
+
+#: src/event_page_meta_data.php
+msgid "Address:"
+msgstr "Adresse:"
+
+#: src/event_share_button.php
+msgid "Share via WhatsApp"
+msgstr "Per WhatsApp teilen"
+
+#: src/event_share_button.php
+msgid "Share on Facebook"
+msgstr "Auf Facebook teilen"
+
+#: src/event_share_button.php
+msgid "Share on X (Twitter)"
+msgstr "Auf X (Twitter) teilen"
+
+#: src/event_share_button.php
+msgid "Share via email"
+msgstr "Per E-Mail teilen"

@@ -17,7 +17,8 @@ document.addEventListener("DOMContentLoaded", function() {
             center: "title",
             right: mobilecheck() ? "" : "dayGridMonth,timeGridWeek,timeGridDay,listMonth",
         },
-        locale: "de",
+        // language of the WordPress site, FullCalendar falls back to English for unknown locales
+        locale: typeof evkiteCalendarData !== 'undefined' && evkiteCalendarData.locale ? evkiteCalendarData.locale : "en",
         weekNumbers: true,
         height: "auto",
         initialView: mobilecheck() ? "listMonth" : "dayGridMonth",

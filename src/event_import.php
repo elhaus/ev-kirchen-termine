@@ -20,7 +20,7 @@ function ev_kirchen_termine_import_events_task_plugin_activate() {
             array(
             'comment_status' => 'close',
             'ping_status'    => 'close',
-            'post_title'     => ucwords('Termine'),
+            'post_title'     => __('Events', 'ev-kirchen-termine'),
             'post_name'      => strtolower(trim('events')),
             'post_status'    => 'publish',
             'post_content'   => '[evkite_events_calendar]',
@@ -51,7 +51,11 @@ add_action('ev_kirchen_termine_import_events_task', 'ev_kirchen_termine_import_e
 function ev_kirchen_termine_fetch_events($url) {
 
     //read xml file from url in php
-    $xml = file_get_contents($url);
+    $response = wp_remote_get($url, array('timeout' => 30));
+    if(is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200)
+        return array();
+
+    $xml = wp_remote_retrieve_body($response);
     if(empty($xml))
         return array();
 
@@ -74,10 +78,118 @@ function ev_kirchen_termine_fetch_events($url) {
     return $export["Veranstaltung"];
 }
 
+/**
+ * Returns a <dt>/<dd> pair of a definition list, or nothing if the value is empty.
+ * Empty rows and <dt> without label are reported as accessibility errors.
+ */
+function ev_kirchen_termine_dl_row($label, $value_html, $class) {
+    if(trim(wp_strip_all_tags($value_html)) === '')
+        return '';
+
+    return '<dt class="'.esc_attr($class).'-label">'.esc_html($label).'</dt><dd class="'.esc_attr($class).'">'.$value_html.'</dd>';
+}
+
+/**
+ * Returns a mailto link or an empty string if no valid email address is given.
+ */
+function ev_kirchen_termine_mail_link($email) {
+    $email = sanitize_email($email);
+    if(empty($email))
+        return '';
+
+    return '<a href="mailto:'.esc_attr($email).'">'.esc_html($email).'</a>';
+}
+
+/**
+ * Returns true if images of the event database should be stored in the media library
+ * instead of being embedded from the remote server. Enabled by default for privacy reasons.
+ */
+function ev_kirchen_termine_use_local_images() {
+    return (bool) get_option("ev_kirchen_termine_local_images", 1);
+}
+
+/**
+ * Downloads a remote image into the media library (once) and returns the local url.
+ * Returns an empty string if the image could not be stored locally.
+ */
+function ev_kirchen_termine_get_local_image_url($remote_url) {
+
+    if(empty($remote_url))
+        return "";
+
+    $existing = get_posts(array(
+        'post_type'      => 'attachment',
+        'post_status'    => 'inherit',
+        'posts_per_page' => 1,
+        'fields'         => 'ids',
+        'meta_key'       => '_ev_kirchen_termine_source_url', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- runs during the import only
+        'meta_value'     => $remote_url, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- runs during the import only
+    ));
+
+    if(!empty($existing))
+        return wp_get_attachment_url($existing[0]);
+
+    require_once ABSPATH . 'wp-admin/includes/media.php';
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+
+    $attachment_id = media_sideload_image($remote_url, 0, null, 'id');
+    if(is_wp_error($attachment_id))
+        return "";
+
+    update_post_meta($attachment_id, '_ev_kirchen_termine_source_url', $remote_url);
+
+    return wp_get_attachment_url($attachment_id);
+}
+
+/**
+ * Deletes imported images which are not used by any of the current events anymore.
+ */
+function ev_kirchen_termine_delete_unused_images($used_remote_urls) {
+
+    $attachments = get_posts(array(
+        'post_type'      => 'attachment',
+        'post_status'    => 'inherit',
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+        'meta_key'       => '_ev_kirchen_termine_source_url', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- runs during the import only
+    ));
+
+    foreach ($attachments as $attachment_id) {
+        if(!in_array(get_post_meta($attachment_id, '_ev_kirchen_termine_source_url', true), $used_remote_urls, true))
+            wp_delete_attachment($attachment_id, true);
+    }
+}
+
+/**
+ * Returns the url under which an image of the event database should be shown on the website.
+ */
+function ev_kirchen_termine_image_url($remote_url) {
+
+    if(!ev_kirchen_termine_use_local_images())
+        return $remote_url;
+
+    return ev_kirchen_termine_get_local_image_url($remote_url);
+}
+
 function ev_kirchen_termine_import_events($force = false) {
 
-    global $wpdb;
-    $old_posts_meta = $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE meta_key LIKE '_ev_kirchen_termine_meta_key_id'");
+    // existing event posts, mapped by the event id of the event database
+    $old_post_ids = get_posts(array(
+        'post_type'      => 'evkite_event',
+        'post_status'    => array_keys(get_post_stati()),
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+        'no_found_rows'  => true,
+    ));
+    update_meta_cache('post', $old_post_ids);
+
+    $old_posts = array();
+    foreach ($old_post_ids as $old_post_id) {
+        $old_event_id = get_post_meta($old_post_id, '_ev_kirchen_termine_meta_key_id', true);
+        if($old_event_id !== '')
+            $old_posts[(string) $old_event_id] = $old_post_id;
+    }
 
     $events = array();
     $events_data = array();
@@ -151,9 +263,11 @@ function ev_kirchen_termine_import_events($force = false) {
         "_event_PERSON_ID",
         "_event_TEXTBOX_1",
         "_event_FEEDBACK_ID",
+        "_poll_ID",
         "_event_HIGHLIGHT",
         "_event_USER_ID",
         "_event_IMAGE",
+        "_event_IMAGE_ALT_DESCRIPTION",
         "_event_CAPTION",
         "_event_MODIFIED",
         "_place_ID",
@@ -224,20 +338,14 @@ function ev_kirchen_termine_import_events($force = false) {
 
 
     // Delete old/delted Events
-    foreach ($old_posts_meta as $old_post_meta) {
-
-        $delete_post = true;
-        foreach ($events as $event) {
-            if($old_post_meta->meta_value == $event["ID"]) {
-                $delete_post = false;
-                break;
-            }
-        }
-
-        if($delete_post)
-            wp_delete_post($old_post_meta->post_id, true);
-
+    $current_event_ids = array_map('strval', array_column($events, 'ID'));
+    foreach ($old_posts as $old_event_id => $old_post_id) {
+        if(!in_array((string) $old_event_id, $current_event_ids, true))
+            wp_delete_post($old_post_id, true);
     }
+
+    $used_image_urls = array();
+    $used_map_image_ids = array();
 
     foreach ($events as $event) {
 
@@ -266,7 +374,8 @@ function ev_kirchen_termine_import_events($force = false) {
         $end_timestamp   = strtotime($event["END_RFC"]);
 
         if(wp_date("Y-m-d", $start_timestamp) == wp_date("Y-m-d", $end_timestamp)) {
-            $timespan  = wp_sprintf('%s um %s - %s Uhr',
+            /* translators: 1: date, 2: start time, 3: end time */
+            $timespan  = wp_sprintf(__('%1$s at %2$s - %3$s', 'ev-kirchen-termine'),
                 wp_date($date_format, $start_timestamp),
                 wp_date($time_format, $start_timestamp),
                 wp_date($time_format, $end_timestamp)
@@ -277,7 +386,8 @@ function ev_kirchen_termine_import_events($force = false) {
                 wp_date($time_format, $end_timestamp)
             );
         } else {
-            $timespan  = wp_sprintf('%s um %s - %s um %s',
+            /* translators: 1: start date, 2: start time, 3: end date, 4: end time */
+            $timespan  = wp_sprintf(__('%1$s at %2$s - %3$s at %4$s', 'ev-kirchen-termine'),
                 wp_date($date_format, $start_timestamp),
                 wp_date($time_format, $start_timestamp),
                 wp_date($date_format, $end_timestamp),
@@ -292,35 +402,40 @@ function ev_kirchen_termine_import_events($force = false) {
 
         $media          = "";
         if(strpos($event["_event_LINK"], "https://youtu.be") !== false || strpos($event["_event_LINK"], "https://www.youtube.com") !== false) {
-            $media     .= '<a target="_blank" title="YouTube" class="btn" style="background-color: #e52d27;" href="'.$event["_event_LINK"].'">zu YouTube</a><br/>';
+            $media     .= '<a target="_blank" title="YouTube" class="btn" style="background-color: #e52d27;" href="'.$event["_event_LINK"].'">'.esc_html__('Go to YouTube', 'ev-kirchen-termine').'</a><br/>';
         } elseif(strpos($event["_event_LINK"], ".zoom.us/j/") !== false) {
             if(wp_date("Y-m-d", $end_timestamp) >= wp_date("Y-m-d")) {
-                $media     .= '<a target="_blank" title="Zoom" class="btn" style="background-color: #2D8CFF;" href="'.$event["_event_LINK"].'">zum Zoom-Meeting</a><br/>';
+                $media     .= '<a target="_blank" title="Zoom" class="btn" style="background-color: #2D8CFF;" href="'.$event["_event_LINK"].'">'.esc_html__('Join the Zoom meeting', 'ev-kirchen-termine').'</a><br/>';
             } else {
-                $media     .= '<a target="_blank" title="Zoom" class="btn" style="background-color: #2D8CFF;" href="#" disabled>das Zoom-Meeting ist schon vorbei</a><br/>';
+                $media     .= '<a target="_blank" title="Zoom" class="btn" style="background-color: #2D8CFF;" href="#" disabled>'.esc_html__('The Zoom meeting is already over', 'ev-kirchen-termine').'</a><br/>';
             }
         } elseif(!empty($event["_event_LINK"])) {
-            $media     .= '<a target="_blank" title="Webseite" class="btn" style="background-color: #e52d27;" href="'.$event["_event_LINK"].'">zur Veranstaltungs Seite</a><br/>';
+            $media     .= '<a target="_blank" title="'.esc_attr__('Website', 'ev-kirchen-termine').'" class="btn" style="background-color: #e52d27;" href="'.$event["_event_LINK"].'">'.esc_html__('Go to the event page', 'ev-kirchen-termine').'</a><br/>';
         }
 
-        if(!empty($event["_event_IMAGE"]))
-            $media .= '<img src="' .$event["_event_IMAGE"] .'" alt="Event_Bild" class="alignright" width="414" height="auto">';
-        elseif(!empty($event["_place_IMAGE"]))
-            $media .= '<img src="' .$event["_place_IMAGE"] .'" alt="Event_Bild" class="alignright" width="414" height="auto">';
+        $image_remote_url = !empty($event["_event_IMAGE"]) ? $event["_event_IMAGE"] : $event["_place_IMAGE"];
+        // the event database returns protocol relative urls
+        if(strpos($image_remote_url, "//") === 0)
+            $image_remote_url = "https:".$image_remote_url;
+        $image_url        = "";
+        if(!empty($image_remote_url)) {
+            $used_image_urls[] = $image_remote_url;
+            $image_url = ev_kirchen_termine_image_url($image_remote_url);
+        }
 
-        $feedback_link  = (empty($event["_event_FEEDBACK_ID"]) ? "" : get_option("ev_kirchen_termine_webpage")."/rueckmeldeformular".$event["_event_FEEDBACK_ID"]."-".$event["ID"]);
+        $image_alt = !empty($event["_event_IMAGE_ALT_DESCRIPTION"]) ? $event["_event_IMAGE_ALT_DESCRIPTION"] : __('Event image', 'ev-kirchen-termine');
+        if(!empty($image_url))
+            $media .= '<img src="' .esc_url($image_url) .'" alt="'.esc_attr($image_alt).'" class="alignright" width="414" height="auto">';
+
+        $feedback_link  = (empty($event["_poll_ID"]) ? "" : get_option("ev_kirchen_termine_webpage")."/webformular/input/liste/".$event["_poll_ID"]);
         $feedback       = "";
+        // a real link instead of a JS popup: reachable by keyboard and announced as a link by screen readers
         if(!empty($feedback_link))
             $feedback   = ' <br/>
-                            <a target="_blank" title="Anmelden" class="btn btn-primary"
-                                onclick=\'window.open("'.$feedback_link.'", "Rückmeldeformular","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=850,height=650,top=10,left=200");\'>
-                                zur Anmeldung
-                            </a>
-                            <noscript>
-                                <a target="_blank" href="'.$feedback_link.'" title="Anmelden" class="btn btn-primary">
-                                    zur Anmeldung
-                                </a>
-                            </noscript>';
+                            <a href="'.esc_url($feedback_link).'" target="_blank" rel="noopener" class="btn btn-primary">'
+                                .esc_html__('Go to registration', 'ev-kirchen-termine')
+                                .'<span class="screen-reader-text"> '.esc_html__('(opens in a new tab)', 'ev-kirchen-termine').'</span>'
+                            .'</a>';
 
         $ical_link      = get_option("ev_kirchen_termine_webpage")."/ical-". $event["ID"];
 
@@ -368,15 +483,12 @@ function ev_kirchen_termine_import_events($force = false) {
         $organizer      = "";
         if(!empty($event["_event_PERSON_ID"]))
             $organizer  = '<div class="evkite-events-meta-group evkite-events-meta-group-organizer">
-                                <h2 class="evkite-events-single-section-title">Ansprechpartner</h2>
-                                <dl>
-                                    <dt style="display:none;"></dt>
-                                    <dd class="evkite-organizer">'.$event["_person_NAME"].'</dd>
-                                    <dt class="evkite-organizer-email-label">E-Mail:</dt>
-                                    <dd class="evkite-organizer-email"><a href="mailto:'.$event["_person_EMAIL"].'">'.$event["_person_EMAIL"].'</a></dd>
-                                    <dt class="evkite-organizer-contact-label">Kontakt:</dt>
-                                    <dd class="evkite-organizer-contact">'.nl2br($event["_person_CONTACT"]).'</dd>
-                                </dl>
+                                <h2 class="evkite-events-single-section-title">'.esc_html__('Contact person', 'ev-kirchen-termine').'</h2>
+                                <dl>'.
+                                    ev_kirchen_termine_dl_row(__('Name:', 'ev-kirchen-termine'), esc_html($event["_person_NAME"]), 'evkite-organizer').
+                                    ev_kirchen_termine_dl_row(__('Email:', 'ev-kirchen-termine'), ev_kirchen_termine_mail_link($event["_person_EMAIL"]), 'evkite-organizer-email').
+                                    ev_kirchen_termine_dl_row(__('Contact:', 'ev-kirchen-termine'), nl2br(esc_html($event["_person_CONTACT"])), 'evkite-organizer-contact').
+                                '</dl>
                             </div>';
 
 
@@ -458,11 +570,8 @@ function ev_kirchen_termine_import_events($force = false) {
 
         // Veranstalltungsbilder
 
-        if(!empty($event["_event_IMAGE"]))
-            $parameter_event_shema["image"][] = $event["_event_IMAGE"];
-
-        if(!empty($event["_place_IMAGE"]))
-            $parameter_event_shema["image"][] = $event["_place_IMAGE"];
+        if(!empty($image_url))
+            $parameter_event_shema["image"][] = $image_url;
 
 
         // Ansprechpartner der Veranstaltung
@@ -504,7 +613,13 @@ function ev_kirchen_termine_import_events($force = false) {
             "longitude"=> $event["_place_GLONG"],
             "equipped"=> $event["_place_EQUIP"],
             "equipped_text"=> $event["_place_EQUIPTEXT"],
+            "map_image_id"=> 0,
         );
+
+        if(ev_kirchen_termine_use_osm_map_image() && !empty($event["_place_ID"]) && $event["_place_ID"] !== "1") {
+            $location_json["map_image_id"] = ev_kirchen_termine_get_osm_map_image_id($event["_place_GLAT"], $event["_place_GLONG"], $event["_place_NAME"]);
+            $used_map_image_ids[] = $location_json["map_image_id"];
+        }
 
         $user_data = array(
             "id"=> $event["_user_ID"],
@@ -531,13 +646,13 @@ function ev_kirchen_termine_import_events($force = false) {
         $args = array(
             'post_type'    => 'evkite_event',
             'post_status'  => 'publish',
-            'post_excerpt' => $timespan.' / </br>'.$event["_place_NAME"].' / </br>mit '.$event["_person_NAME"],
+            'post_excerpt' => $timespan.' / </br>'.$event["_place_NAME"].' / </br>'.sprintf(/* translators: %s: name of the contact person */ __('with %s', 'ev-kirchen-termine'), $event["_person_NAME"]),
             'post_content' =>
                 '<script type="application/ld+json">'.json_encode($parameter_event_shema, JSON_UNESCAPED_UNICODE).'</script>
                 <div id="evkite-events">
                     <div id="evkite-events-content" class="evkite-events-single">
                         <p class="evkite-events-back">
-                            <a href="'.get_site_url().'/events/">&laquo;Alle Veranstaltungen</a>
+                            <a href="'.get_site_url().'/events/">&laquo;'.esc_html__('All events', 'ev-kirchen-termine').'</a>
                         </p>
                         <h1 class="evkite-events-single-event-title">'.$title.'</h1>
                         '.$subtitle_html.'
@@ -550,45 +665,37 @@ function ev_kirchen_termine_import_events($force = false) {
                                 <p>'.$media.$text.$feedback.'</p>
                             </div>
                             <div class="evkite-events-cal-links">
-                                <a class="evkite-events-ical evkite-events-button" href="'.$ical_link.'" title=".ics Datei herunterladen">+ Exportiere iCal</a>
-                                <a target="_blank" class="evkite-events-gcal evkite-events-button" href="'.$google_cal_link.'" title="zu Google Kalender hinzufügen">zu Google Kalender hinzufügen</a>
-                                <a target="_blank" class="evkite-events-o365 evkite-events-button" href="'.$office_365_cal_link.'" title="zu Outlook.com / Office365 Kalender hinzufügen">zu Outlook.com Kalender hinzufügen</a>
+                                <a class="evkite-events-ical evkite-events-button" href="'.$ical_link.'" title="'.esc_attr__('Download .ics file', 'ev-kirchen-termine').'">+ '.esc_html__('Export iCal', 'ev-kirchen-termine').'</a>
+                                <a target="_blank" class="evkite-events-gcal evkite-events-button" href="'.$google_cal_link.'" title="'.esc_attr__('Add to Google Calendar', 'ev-kirchen-termine').'">'.esc_html__('Add to Google Calendar', 'ev-kirchen-termine').'</a>
+                                <a target="_blank" class="evkite-events-o365 evkite-events-button" href="'.$office_365_cal_link.'" title="'.esc_attr__('Add to Outlook.com / Office 365 calendar', 'ev-kirchen-termine').'">'.esc_html__('Add to Outlook.com calendar', 'ev-kirchen-termine').'</a>
                             </div>
                             <div class="evkite-events-single-section evkite-events-event-meta primary evkite-clearfix">
                                 <div class="evkite-events-meta-group evkite-events-meta-group-details">
-                                    <h2 class="evkite-events-single-section-title">Details</h2>
+                                    <h2 class="evkite-events-single-section-title">'.esc_html__('Details', 'ev-kirchen-termine').'</h2>
                                     <dl>
-                                        <dt class="evkite-events-start-date-label">Datum:</dt>
+                                        <dt class="evkite-events-start-date-label">'.esc_html__('Date:', 'ev-kirchen-termine').'</dt>
                                         <dd>
                                             <abbr class="evkite-events-abbr evkite-events-date published dtstart">'.$date.'</abbr>
                                         </dd>
-                                        <dt class="evkite-events-start-time-label">Zeit:</dt>
+                                        <dt class="evkite-events-start-time-label">'.esc_html__('Time:', 'ev-kirchen-termine').'</dt>
                                         <dd>
                                             <div class="evkite-events-abbr evkite-events-time published dtstart">'.$time.'</div>
                                         </dd>
-                                        <dt class="evkite-events-event-categories-label">Veranstaltungskategorie:</dt>
+                                        <dt class="evkite-events-event-categories-label">'.esc_html__('Event category:', 'ev-kirchen-termine').'</dt>
                                         <dd class="evkite-events-event-categories">'.$type.'</dd>
-                                        <dt>Veranstaltung-Tags:</dt>
+                                        <dt>'.esc_html__('Event tags:', 'ev-kirchen-termine').'</dt>
                                         <dd class="evkite-event-tags">'.$tags.'</dd>
                                     </dl>
                                 </div>
                                 '.$organizer.'
                                 <div class="evkite-events-meta-group evkite-events-meta-group-organizer">
-                                    <h2 class="evkite-events-single-section-title">Veranstalter / veröffentlicht von</h2>
-                                    <dl>
-                                        <dt style="display:none;"></dt>
-                                        <dd class="evkite-organizer">
-                                            <a href="'.get_site_url().'/events/?vid='.$event["_event_USER_ID"].'">'.$org_name.'</a>
-                                        </dd>
-                                        <dt class="evkite-organizer-tel-label">Kontakt:</dt>
-                                        <dd class="evkite-organizer-tel">'.nl2br($org_contact).'</dd>
-                                        <dt class="evkite-organizer-email-label">E-Mail:</dt>
-                                        <dd class="evkite-organizer-email"><a href="mailto:'.$org_email.'">'.$org_email.'</a></dd>
-                                        <dt class="evkite-organizer-url-label">Website:</dt>
-                                        <dd class="evkite-organizer-url">
-                                            <a href="'.$org_url.'" target="_self">'.$org_url.'</a>
-                                        </dd>
-                                    </dl>
+                                    <h2 class="evkite-events-single-section-title">'.esc_html__('Organizer / published by', 'ev-kirchen-termine').'</h2>
+                                    <dl>'.
+                                        ev_kirchen_termine_dl_row(__('Name:', 'ev-kirchen-termine'), empty($org_name) ? '' : '<a href="'.esc_url(get_site_url().'/events/?vid='.$event["_event_USER_ID"]).'">'.esc_html($org_name).'</a>', 'evkite-organizer').
+                                        ev_kirchen_termine_dl_row(__('Contact:', 'ev-kirchen-termine'), nl2br(esc_html($org_contact)), 'evkite-organizer-tel').
+                                        ev_kirchen_termine_dl_row(__('Email:', 'ev-kirchen-termine'), ev_kirchen_termine_mail_link($org_email), 'evkite-organizer-email').
+                                        ev_kirchen_termine_dl_row(__('Website:', 'ev-kirchen-termine'), empty($org_url) ? '' : '<a href="'.esc_url($org_url).'">'.esc_html($org_url).'</a>', 'evkite-organizer-url').
+                                    '</dl>
                                 </div>
                             </div>
                         </div>
@@ -610,13 +717,7 @@ function ev_kirchen_termine_import_events($force = false) {
 
         $args["post_content"] = str_replace(array("\n","\r","\t"), "", $args["post_content"]);
 
-        $current_id = NULL;
-
-        foreach ($old_posts_meta as $old_post_meta) {
-            if($old_post_meta->meta_value == $event["ID"]) {
-                $current_id = $old_post_meta->post_id;
-            }
-        }
+        $current_id = isset($old_posts[(string) $event["ID"]]) ? $old_posts[(string) $event["ID"]] : NULL;
 
         if(empty($current_id)) {
             $args['post_name'] = wp_date("Y-m-d", $start_timestamp) ." - " .$event["_event_TITLE"];
@@ -634,6 +735,12 @@ function ev_kirchen_termine_import_events($force = false) {
         }
 
     }
+
+    if(ev_kirchen_termine_use_local_images())
+        ev_kirchen_termine_delete_unused_images($used_image_urls);
+
+    if(ev_kirchen_termine_use_osm_map_image())
+        ev_kirchen_termine_delete_unused_osm_map_images($used_map_image_ids);
 
     add_filter('content_save_pre', 'wp_filter_post_kses');
     add_filter('content_filtered_save_pre', 'wp_filter_post_kses');

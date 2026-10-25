@@ -3,13 +3,13 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 function ev_kirchen_termine_setup_admin_menus() {
     add_submenu_page('options-general.php',
-    'Event Settings', 'Ev. Kirchen Termine Einstellungen', 'manage_options',
+    __('Ev. Kirchen Termine - settings', 'ev-kirchen-termine'), __('Ev. Kirchen Termine settings', 'ev-kirchen-termine'), 'manage_options',
     'ev_kirchen_termine_settings', 'ev_kirchen_termine_manage_settings');
 }
 
 function ev_kirchen_termine_manage_settings() {
     if (!current_user_can('manage_options')) {
-        wp_die('You do not have sufficient permissions to access this page.');
+        wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'ev-kirchen-termine'));
     }
     ?>
         <div class="wrap">
@@ -42,7 +42,8 @@ function ev_kirchen_termine_manage_settings() {
 
         $checkbox_fields = [
             'ev_kirchen_termine_show_events_in_search',
-            'ev_kirchen_termine_show_share_icons'
+            'ev_kirchen_termine_show_share_icons',
+            'ev_kirchen_termine_local_images'
         ];
 
         // Process checkbox inputs (strictly 1 or 0)
@@ -55,8 +56,8 @@ function ev_kirchen_termine_manage_settings() {
     }
     ?>
             <form method="POST" action="">
-                <p>Für Webseiten von Kirchengemeinden tragen Sie bitte die vid ein und lassen Sie das Feld region leer. Für Webseiten von Kirchenkreisen tragen Sie in vid "all" ein und füllen Sie region entsprechend des Kirchenkreises aus.</p>
-                <p>Der Katergorie Filter bezeiht sich auf den "eventtype". Lassen Sie das Feld leer wir nicht weiter gefiltert, tragen Sie z.B. 1 ein werden nur Gottesdienste importiert. Genauere Angaben unter <a href="http://handbuch.evangelische-termine.de/anzeige-im-internet/ausgabe-parameter">http://handbuch.evangelische-termine.de/anzeige-im-internet/ausgabe-parameter</a></p>
+                <p><?php esc_html_e('For parish websites, please enter the vid and leave the region field empty. For church district websites, enter "all" as vid and fill in the region of the church district.', 'ev-kirchen-termine'); ?></p>
+                <p><?php esc_html_e('The category filter refers to the "eventtype". If the field is left empty, no further filtering is applied. If you enter e.g. 1, only church services are imported. More details:', 'ev-kirchen-termine'); ?> <a href="http://handbuch.evangelische-termine.de/anzeige-im-internet/ausgabe-parameter">http://handbuch.evangelische-termine.de/anzeige-im-internet/ausgabe-parameter</a></p>
                 <table class="form-table">
                     <tr valign="top">
                         <th scope="row">
@@ -124,7 +125,7 @@ function ev_kirchen_termine_manage_settings() {
                         </th>
                         <td>
                             <select name="ev_kirchen_termine_event_template" id="ev_kirchen_termine_event_template">
-                                <option value="">Default</option>"
+                                <option value=""><?php esc_html_e('Default', 'ev-kirchen-termine'); ?></option>
                                 <?php
                                 $templates = get_page_templates();
                                 $current_setting = get_option( 'ev_kirchen_termine_event_template' );
@@ -149,10 +150,11 @@ function ev_kirchen_termine_manage_settings() {
                             <select name="ev_kirchen_termine_map_type" id="ev_kirchen_termine_map_type">
                                 <?php
                                 $options = array(
+                                    "link_only" => __("No map, link only (privacy friendly)", 'ev-kirchen-termine'),
+                                    "osm_image" => __("OpenStreetMap image, stored in the media library (privacy friendly)", 'ev-kirchen-termine'),
                                     "google_iframe" => __("Google Maps iframe", 'ev-kirchen-termine'),
                                     "google_image" => __("Google Maps image", 'ev-kirchen-termine'),
                                     "osm_iframe" => __("OpenStreetMap iframe", 'ev-kirchen-termine'),
-                                    //"osm_image" => __("OpenStreetMap image", 'ev-kirchen-termine')
                                 );
                                 $current_setting = get_option("ev_kirchen_termine_map_type");
                                 foreach ($options as $option_key => $option_name) {
@@ -196,6 +198,13 @@ function ev_kirchen_termine_manage_settings() {
                                         echo "checked";
                                     } ?>>
                                 <?php esc_html_e("Show Events in Search", 'ev-kirchen-termine'); ?>
+                            </label></br>
+                            <label for="ev_kirchen_termine_local_images">
+                                <input name="ev_kirchen_termine_local_images" type="checkbox" id="ev_kirchen_termine_local_images" <?php
+                                    if(ev_kirchen_termine_use_local_images()) {
+                                        echo "checked";
+                                    } ?>>
+                                <?php esc_html_e("Store event images in the media library (privacy friendly, no images are loaded from the event database server)", 'ev-kirchen-termine'); ?>
                             </label>
                         </td>
                     </tr>
@@ -203,7 +212,7 @@ function ev_kirchen_termine_manage_settings() {
                 <input type="hidden" name="update_settings" value="Y" />
                 <?php wp_nonce_field( 'update_ev-kirchen-termine_settings' ); ?>
                 <p>
-                    <input type="submit" value="<?php esc_html_e("save settings", 'ev-kirchen-termine'); ?>" class="button-primary"/>
+                    <input type="submit" value="<?php esc_attr_e("save settings", 'ev-kirchen-termine'); ?>" class="button-primary"/>
                 </p>
             </form>
         </div>
@@ -225,15 +234,15 @@ add_action("admin_menu", "ev_kirchen_termine_setup_admin_menus");
 */
 function ev_kirchen_termine_custom_post_type() {
     $labels = array(
-        'name'               => 'Evangelische Termine', // Tippfehler korrigiert ;)
-        'singular_name'      => 'Veranstaltung',
-        'menu_name'          => 'Evangelische Termine',
-        'all_items'          => 'Alle Veranstaltungen',
-        'view_item'          => 'Veranstaltung ansehen',
-        'add_new_item'       => 'Neue Veranstaltung',
-        'add_new'            => 'Veranstaltung hinzufügen',
-        'edit_item'          => 'Veranstaltung bearbeiten',
-        'update_item'        => 'Veranstaltung aktualisieren',
+        'name'               => _x( 'Protestant events', 'post type general name', 'ev-kirchen-termine' ),
+        'singular_name'      => _x( 'Event', 'post type singular name', 'ev-kirchen-termine' ),
+        'menu_name'          => __( 'Protestant events', 'ev-kirchen-termine' ),
+        'all_items'          => __( 'All events', 'ev-kirchen-termine' ),
+        'view_item'          => __( 'View event', 'ev-kirchen-termine' ),
+        'add_new_item'       => __( 'New event', 'ev-kirchen-termine' ),
+        'add_new'            => __( 'Add event', 'ev-kirchen-termine' ),
+        'edit_item'          => __( 'Edit event', 'ev-kirchen-termine' ),
+        'update_item'        => __( 'Update event', 'ev-kirchen-termine' ),
     );
     $rewrite = array(
         'slug'       => 'event',
@@ -273,7 +282,7 @@ class ev_kirchen_termine_Meta_Box {
     public static function add() {
         add_meta_box(
             'event_data',          // Unique ID
-            'Veranstaltungsdaten', // Box title
+            __( 'Event data', 'ev-kirchen-termine' ), // Box title
             [ self::class, 'html' ],   // Content callback, must be of type callable
             'evkite_event', // Posttype 
             'normal',
@@ -346,19 +355,19 @@ class ev_kirchen_termine_Meta_Box {
         $event_vid   = get_post_meta( $post->ID, '_ev_kirchen_termine_meta_key_vid', true );?>
         <table class="form-table">
             <tr>
-                <th><label for="event_start">Veranstaltungsbeginn</label></th>
+                <th><label for="event_start"><?php esc_html_e( 'Event start', 'ev-kirchen-termine' ); ?></label></th>
                 <td><input name="event_start" id="event_start" type="datetime-local" value="<?php echo esc_attr($event_start); ?>"></td>
             </tr>
             <tr>
-                <th><label for="event_end">Veranstaltungsende</label></th>
+                <th><label for="event_end"><?php esc_html_e( 'Event end', 'ev-kirchen-termine' ); ?></label></th>
                 <td><input name="event_end" id="event_end" type="datetime-local" value="<?php echo esc_attr($event_end); ?>"></td>
             </tr>
             <tr>
-                <th><label for="event_id">Veranstaltungs-ID</label></th>
+                <th><label for="event_id"><?php esc_html_e( 'Event ID', 'ev-kirchen-termine' ); ?></label></th>
                 <td><input name="event_id" id="event_id" type="number" value="<?php echo esc_attr($event_id); ?>"></td>
             </tr>
             <tr>
-                <th><label for="event_vid">Veranstalter-ID</label></th>
+                <th><label for="event_vid"><?php esc_html_e( 'Organizer ID', 'ev-kirchen-termine' ); ?></label></th>
                 <td><input name="event_vid" id="event_vid" type="number" value="<?php echo esc_attr($event_vid); ?>"></td>
             </tr>
         </table>
