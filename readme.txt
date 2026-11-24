@@ -5,7 +5,7 @@ Tags: events, kirche
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.2.0
+Stable tag: 0.2.1
 License: GPL v2 or later
 
 This Plugin imports events form event databases like https://www.veranstaltungen-ekvw.de/.
@@ -53,6 +53,9 @@ This plugin communicates with the following external endpoints:
    * **Google Maps Choice:** If configured to use Google Maps, an iframe embeds maps from `https://www.google.com/maps`, which is subject to Google's privacy policy and tracks user interactions. The Google privacy policy can be found under: https://policies.google.com/privacy
 
 == Changelog ==
+
+= 0.2.1 =
+* Existing events are updated when their location, organizer or contact person changes in the event database. Before, events kept outdated location data and could point to a deleted map image.
 
 = 0.2.0 =
 * Event images are stored in the media library by default (no hotlinking of the event database server).

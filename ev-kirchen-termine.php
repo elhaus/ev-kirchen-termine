@@ -3,7 +3,7 @@
  * Plugin Name:       Ev. Kirchen Termine
  * Plugin URI:        https://github.com/elhaus/ev-kirchen-termine
  * Description:       Shows events from the event calendar of the Protestant churches.
- * Version:           0.2.0
+ * Version:           0.2.1
  * Requires at least: 6.3
  * Requires PHP:      7.4
  * Author:            Jan Elhaus
@@ -17,7 +17,7 @@
 
 if (!defined('ABSPATH')) die('No direct access allowed');
 
-const EV_KIRCHEN_TERMINE_VERSION = '0.2.0';
+const EV_KIRCHEN_TERMINE_VERSION = '0.2.1';
 
 
 function ev_kirchen_termin_load_plugin_css_js() {

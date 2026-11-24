@@ -727,6 +727,12 @@ function ev_kirchen_termine_import_events($force = false) {
         } elseif(
             wp_date("Y-m-d H:i:s", filemtime(__FILE__)) > get_the_modified_date("Y-m-d H:i:s", $current_id) ||
             wp_date("Y-m-d H:i:s", strtotime($event["_event_MODIFIED"])) > get_the_modified_date("Y-m-d H:i:s", $current_id) ||
+            // location, organizer and contact person are maintained separately in the event database,
+            // their changes do not update the modification date of the event (e.g. corrected coordinates,
+            // which also replace the map image and delete the old one)
+            get_post_meta($current_id, '_ev_kirchen_termine_meta_key_location_json', true) != $location_json ||
+            get_post_meta($current_id, '_ev_kirchen_termine_meta_key_user_data', true) != $user_data ||
+            get_post_meta($current_id, '_ev_kirchen_termine_meta_key_person_data', true) != $person_data ||
             $force
         ) {
             $args["ID"] = $current_id;
